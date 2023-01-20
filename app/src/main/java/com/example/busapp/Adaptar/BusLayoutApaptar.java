@@ -1,9 +1,12 @@
 package com.example.busapp.Adaptar;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,8 +58,12 @@ public class BusLayoutApaptar extends RecyclerView.Adapter<BusLayoutApaptar.View
             public void onClick(View v){
                 int duration = Toast.LENGTH_SHORT;
                 if (!isClicked){
-                    holder.itemView.setBackgroundColor(Color.WHITE);
+                    //holder.itemView.setBackgroundColor(Color.WHITE);
                     holder.showText.setTextColor(Color.BLACK);
+                    AnimationDrawable animationDrawable = (AnimationDrawable) holder.itemView.getBackground();
+                    animationDrawable.setEnterFadeDuration(500);
+                    animationDrawable.setExitFadeDuration(500);
+                    animationDrawable.start();
                     isClicked = true;
                 } else {
                     holder.showText.setTextColor(Color.WHITE);
@@ -65,8 +72,9 @@ public class BusLayoutApaptar extends RecyclerView.Adapter<BusLayoutApaptar.View
                 }
 
                 Intent seatIntent = new Intent(v.getContext(), SelectSeatActivity.class);
-
+                seatIntent.putExtra("BUSNAME", holder.showText.getText().toString());
                 v.getContext().startActivity(seatIntent);
+                ((Activity)mContext).finish();
             }
         });
     }

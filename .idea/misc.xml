@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/android_Projects/Bus-app/app/src/main/res/drawable/anim.xml" value="0.1205" />
+        <entry key="..\:/android_Projects/Bus-app/app/src/main/res/drawable/animate.xml" value="0.1205" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/drawable/button_background_color.xml" value="0.1215" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/drawable/gradient_background.xml" value="0.101" />
+        <entry key="..\:/android_Projects/Bus-app/app/src/main/res/drawable/transition_gradient.xml" value="0.1" />
+        <entry key="..\:/android_Projects/Bus-app/app/src/main/res/drawable/transition_gradient_2.xml" value="0.1" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/bus_seat_card.xml" value="0.25" />
-        <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/bus_seat_view.xml" value="0.33" />
+        <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/bus_seat_view.xml" value="0.22" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/choose_main.xml" value="0.25" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/sales_view.xml" value="0.33" />
         <entry key="..\:/android_Projects/Bus-app/app/src/main/res/layout/select_bus_card.xml" value="0.2" />

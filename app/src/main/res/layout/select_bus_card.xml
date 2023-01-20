@@ -7,11 +7,13 @@
     android:layout_marginBottom="10dp"
     android:orientation="horizontal"
     android:id="@+id/IndividualBusLayout"
-    android:background="@color/ColorBluGray"
+    android:background="@drawable/anim"
+
     android:padding="10dp"
     >
 
     <TextView
+
         android:id="@+id/recycleText"
         android:layout_width="365dp"
         android:layout_height="47dp"

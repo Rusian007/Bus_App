@@ -6,11 +6,12 @@
     android:layout_height="match_parent">
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/backbtn"
         android:layout_width="56dp"
         android:layout_height="49dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:onClick="gotoBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="?attr/homeAsUpIndicator" />
@@ -60,22 +61,24 @@
 
 
     <TableLayout
-        android:layout_width="348dp"
-        android:layout_height="314dp"
+        android:id="@+id/tableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="360dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:padding="5dp"
-        android:layout_marginBottom="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.588">
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/busSeatRecycleView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="match_parent"
+            android:padding="10dp" />
     </TableLayout>
 
     <LinearLayout
@@ -111,6 +114,18 @@
             android:textColor="@color/white"
             android:textSize="18dp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="237dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="35dp"
+        android:backgroundTint="@color/ColorBluGray"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
