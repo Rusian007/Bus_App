@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:stretchColumns="1,2,3,4,5"
+     android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            >
+            <TextView
+                android:id="@+id/col1Text"
+
+                android:text="A1"
+                android:textSize="25sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:fontFamily="@font/poppins_bold"
+                android:layout_column="1"
+                android:layout_margin="15dp"
+                />
+            <TextView
+                android:id="@+id/col2Text"
+                android:text="A2"
+                android:textSize="25sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:fontFamily="@font/poppins_bold"
+                android:layout_column="1"
+                android:layout_margin="15dp"
+                />
+            <TextView
+                android:id="@+id/col3Text"
+                android:text="A3"
+                android:textSize="25sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:fontFamily="@font/poppins_bold"
+                android:layout_column="1"
+                android:layout_margin="15dp"
+                />
+            <TextView
+                android:id="@+id/col4Text"
+                android:text="A4"
+                android:textSize="25sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:fontFamily="@font/poppins_bold"
+                android:layout_column="1"
+                android:layout_margin="15dp"
+                />
+            <TextView
+                android:id="@+id/col5Text"
+                android:text="A5"
+                android:textSize="25sp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:background="@color/black"
+                android:textColor="@color/white"
+                android:fontFamily="@font/poppins_bold"
+                android:layout_column="1"
+                android:layout_margin="15dp"
+                />
+        </TableRow>
+
+
+    </TableLayout>
