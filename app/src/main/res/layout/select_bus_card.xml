@@ -7,7 +7,7 @@
     android:layout_marginBottom="10dp"
     android:orientation="horizontal"
     android:id="@+id/IndividualBusLayout"
-    android:background="@drawable/anim"
+    android:background="@color/ColorBluGray"
 
     android:padding="10dp"
     >
