@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Booking.SelectSeatActivity;
-import com.example.busapp.Model.BusModal;
+import com.example.busapp.Model.BusModel;
 import com.example.busapp.R;
 
 import java.util.ArrayList;
@@ -26,11 +24,11 @@ import java.util.ArrayList;
 public class BusLayoutApaptar extends RecyclerView.Adapter<BusLayoutApaptar.ViewHolder> {
 
 
-    private ArrayList<BusModal> names;
+    private ArrayList<BusModel> names;
     private Context mContext;
     boolean isClicked = false;
 
-    public BusLayoutApaptar( Context mContext ,ArrayList<BusModal> names) {
+    public BusLayoutApaptar( Context mContext ,ArrayList<BusModel> names) {
         this.names = names;
         this.mContext = mContext;
     }

@@ -1,10 +1,10 @@
 package com.example.busapp.Model;
 
-public class BusModal {
+public class BusModel {
     // variables for storing our Bus name.
     private String Busname;
 
-    public BusModal(String name) {
+    public BusModel(String name) {
         this.Busname = name;
     }
 

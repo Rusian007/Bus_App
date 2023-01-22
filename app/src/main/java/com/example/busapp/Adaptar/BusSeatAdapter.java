@@ -1,7 +1,6 @@
 package com.example.busapp.Adaptar;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.busapp.Model.BusSeatModel;
+import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 
 import java.util.List;
@@ -18,9 +17,9 @@ import java.util.List;
 public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHolder> {
 
     Context context;
-    List<BusSeatModel> BusSeatNameList;
+    List<BusSeatListModel> BusSeatNameList;
 
-    public BusSeatAdapter(Context context, List<BusSeatModel> busSeatNameList) {
+    public BusSeatAdapter(Context context, List<BusSeatListModel> busSeatNameList) {
         this.context = context;
         BusSeatNameList = busSeatNameList;
     }
@@ -36,7 +35,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
     public void onBindViewHolder(@NonNull BusSeatAdapter.ViewHolder holder, int position) {
 
         if(BusSeatNameList != null && BusSeatNameList.size()>0 ){
-            BusSeatModel model = BusSeatNameList.get(position);
+            BusSeatListModel model = BusSeatNameList.get(position);
 
             holder.col1Text.setText(checkNameForX(model.getSeat1(),holder.col1Text));
             holder.col2Text.setText(checkNameForX(model.getSeat2(), holder.col2Text));

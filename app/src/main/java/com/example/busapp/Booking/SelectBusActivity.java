@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Adaptar.BusLayoutApaptar;
-import com.example.busapp.Model.BusModal;
+import com.example.busapp.Model.BusModel;
 import com.example.busapp.R;
 
 import java.util.ArrayList;
 
 public class SelectBusActivity extends AppCompatActivity
 {
-    private ArrayList<BusModal> theBusNames = new ArrayList<>();
+    private ArrayList<BusModel> theBusNames = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,12 +31,12 @@ public class SelectBusActivity extends AppCompatActivity
         InitializeNamesArray();
     }
     private void InitializeNamesArray(){
-        BusModal busname;
+        BusModel busname;
         // Call API
         try {
 
-            theBusNames.add(new BusModal("DHA-BAN-1234"));
-            theBusNames.add(new BusModal("DHA-BARI-222"));
+            theBusNames.add(new BusModel("DHA-BAN-1234"));
+            theBusNames.add(new BusModel("DHA-BARI-222"));
         } catch (Exception e) {
             e.printStackTrace();
         }

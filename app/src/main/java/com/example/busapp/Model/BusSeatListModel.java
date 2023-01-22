@@ -1,18 +1,14 @@
 package com.example.busapp.Model;
 
-public class BusSeatModel {
+public class BusSeatListModel {
     String seat1;
     String seat2;
     String seat3;
     String seat4;
     String seat5;
 
-    public BusSeatModel(String seat1, String seat2, String seat3, String seat4, String seat5) {
-        this.seat1 = seat1;
-        this.seat2 = seat2;
-        this.seat3 = seat3;
-        this.seat4 = seat4;
-        this.seat5 = seat5;
+    public BusSeatListModel() {
+
     }
 
     public String getSeat1() {
