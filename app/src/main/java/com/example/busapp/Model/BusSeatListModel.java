@@ -1,53 +1,85 @@
 package com.example.busapp.Model;
 
+
 public class BusSeatListModel {
-    String seat1;
-    String seat2;
-    String seat3;
-    String seat4;
-    String seat5;
 
-    public BusSeatListModel() {
-
+    public class Seat {
+        public String SeatName;
+        public boolean isAvailable;
     }
 
-    public String getSeat1() {
-        return seat1;
+    private Seat seatCol1 = new Seat();
+    private Seat seatCol2 = new Seat();
+    private Seat seatCol3 = new Seat();
+    private Seat seatCol4= new Seat();
+    private Seat seatCol5= new Seat();
+
+    public String getSeatCol1() {
+        return seatCol1.SeatName;
+    }
+    public boolean getSeatCol1Status(){
+        return  seatCol1.isAvailable;
+    }
+    public void setSeatCol1(String SeatName, boolean isAvailable) {
+        this.seatCol1.SeatName = SeatName;
+        this.seatCol1.isAvailable = isAvailable;
     }
 
-    public void setSeat1(String seat1) {
-        this.seat1 = seat1;
+
+
+    public String getSeatCol2() {
+        return seatCol2.SeatName;
     }
 
-    public String getSeat2() {
-        return seat2;
+    public boolean getSeatCol2Status(){
+        return  seatCol2.isAvailable;
     }
 
-    public void setSeat2(String seat2) {
-        this.seat2 = seat2;
+    public void setSeatCol2(String SeatName, boolean isAvailable) {
+        this.seatCol2.SeatName = SeatName;
+        this.seatCol2.isAvailable = isAvailable;
     }
 
-    public String getSeat3() {
-        return seat3;
+
+    public String getSeatCol3() {
+        return seatCol3.SeatName;
     }
 
-    public void setSeat3(String seat3) {
-        this.seat3 = seat3;
+    public boolean getSeatCol3Status(){
+        return  seatCol3.isAvailable;
     }
 
-    public String getSeat4() {
-        return seat4;
+    public void setSeatCol3(String SeatName, boolean isAvailable) {
+        this.seatCol3.SeatName = SeatName;
+        this.seatCol3.isAvailable = isAvailable;
     }
 
-    public void setSeat4(String seat4) {
-        this.seat4 = seat4;
+
+    public String getSeatCol4() {
+        return seatCol4.SeatName;
     }
 
-    public String getSeat5() {
-        return seat5;
+    public boolean getSeatCol4Status(){
+        return  seatCol4.isAvailable;
     }
 
-    public void setSeat5(String seat5) {
-        this.seat5 = seat5;
+    public void setSeatCol4(String SeatName, boolean isAvailable) {
+        this.seatCol4.SeatName = SeatName;
+        this.seatCol4.isAvailable = isAvailable;
     }
+
+
+    public String getSeatCol5() {
+        return seatCol5.SeatName;
+    }
+
+    public boolean getSeatCol5Status(){
+        return  seatCol5.isAvailable;
+    }
+
+    public void setSeatCol5(String SeatName, boolean isAvailable) {
+        this.seatCol5.SeatName = SeatName;
+        this.seatCol5.isAvailable = isAvailable;
+    }
+
 }

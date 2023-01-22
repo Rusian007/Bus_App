@@ -45,7 +45,7 @@ public class BusLayoutApaptar extends RecyclerView.Adapter<BusLayoutApaptar.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d("FROM ON BIND VIEW HOLDER", "on bindCalled : VIEW :)");
+
 
 
         holder.showText.setText(names.get(position).getBusname());

@@ -1,6 +1,7 @@
 package com.example.busapp.Adaptar;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +38,29 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
         if(BusSeatNameList != null && BusSeatNameList.size()>0 ){
             BusSeatListModel model = BusSeatNameList.get(position);
 
-            holder.col1Text.setText(checkNameForX(model.getSeat1(),holder.col1Text));
-            holder.col2Text.setText(checkNameForX(model.getSeat2(), holder.col2Text));
-            holder.col3Text.setText(checkNameForX(model.getSeat3(), holder.col3Text));
-            holder.col4Text.setText(checkNameForX(model.getSeat4(), holder.col4Text));
-            holder.col5Text.setText(checkNameForX(model.getSeat5(), holder.col5Text));
+            holder.col1Text.setText(checkNameForX(model.getSeatCol1(),holder.col1Text));
+            holder.col2Text.setText(checkNameForX(model.getSeatCol2(), holder.col2Text));
+            holder.col3Text.setText(checkNameForX(model.getSeatCol3(), holder.col3Text));
+            holder.col4Text.setText(checkNameForX(model.getSeatCol4(), holder.col4Text));
+            holder.col5Text.setText(checkNameForX(model.getSeatCol5(), holder.col5Text));
 
         } else {
             return;
         }
+
+        holder.col1Text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("FROM ON BIND VIEW HOLDER", "on bindCalled :)   "+ holder.col1Text.getText());
+            }
+        });
+
+        holder.col3Text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("FROM ON BIND VIEW HOLDER", "on bindCalled :)   "+ holder.col3Text.getText());
+            }
+        });
 
     }
 
