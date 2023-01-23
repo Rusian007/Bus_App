@@ -29,4 +29,5 @@ public class ChooseActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SelectBusActivity.class);
         startActivity(intent);
     }
+
 }

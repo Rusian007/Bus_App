@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     Button button;
     TextView contact;
-
+//android:roundIcon="@mipmap/ic_launcher_round"
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +42,16 @@ public class MainActivity extends AppCompatActivity {
     private void openSignUpActivity() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         this.finish();
+
     }
 
     private void openNextActivity() {
         Intent intent = new Intent(this, ChooseActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        this.finish();
     }
 
 
