@@ -136,7 +136,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/SeatConfirmButton"
             android:layout_width="237dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

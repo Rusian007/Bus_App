@@ -13,11 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusApp"
         tools:targetApi="31">
-        <activity android:name=".ChooseActivity"></activity>
-        <activity android:name=".SalesActivity"></activity>
-        <activity android:name=".SignUpActivity"></activity>
-        <activity android:name=".Booking.SelectBusActivity"></activity>
-        <activity android:name=".Booking.SelectSeatActivity"></activity>
+        <activity
+            android:name=".BookingSeatActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity android:name=".ChooseActivity" />
+        <activity android:name=".SalesActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".Booking.SelectBusActivity" />
+        <activity android:name=".Booking.SelectSeatActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

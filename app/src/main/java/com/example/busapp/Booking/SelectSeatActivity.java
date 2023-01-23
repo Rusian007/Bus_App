@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.busapp.Adaptar.BusSeatAdapter;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
+import com.example.busapp.SignUpActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
     ImageButton back;
     TextView busSeatNameListText;
     ArrayList<String> SelectedBusSeatsList;
+    Button seatConfirmedButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
         TextView busNameText = findViewById(R.id.busNumber);
         busSeatNameListText = findViewById(R.id.seatNameList);
         SelectedBusSeatsList = new ArrayList<>();
+        seatConfirmedButton = (Button) findViewById(R.id.SeatConfirmButton); // Confirm button after selecting seats
 
         busNameText.setText(BusName);
         back = (ImageButton) findViewById(R.id.backbtn);
@@ -53,6 +57,12 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
 
         // Set recycle view
         setRecycleView();
+    }
+
+    public void ConfirmSeatButton_OnClickListener(View view){
+        Intent intent = new Intent(this, BookingSeatActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
     //On Back button click
