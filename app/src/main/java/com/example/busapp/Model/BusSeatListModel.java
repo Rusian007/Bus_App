@@ -6,6 +6,7 @@ public class BusSeatListModel {
     public class Seat {
         public String SeatName;
         public boolean isAvailable;
+        public boolean isClicked = false;
     }
 
     private Seat seatCol1 = new Seat();
@@ -80,6 +81,38 @@ public class BusSeatListModel {
     public void setSeatCol5(String SeatName, boolean isAvailable) {
         this.seatCol5.SeatName = SeatName;
         this.seatCol5.isAvailable = isAvailable;
+    }
+
+    public boolean isSeatCol1Clicked(){
+        return seatCol1.isClicked;
+    }
+    public boolean isSeatCol2Clicked(){
+        return seatCol2.isClicked;
+    }
+    public boolean isSeatCol3Clicked(){
+        return seatCol3.isClicked;
+    }
+    public boolean isSeatCol4Clicked(){
+        return seatCol4.isClicked;
+    }
+    public boolean isSeatCol5Clicked(){
+        return seatCol5.isClicked;
+    }
+
+    public void setIsClickedSeatCol1(boolean state){
+        this.seatCol1.isClicked = state;
+    }
+    public void setIsClickedSeatCol2(boolean state){
+        this.seatCol2.isClicked = state;
+    }
+    public void setIsClickedSeatCol3(boolean state){
+        this.seatCol3.isClicked = state;
+    }
+    public void setIsClickedSeatCol4(boolean state){
+        this.seatCol4.isClicked = state;
+    }
+    public void setIsClickedSeatCol5(boolean state){
+        this.seatCol5.isClicked = state;
     }
 
 }

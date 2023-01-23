@@ -115,7 +115,7 @@
         app:layout_constraintStart_toEndOf="@+id/seats" />
 
     <TextView
-        android:id="@+id/seats"
+        android:id="@+id/seatslist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="236dp"

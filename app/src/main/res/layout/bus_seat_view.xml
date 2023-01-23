@@ -81,11 +81,11 @@
                 android:padding="10dp" />
         </TableLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
         android:layout_width="258dp"
-        android:layout_height="62dp"
-        android:layout_marginTop="4dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="3dp"
         android:background="@color/ColorBluGray"
         android:orientation="vertical"
         android:paddingVertical="6dp"
@@ -95,25 +95,45 @@
         app:layout_constraintTop_toBottomOf="@+id/busNumber">
 
         <TextView
-            android:id="@+id/seats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Seats"
-
-            android:textColor="@color/white"
-            android:textSize="16dp" />
-
-        <TextView
             android:id="@+id/amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
-            android:text="Amount"
 
+            android:text="Amount"
             android:textColor="@color/white"
-            android:textSize="16dp" />
-    </LinearLayout>
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seats" />
+
+        <TextView
+            android:id="@+id/seats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+
+            android:text="Seats"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/seatNameList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.048"
+            app:layout_constraintStart_toEndOf="@+id/seats"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/button"
@@ -126,8 +146,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,13 +20,15 @@ import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class SelectSeatActivity extends AppCompatActivity {
+public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAdapter.IBusSeat{
     RecyclerView busSeatRecycleView;
     BusSeatAdapter adapter;
     ImageButton back;
-
+    TextView busSeatNameListText;
+    ArrayList<String> SelectedBusSeatsList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class SelectSeatActivity extends AppCompatActivity {
         String BusName = (String) getIntent().getStringExtra("BUSNAME");
 
         TextView busNameText = findViewById(R.id.busNumber);
+        busSeatNameListText = findViewById(R.id.seatNameList);
+        SelectedBusSeatsList = new ArrayList<>();
+
         busNameText.setText(BusName);
         back = (ImageButton) findViewById(R.id.backbtn);
         busSeatRecycleView = findViewById(R.id.busSeatRecycleView);
@@ -59,7 +65,7 @@ public class SelectSeatActivity extends AppCompatActivity {
     private void setRecycleView() {
         busSeatRecycleView.setHasFixedSize(true);
         busSeatRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new BusSeatAdapter(this, getSeatList() );
+        adapter = new BusSeatAdapter(this, getSeatList() , this);
         busSeatRecycleView.setAdapter(adapter);
     }
 
@@ -116,4 +122,43 @@ public class SelectSeatActivity extends AppCompatActivity {
 
         return BusSeatList;
     }
+
+    @Override
+    public boolean AddSeat(String seatname) {
+       // Log.d("SEATNAME", "AddSeat: "+ seatname);
+
+
+        boolean contains = false;
+        if(SelectedBusSeatsList.size() > 0){
+            contains = SelectedBusSeatsList.contains(seatname);
+        }
+        boolean RestrictSeats = false;
+
+       if(contains){
+            SelectedBusSeatsList.remove(seatname);
+         //  Log.d("seats", "Seat Removed: "+ "Removed******");
+            //print Out selected Seats
+            PrintOutSeats(SelectedBusSeatsList);
+        } else if(SelectedBusSeatsList.size() >= 4) {
+            Toast.makeText(getApplicationContext(),"You can't add more than 4 seats", Toast.LENGTH_SHORT).show();
+            //print Out selected Seats
+            PrintOutSeats(SelectedBusSeatsList);
+            RestrictSeats = true;
+        } else {
+            SelectedBusSeatsList.add(seatname);
+            //print Out selected Seats
+            PrintOutSeats(SelectedBusSeatsList);
+        }
+
+        return RestrictSeats;
+
+    }
+    private void PrintOutSeats(ArrayList<String> seatList){
+            busSeatNameListText.setText(": ");
+        for (String seat:seatList) {
+
+            busSeatNameListText.append(seat+", ");
+        }
+    }
+
 }
