@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BusApp"
         tools:targetApi="31">
+        <activity android:name=".Booking.ShortRouteBooking.ShortRouteBookingActivity"/>
         <activity android:name=".MainActivity"/>
         <activity android:name=".ChooseActivity" />
         <activity android:name=".SalesActivity" />
