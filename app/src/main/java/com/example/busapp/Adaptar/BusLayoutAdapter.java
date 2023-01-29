@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +20,14 @@ import com.example.busapp.R;
 
 import java.util.ArrayList;
 
-public class BusLayoutApaptar extends RecyclerView.Adapter<BusLayoutApaptar.ViewHolder> {
+public class BusLayoutAdapter extends RecyclerView.Adapter<BusLayoutAdapter.ViewHolder> {
 
 
     private ArrayList<BusModel> names;
     private Context mContext;
     boolean isClicked = false;
 
-    public BusLayoutApaptar( Context mContext ,ArrayList<BusModel> names) {
+    public BusLayoutAdapter(Context mContext , ArrayList<BusModel> names) {
         this.names = names;
         this.mContext = mContext;
     }

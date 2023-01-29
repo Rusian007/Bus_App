@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.busapp.Adaptar.BusLayoutApaptar;
+import com.example.busapp.Adaptar.BusLayoutAdapter;
 import com.example.busapp.Model.BusModel;
 import com.example.busapp.R;
 
@@ -47,7 +47,7 @@ public class SelectBusActivity extends AppCompatActivity
     private void initRecycleView(){
 
         RecyclerView recyclerView = findViewById(R.id.BusrecycleView);
-        BusLayoutApaptar adapter = new BusLayoutApaptar(this, theBusNames);
+        BusLayoutAdapter adapter = new BusLayoutAdapter(this, theBusNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
