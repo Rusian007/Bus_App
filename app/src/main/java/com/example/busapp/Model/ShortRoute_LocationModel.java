@@ -1,11 +1,11 @@
 package com.example.busapp.Model;
 
-public class ShortRoute_FromLocation_Model {
+public class ShortRoute_LocationModel {
 
     String start_location;
     boolean is_clicked = false;
 
-    public ShortRoute_FromLocation_Model(String start_location) {
+    public ShortRoute_LocationModel(String start_location) {
         this.start_location = start_location;
     }
 

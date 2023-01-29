@@ -11,8 +11,8 @@
 
         <TextView
             android:id="@+id/Start_loc"
-            android:layout_width="102dp"
-            android:layout_height="60dp"
+            android:layout_width="103dp"
+            android:layout_height="57dp"
             android:textAlignment="center"
             android:gravity="center"
             android:background="@color/ColorBluGray"

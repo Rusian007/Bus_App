@@ -14,25 +14,25 @@ import com.example.busapp.R;
 
 import java.util.ArrayList;
 
-public class FromLocationAdapter extends RecyclerView.Adapter<FromLocationAdapter.ViewHolder> {
+public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<ShortRoute_LocationModel> locations;
 
-    public FromLocationAdapter(Context mContext, ArrayList<ShortRoute_LocationModel> locations) {
+    public ToLocationAdapter(Context mContext, ArrayList<ShortRoute_LocationModel> locations) {
         this.mContext = mContext;
         this.locations = locations;
     }
 
     @NonNull
     @Override
-    public FromLocationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.from_location_card, parent, false);
-        ViewHolder viewholder = new ViewHolder(view);
+    public ToLocationAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.to_location_card, parent, false);
+        ToLocationAdapter.ViewHolder viewholder = new ToLocationAdapter.ViewHolder(view);
         return viewholder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FromLocationAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ToLocationAdapter.ViewHolder holder, int position) {
         holder.locationText.setText(locations.get(position).getStart_location());
     }
 
@@ -42,11 +42,12 @@ public class FromLocationAdapter extends RecyclerView.Adapter<FromLocationAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         TextView locationText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            locationText = itemView.findViewById(R.id.Start_loc);
+            locationText = itemView.findViewById(R.id.end_loc);
         }
     }
 }
