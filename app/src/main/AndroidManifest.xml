@@ -14,7 +14,9 @@
         android:theme="@style/Theme.BusApp"
         tools:targetApi="31">
 
-
+        <activity android:name=".Booking.ShortRouteBooking.PopActivity"
+            android:theme="@style/Theme.Pop"
+            />
 
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteBookingActivity"/>
         <activity android:name=".MainActivity"/>

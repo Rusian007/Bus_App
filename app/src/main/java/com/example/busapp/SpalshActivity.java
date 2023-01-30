@@ -40,7 +40,7 @@ public class SpalshActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
                 finish();
             }
-        },4100);
+        },2000);
 
     }
 }

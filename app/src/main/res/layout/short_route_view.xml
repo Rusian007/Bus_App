@@ -75,7 +75,7 @@
 
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-
+        android:onClick="popWindow"
         android:background="@color/ColorBluGray"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
@@ -129,113 +129,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view3" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
 
-        android:id="@+id/Clickable_constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="25dp"
-        android:background="@color/ColorBluGray"
-        android:orientation="vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toLocation_recycleView">
-
-        <TextView
-            android:id="@+id/fromText2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-
-            android:fontFamily="@font/poppins_medium"
-            android:text="From"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/fromLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-
-            android:fontFamily="@font/poppins_medium"
-            android:text="......."
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.03"
-            app:layout_constraintStart_toEndOf="@+id/fromText2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/toText2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="To"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fromText2" />
-
-        <TextView
-            android:id="@+id/toLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="......."
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.03"
-            app:layout_constraintStart_toEndOf="@+id/toText2"
-            app:layout_constraintTop_toBottomOf="@+id/fromLocation" />
-
-        <TextView
-            android:id="@+id/shortRoute_amount_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Amount"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toText2" />
-
-        <TextView
-            android:id="@+id/shortRoute_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="6dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="...."
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.03"
-            app:layout_constraintStart_toEndOf="@+id/shortRoute_amount_text"
-            app:layout_constraintTop_toBottomOf="@+id/toLocation" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

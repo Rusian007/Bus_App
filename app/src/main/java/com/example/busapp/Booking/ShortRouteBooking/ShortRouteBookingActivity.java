@@ -1,20 +1,32 @@
 package com.example.busapp.Booking.ShortRouteBooking;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.busapp.Adaptar.BusLayoutAdapter;
 import com.example.busapp.Adaptar.FromLocationAdapter;
 import com.example.busapp.Adaptar.ToLocationAdapter;
 import com.example.busapp.Model.ShortRoute_LocationModel;
 import com.example.busapp.R;
+import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
@@ -33,6 +45,12 @@ public class ShortRouteBookingActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         setContentView(R.layout.short_route_view);
+
+        // Test
+
+
+
+        // - end
 
 
         /// Dummy data - REMOVE in production
@@ -58,22 +76,46 @@ public class ShortRouteBookingActivity extends AppCompatActivity {
         // From List Adapter
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.fromLocation_recyclerView);
         FromLocationAdapter adapter = new FromLocationAdapter(this, fromLocations);
-
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this.getApplicationContext());
-        layoutManager.setFlexDirection(FlexDirection.ROW);
-
-
+        // setting grid layout manager to implement grid view.
+        GridLayoutManager layoutManager=new GridLayoutManager(this,3);
+        // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         // To List Adapter
         RecyclerView toListRecyclerView = findViewById(R.id.toLocation_recycleView);
         ToLocationAdapter toAdapter = new ToLocationAdapter(this, toLocations);
-        FlexboxLayoutManager toLayoutManager = new FlexboxLayoutManager(this.getApplicationContext());
-
-        toLayoutManager.setFlexDirection(FlexDirection.ROW);
-
+        GridLayoutManager toLayoutManager = new GridLayoutManager(this, 3);
         toListRecyclerView.setLayoutManager(toLayoutManager);
         toListRecyclerView.setAdapter(toAdapter);
     }
+
+
+
+    public void popWindow(View view){
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.btn_confirm_pop_view, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("TAG", "onTouch: ************");
+                return true;
+            }
+        });
+    }
+
 }
