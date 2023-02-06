@@ -1,6 +1,7 @@
 package com.example.busapp.Booking;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +51,8 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
 
         busNameText.setText(BusName);
         back = (ImageButton) findViewById(R.id.backbtn);
+
+
         busSeatRecycleView = findViewById(R.id.busSeatRecycleView);
 
 
@@ -149,12 +152,7 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
          //  Log.d("seats", "Seat Removed: "+ "Removed******");
             //print Out selected Seats
             PrintOutSeats(SelectedBusSeatsList);
-        } else if(SelectedBusSeatsList.size() >= 4) {
-            Toast.makeText(getApplicationContext(),"You can't add more than 4 seats", Toast.LENGTH_SHORT).show();
-            //print Out selected Seats
-            PrintOutSeats(SelectedBusSeatsList);
-            RestrictSeats = true;
-        } else {
+        }else {
             SelectedBusSeatsList.add(seatname);
             //print Out selected Seats
             PrintOutSeats(SelectedBusSeatsList);
@@ -165,10 +163,9 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
     }
     private void PrintOutSeats(ArrayList<String> seatList){
             busSeatNameListText.setText(": ");
-        for (String seat:seatList) {
 
-            busSeatNameListText.append(seat+", ");
-        }
+            int size = seatList.size();
+        busSeatNameListText.append(Integer.toString(size));
     }
 
 }

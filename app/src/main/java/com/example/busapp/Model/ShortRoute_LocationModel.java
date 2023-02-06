@@ -5,6 +5,7 @@ public class ShortRoute_LocationModel {
     String start_location;
     boolean is_clicked = false;
 
+
     public ShortRoute_LocationModel(String start_location) {
         this.start_location = start_location;
     }
@@ -24,4 +25,6 @@ public class ShortRoute_LocationModel {
     public void setIs_clicked(boolean is_clicked) {
         this.is_clicked = is_clicked;
     }
+
+
 }

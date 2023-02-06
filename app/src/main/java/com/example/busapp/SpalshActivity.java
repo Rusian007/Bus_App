@@ -37,10 +37,10 @@ public class SpalshActivity extends AppCompatActivity {
             public void run() {
                 Intent intent=new Intent(SpalshActivity.this, MainActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_out_bottom, R.anim.slide_in_bottom);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 finish();
             }
-        },2000);
+        },3000);
 
     }
 }
