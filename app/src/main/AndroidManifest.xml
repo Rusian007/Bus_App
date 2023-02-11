@@ -18,6 +18,7 @@
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteBookingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
+        <activity android:name=".Booking.ShortRouteBooking.ShortRouteFromLoationActivity"/>
         <activity android:name=".MainActivity"/>
         <activity android:name=".ChooseActivity" />
         <activity android:name=".SalesActivity" />

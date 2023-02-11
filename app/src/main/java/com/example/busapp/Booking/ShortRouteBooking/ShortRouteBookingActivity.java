@@ -1,5 +1,6 @@
 package com.example.busapp.Booking.ShortRouteBooking;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,12 +23,12 @@ import com.example.busapp.R;
 
 import java.util.ArrayList;
 
-public class ShortRouteBookingActivity extends AppCompatActivity implements ToLocationAdapter.IEndLocation, FromLocationAdapter.IStartLocation {
-    ArrayList<ShortRoute_LocationModel> fromLocations = new ArrayList<>();
+public class ShortRouteBookingActivity extends AppCompatActivity implements ToLocationAdapter.IEndLocation {
+
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
+    String FromLocationSelected;
 
 
-    ArrayList<String> startLocationSelected = new ArrayList<>();
     ArrayList<String> endLocationSelected = new ArrayList<>();
 
     @Override
@@ -42,16 +43,11 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-        setContentView(R.layout.short_route_view);
+        setContentView(R.layout.short_route_to_location);
 
+        Intent intent = getIntent();
+        FromLocationSelected = intent.getStringExtra("FromLocation");
 
-        /// Dummy data - REMOVE in production
-        // call API
-        fromLocations.add(new ShortRoute_LocationModel("Kakrail"));
-        fromLocations.add(new ShortRoute_LocationModel("Dhaka"));
-        fromLocations.add(new ShortRoute_LocationModel("Mawa"));
-        fromLocations.add(new ShortRoute_LocationModel("Barishal"));
-        fromLocations.add(new ShortRoute_LocationModel("Mothijhil"));
 
         /// Dummy data - REMOVE in production
         // call API - start a method
@@ -65,14 +61,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     }
 
     private void initRecycleView() {
-        // From List Adapter
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.fromLocation_recyclerView);
-        FromLocationAdapter adapter = new FromLocationAdapter(this, fromLocations, this);
-        // setting grid layout manager to implement grid view.
-        GridLayoutManager layoutManager=new GridLayoutManager(this,3);
-        // at last set adapter to recycler view.
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+
 
         // To List Adapter
         RecyclerView toListRecyclerView = findViewById(R.id.toLocation_recycleView);
@@ -102,7 +91,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
         popupWindow.setAnimationStyle(com.google.android.material.R.style.Animation_Design_BottomSheetDialog);
 
-        ((TextView)popupWindow.getContentView().findViewById(R.id.fromLocation)).setText(startLocationSelected.get(0));
+        ((TextView)popupWindow.getContentView().findViewById(R.id.fromLocation)).setText(FromLocationSelected);
         ((TextView) popupWindow.getContentView().findViewById(R.id.toLocation)).setText(endLocationSelected.get(0));
 
 
@@ -148,20 +137,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         endLocationSelected.remove(locationName);
     }
 
-    @Override
-    public boolean AddStartLocation(String locationName) {
-        startLocationSelected.add(locationName);
-        checkLocations();
-        return true;
-    }
 
-    @Override
-    public void RemoveStartLocation(String locationName) {
-        startLocationSelected.remove(locationName);
-    }
 
     private void checkLocations() {
-        if (endLocationSelected.size() > 0 && startLocationSelected.size()> 0){
+        if (endLocationSelected.size() > 0 ){
             popWindow();
         }
     }
