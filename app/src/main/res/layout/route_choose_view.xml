@@ -20,60 +20,45 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/booking"
+        android:id="@+id/long_route"
         android:layout_width="294dp"
         android:layout_height="58dp"
         android:layout_marginBottom="516dp"
         android:backgroundTint="@color/ColorBluGray"
         android:fontFamily="@font/poppins_bold"
-        android:onClick="goToBookingView"
-        android:text="Booking"
+        android:onClick="goToLongRoute_View"
+        android:text="LONG ROUTE"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
 
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/account"
-        android:layout_width="294dp"
-        android:layout_height="58dp"
-        android:layout_marginBottom="244dp"
-        android:backgroundTint="@color/ColorBluGray"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Mr.Tamjid"
-        android:textSize="20dp"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
+
 
     <View
-        android:layout_width="294dp"
+        android:layout_width="296dp"
         android:layout_height="2dp"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="20dp"
         android:background="#5f5f5f"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sales" />
+        app:layout_constraintTop_toBottomOf="@+id/short_route" />
 
     <Button
-        android:id="@+id/sales"
+        android:id="@+id/short_route"
         android:layout_width="294dp"
         android:layout_height="58dp"
         android:layout_marginBottom="448dp"
         android:backgroundTint="@color/ColorBluGray"
         android:fontFamily="@font/poppins_bold"
 
-        android:onClick="goToSalesView"
-        android:text="Sales"
+        android:onClick="goToShortRoute_View"
+        android:text="short route"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
 
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
 

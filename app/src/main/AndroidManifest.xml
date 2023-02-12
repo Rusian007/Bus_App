@@ -18,9 +18,10 @@
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteBookingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
+        <activity android:name=".ChooseRouteActivity"/>
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteFromLoationActivity"/>
         <activity android:name=".MainActivity"/>
-        <activity android:name=".ChooseActivity" />
+        <activity android:name=".ChooseLongRouteActivity" />
         <activity android:name=".SalesActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".Booking.SelectBusActivity" />
