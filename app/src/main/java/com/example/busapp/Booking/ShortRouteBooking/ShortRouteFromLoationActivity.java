@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class ShortRouteFromLoationActivity extends AppCompatActivity implements FromLocationAdapter.IStartLocation {
     ArrayList<ShortRoute_LocationModel> fromLocations = new ArrayList<>();
     ArrayList<String> startLocationSelected = new ArrayList<>();
+    boolean clicked = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
         recyclerView.setAdapter(adapter);
     }
 
+
     @Override
     public boolean AddStartLocation(String locationName) {
         startLocationSelected.add(locationName);
@@ -64,7 +66,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
         intent.putExtra("FromLocation", startLocationSelected.get(0));
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-
+        this.finish();
 
         return true;
     }
@@ -73,4 +75,17 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
     public void RemoveStartLocation(String locationName) {
         startLocationSelected.remove(locationName);
     }
+    @Override
+    public boolean isSelected() {
+        if (startLocationSelected.size()>0 && !clicked){
+            clicked = true;
+            return true;
+        }
+        else{
+            clicked = false;
+            return false;
+        }
+
+    }
+
 }

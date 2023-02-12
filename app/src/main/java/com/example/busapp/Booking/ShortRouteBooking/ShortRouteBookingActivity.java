@@ -1,12 +1,15 @@
 package com.example.busapp.Booking.ShortRouteBooking;
 
+import android.app.Service;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -27,6 +30,8 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
     String FromLocationSelected;
+    private WindowManager windowManager;
+    private TextView fromLoc, toLoc, amount;
 
 
     ArrayList<String> endLocationSelected = new ArrayList<>();
@@ -48,6 +53,9 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         Intent intent = getIntent();
         FromLocationSelected = intent.getStringExtra("FromLocation");
 
+        fromLoc = findViewById(R.id.fromLocation);
+        toLoc = findViewById(R.id.toLocation);
+        amount = findViewById(R.id.shortRoute_amount);
 
         /// Dummy data - REMOVE in production
         // call API - start a method
@@ -73,51 +81,6 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
 
 
-    public void popWindow(){
-        // inflate the layout of the popup window
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.btn_confirm_pop_view, null);
-
-        // create the popup window
-        int width = LinearLayout.LayoutParams.MATCH_PARENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true; // lets taps outside the popup also dismiss it
-
-       // popupView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out_bottom));
-
-        PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-
-
-        popupWindow.setAnimationStyle(com.google.android.material.R.style.Animation_Design_BottomSheetDialog);
-
-        ((TextView)popupWindow.getContentView().findViewById(R.id.fromLocation)).setText(FromLocationSelected);
-        ((TextView) popupWindow.getContentView().findViewById(R.id.toLocation)).setText(endLocationSelected.get(0));
-
-
-
-        // Set amount based on Bus fair
-        // Change this on Production
-        // Delete this part and calculate for different bus fair
-        TextView amount = popupWindow.getContentView().findViewById(R.id.shortRoute_amount);
-        amount.setText("500");
-
-
-        // show the popup window
-        popupWindow.showAtLocation(getCurrentFocus(), Gravity.BOTTOM, 0, 0);
-
-
-
-        // dismiss the popup window when touched
-        popupView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                return true;
-            }
-        });
-    }
-
 
     // print button On click, print ticket here
     // make necessary changes
@@ -138,10 +101,12 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     }
 
 
-
+// start printing button here
     private void checkLocations() {
         if (endLocationSelected.size() > 0 ){
-            popWindow();
+            fromLoc.setText(FromLocationSelected);
+            toLoc.setText(endLocationSelected.get(0));
+            amount.setText("500");
         }
     }
 }

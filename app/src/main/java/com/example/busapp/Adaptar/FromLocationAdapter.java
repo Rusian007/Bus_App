@@ -56,7 +56,7 @@ public class FromLocationAdapter extends RecyclerView.Adapter<FromLocationAdapte
                     final Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.bounce);
                     view.startAnimation(animation);
 
-                    if (!location.isIs_clicked() && !isSelected){
+                    if (!Startlocation.isSelected()){
 
                         holder.locationText.setTextColor(Color.parseColor("#1cab50"));
                         isSelected = true; // If a seat has already been selected then don't add any more seats to the list
@@ -97,5 +97,6 @@ public class FromLocationAdapter extends RecyclerView.Adapter<FromLocationAdapte
     public interface IStartLocation{
         boolean AddStartLocation(String locationName);
         void RemoveStartLocation(String locationName);
+        boolean isSelected();
     }
 }
