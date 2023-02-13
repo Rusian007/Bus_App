@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
     >
+
+    <ImageButton
+        android:id="@+id/backbtn"
+        android:layout_width="56dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="25dp"
+        android:background="@null"
+
+        android:onClick="finishActivity"
+        android:scaleType="fitCenter"
+        android:src="@drawable/image17"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/image17" />
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"

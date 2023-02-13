@@ -7,6 +7,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageButton
+        android:id="@+id/backbtn"
+        android:layout_width="56dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="14dp"
+        android:background="@null"
+
+        android:onClick="finishActivity"
+        android:scaleType="fitCenter"
+        android:src="@drawable/image17"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/image17" />
+
     <TextView
         android:id="@+id/start"
         android:layout_width="wrap_content"
@@ -88,7 +102,7 @@
         app:layout_constraintHorizontal_bias="0.728"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.98">
+        app:layout_constraintVertical_bias="0.9">
 
         <TextView
             android:id="@+id/fromText2"
@@ -179,9 +193,9 @@
             app:layout_constraintTop_toBottomOf="@+id/fromText2" />
 
         <Button
+            android:id="@+id/ShortprintBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ShortprintBtn"
             android:layout_marginTop="105dp"
             android:backgroundTint="@color/white"
             android:elevation="30dp"

@@ -34,9 +34,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
     String FromLocationSelected;
     Button printbtn;
-    boolean clicked = false;
-    View popView;
-    boolean isUp ;
+    boolean clicked= false ;
     private TextView fromLoc, toLoc, amount;
 
 
@@ -59,71 +57,24 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         Intent intent = getIntent();
         FromLocationSelected = intent.getStringExtra("FromLocation");
 
-        popView = findViewById(R.id.pop_constraintLayout);
         fromLoc = findViewById(R.id.fromLocation);
         toLoc = findViewById(R.id.toLocation);
         amount = findViewById(R.id.shortRoute_amount);
         printbtn = (Button) findViewById(R.id.ShortprintBtn);
 
+
         /// Dummy data - REMOVE in production
         // call API - start a method
-        toLocations.add(new ShortRoute_LocationModel("Mawa"));
-        toLocations.add(new ShortRoute_LocationModel("Dhaka"));
-        toLocations.add(new ShortRoute_LocationModel("Barishal"));
-        toLocations.add(new ShortRoute_LocationModel("Khulna"));
+        toLocations.add(new ShortRoute_LocationModel("Mawa", "500/-"));
+        toLocations.add(new ShortRoute_LocationModel("Dhaka", "50/-"));
+        toLocations.add(new ShortRoute_LocationModel("Barishal", "1000/-"));
+        toLocations.add(new ShortRoute_LocationModel("Khulna","2000/-"));
 
-        popView.getBackground().setAlpha(0);
         printbtn.setVisibility(View.INVISIBLE);
-
         initRecycleView();
 
     }
 
-
-    // slide the view from below itself to the current position
-    public void slideUp(View view){
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown(View view){
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                printbtn.setVisibility(View.INVISIBLE);
-            }
-        }, 500);
-
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-    }
-
-    public void onSlideViewButtonClick() {
-        if (isUp) {
-            slideDown(popView);
-
-        } else {
-            slideUp(popView);
-            popView.getBackground().setAlpha(255);
-            printbtn.setVisibility(View.VISIBLE);
-        }
-        isUp = !isUp;
-    }
 
     private void initRecycleView() {
 
@@ -137,8 +88,6 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     }
 
 
-
-
     // print button On click, print ticket here
     // make necessary changes
     public void Print_Short_Route(View view){
@@ -148,15 +97,14 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     @Override
     public boolean AddDestinationLocation(String locationName) {
         endLocationSelected.add(locationName);
-        onSlideViewButtonClick();
         checkLocations();
+        printbtn.setVisibility(View.VISIBLE);
         return true;
     }
 
     @Override
     public void RemoveDestinationLocation(String locationName) {
         endLocationSelected.remove(locationName);
-        onSlideViewButtonClick();
     }
 
     @Override
@@ -179,5 +127,8 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             toLoc.setText(endLocationSelected.get(0));
             amount.setText("500");
         }
+    }
+    public void finishActivity(View v){
+        this.finish();
     }
 }

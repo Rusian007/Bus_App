@@ -29,4 +29,8 @@ public class ChooseRouteActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ChooseLongRouteActivity.class);
         startActivity(intent);
     }
+
+    public void finishActivity(View v){
+        this.finish();
+    }
 }

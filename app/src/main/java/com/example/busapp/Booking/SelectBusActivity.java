@@ -1,6 +1,7 @@
 package com.example.busapp.Booking;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -50,5 +51,9 @@ public class SelectBusActivity extends AppCompatActivity
         BusLayoutAdapter adapter = new BusLayoutAdapter(this, theBusNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    public void finishActivity(View v){
+        this.finish();
     }
 }

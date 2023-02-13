@@ -50,4 +50,8 @@ public class SalesActivity extends AppCompatActivity {
         }, year, month, day);
         dpd.show();
     }
+
+    public void finishActivity(View v){
+       this.finish();
+    }
 }

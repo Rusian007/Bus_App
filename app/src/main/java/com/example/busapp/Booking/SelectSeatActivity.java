@@ -1,9 +1,7 @@
 package com.example.busapp.Booking;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,10 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.busapp.Adaptar.BusSeatAdapter;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
-import com.example.busapp.SignUpActivity;
+
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAdapter.IBusSeat{
@@ -166,6 +163,9 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
 
             int size = seatList.size();
         busSeatNameListText.append(Integer.toString(size));
+    }
+    public void finishActivity(View v){
+        this.finish();
     }
 
 }

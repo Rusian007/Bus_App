@@ -43,6 +43,7 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
     public void onBindViewHolder(@NonNull ToLocationAdapter.ViewHolder holder, int position) {
         ShortRoute_LocationModel location;
         holder.locationText.setText(locations.get(position).getStart_location());
+        holder.priceText.setText(locations.get(position).getPrice());
         location = locations.get(position);
 
 
@@ -83,12 +84,13 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView locationText;
+        TextView locationText,priceText;
         IEndLocation locationAdder;
 
         public ViewHolder(@NonNull View itemView, IEndLocation locationAdder) {
             super(itemView);
             this.locationAdder = locationAdder;
+            this.priceText = itemView.findViewById(R.id.end_price);
             locationText = itemView.findViewById(R.id.end_loc);
         }
     }

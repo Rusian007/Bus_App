@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     Button button;
-    TextView contact;
-//android:roundIcon="@mipmap/ic_launcher_round"
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
-        contact = findViewById(R.id.contact);
+
         button = (Button) findViewById(R.id.submit);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,21 +31,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        contact.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                openSignUpActivity();
-            }
-        });
-    }
-
-    private void openSignUpActivity() {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        this.finish();
 
     }
+
+
 
     private void openNextActivity() {
         Intent intent = new Intent(this, ChooseRouteActivity.class);
