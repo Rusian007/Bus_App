@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Adaptar.FromLocationAdapter;
 import com.example.busapp.Adaptar.ToLocationAdapter;
+import com.example.busapp.ChooseRouteActivity;
 import com.example.busapp.Model.ShortRoute_LocationModel;
 import com.example.busapp.R;
 
@@ -91,7 +93,26 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     // print button On click, print ticket here
     // make necessary changes
     public void Print_Short_Route(View view){
-        Log.d("TAG", "Print_Short_Route: " +"****************");
+        if(endLocationSelected.size()>0){
+            Toast.makeText(getApplicationContext(),"Your Ticket is being printed !", Toast.LENGTH_SHORT).show();
+            // Print ticket here
+            // Change later
+            Intent intent = new Intent(this, ShortRouteFromLoationActivity.class);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                }
+            }, 1000);
+
+
+        }
+        else Toast.makeText(getApplicationContext(),"You must select an end location", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
