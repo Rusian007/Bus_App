@@ -27,7 +27,7 @@
             />
         <activity android:name=".ChooseRouteActivity"/>
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteFromLoationActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".LoginActivity"/>
         <activity android:name=".ChooseLongRouteActivity" />
         <activity android:name=".SalesActivity" />
         <activity android:name=".SignUpActivity" />

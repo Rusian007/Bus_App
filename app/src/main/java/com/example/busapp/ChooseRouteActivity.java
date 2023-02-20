@@ -21,12 +21,14 @@ public class ChooseRouteActivity extends AppCompatActivity {
         setContentView(R.layout.route_choose_view);
     }
     public void goToShortRoute_View(View view){
-        Intent intent = new Intent(this, ShortRouteFromLoationActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("ROUTE", "SHORT");
         startActivity(intent);
     }
 
     public void goToLongRoute_View(View view){
-        Intent intent = new Intent(this, ChooseLongRouteActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("ROUTE", "LONG");
         startActivity(intent);
     }
 

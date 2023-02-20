@@ -35,7 +35,7 @@ public class SpalshActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(SpalshActivity.this, MainActivity.class);
+                Intent intent=new Intent(SpalshActivity.this, ChooseRouteActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 finish();
