@@ -1,4 +1,4 @@
-package com.example.busapp.Booking;
+package com.example.busapp.Booking.LongRouteBooking;
 
 import android.os.Bundle;
 import android.view.View;

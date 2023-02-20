@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Adaptar.BusSeatAdapter;
+import com.example.busapp.Booking.LongRouteBooking.BookingSeatActivity;
+import com.example.busapp.Booking.LongRouteBooking.SelectBusActivity;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 

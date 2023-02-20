@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="35dp"
     android:paddingTop="20dp"
-    tools:context=".Booking.BookingSeatActivity">
+    tools:context=".Booking.LongRouteBooking.BookingSeatActivity">
 
     <TextView
         android:id="@+id/username"

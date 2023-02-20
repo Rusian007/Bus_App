@@ -1,4 +1,4 @@
-package com.example.busapp.Booking;
+package com.example.busapp.Booking.LongRouteBooking;
 
 import androidx.appcompat.app.AppCompatActivity;
 

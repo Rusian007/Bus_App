@@ -25,15 +25,16 @@
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteBookingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
+        <activity android:name=".Booking.LongRouteBooking.LongRouteBookingStartActivity"/>
         <activity android:name=".ChooseRouteActivity"/>
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteFromLoationActivity"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".ChooseLongRouteActivity" />
         <activity android:name=".SalesActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".Booking.SelectBusActivity" />
+        <activity android:name=".Booking.LongRouteBooking.SelectBusActivity" />
         <activity android:name=".Booking.SelectSeatActivity" />
-        <activity android:name=".Booking.BookingSeatActivity"/>
+        <activity android:name=".Booking.LongRouteBooking.BookingSeatActivity"/>
         <activity
             android:name=".SpalshActivity"
             android:exported="true">

@@ -8,7 +8,8 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.busapp.Booking.SelectBusActivity;
+import com.example.busapp.Booking.LongRouteBooking.LongRouteBookingStartActivity;
+import com.example.busapp.Booking.LongRouteBooking.SelectBusActivity;
 
 public class ChooseLongRouteActivity extends AppCompatActivity {
 
@@ -26,7 +27,7 @@ public class ChooseLongRouteActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void goToBookingView(View view){
-        Intent intent = new Intent(this, SelectBusActivity.class);
+        Intent intent = new Intent(this, LongRouteBookingStartActivity.class);
         startActivity(intent);
     }
     public void finishActivity(View v){
