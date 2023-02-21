@@ -31,7 +31,7 @@
         <activity android:name=".LoginActivity"/>
         <activity android:name=".ChooseLongRouteActivity" />
         <activity android:name=".SalesActivity" />
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".Booking.LongRouteBooking.LongRouteSeatChoosingActivity" />
         <activity android:name=".Booking.LongRouteBooking.SelectBusActivity" />
         <activity android:name=".Booking.SelectSeatActivity" />
         <activity android:name=".Booking.LongRouteBooking.BookingSeatActivity"/>

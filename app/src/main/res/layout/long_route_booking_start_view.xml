@@ -13,8 +13,9 @@
         android:layout_marginTop="5dp"
 
         android:background="@null"
-        android:scaleType="fitCenter"
+        android:onClick="goBack"
 
+        android:scaleType="fitCenter"
         android:src="@drawable/image17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -191,6 +192,7 @@
         android:backgroundTint="@color/ColorBluGray"
         android:fontFamily="@font/poppins_bold"
 
+        android:onClick="goToSeatChoosing"
         android:text="next"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -207,4 +209,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nextbtn" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
