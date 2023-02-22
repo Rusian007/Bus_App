@@ -26,13 +26,22 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="140dp"
         android:background="@color/ColorBluGray"
         android:orientation="vertical"
         android:padding="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/BusName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Bus: [Bus_Name_call]"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/Printing_seats"
@@ -135,7 +144,7 @@
             android:inputType="number"
             android:textSize="25dp"
             android:textColorHint="@color/white"
-            android:hint="Discount"
+            android:hint="0/-"
             android:textColor="@color/white"
             android:fontFamily="@font/poppins_bold"
          />
