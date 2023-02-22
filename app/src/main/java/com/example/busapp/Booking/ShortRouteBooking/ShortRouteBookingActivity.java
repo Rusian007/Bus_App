@@ -68,7 +68,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         /// Dummy data - REMOVE in production
         // call API - start a method
         toLocations.add(new ShortRoute_LocationModel("Mawa", "500/-"));
-        toLocations.add(new ShortRoute_LocationModel("Dhaka", "50/-"));
+        toLocations.add(new ShortRoute_LocationModel("Dhaka", "55/-"));
         toLocations.add(new ShortRoute_LocationModel("Barishal", "1000/-"));
         toLocations.add(new ShortRoute_LocationModel("Khulna","2000/-"));
 
@@ -117,9 +117,12 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     @Override
     public boolean AddDestinationLocation(String locationName) {
-        endLocationSelected.add(locationName);
-        checkLocations();
-        printbtn.setVisibility(View.VISIBLE);
+        if (endLocationSelected.isEmpty()){
+            endLocationSelected.add(locationName);
+            checkLocations();
+            printbtn.setVisibility(View.VISIBLE);
+        }
+
         return true;
     }
 
@@ -130,13 +133,14 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     @Override
     public boolean isSelected() {
-        if (endLocationSelected.size()>0 && !clicked){
+        if (endLocationSelected.isEmpty() && !clicked){
             clicked = true;
-            return true;
-        }
-        else{
-            clicked = false;
             return false;
+        } else if(endLocationSelected.size() > 0 && clicked){
+            clicked = false;
+            return true;
+        } else{
+            return true;
         }
 
     }
@@ -150,6 +154,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         }
     }
     public void finishActivity(View v){
+        Intent intent = new Intent(getApplicationContext(), ShortRouteFromLoationActivity.class);
+        startActivity(intent);
         this.finish();
     }
+
+
 }

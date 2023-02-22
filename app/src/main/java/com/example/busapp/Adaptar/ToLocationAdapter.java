@@ -21,7 +21,8 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
     private Context mContext;
     private ArrayList<ShortRoute_LocationModel> locations;
     private static boolean isSelected = false;
-    private static  int seatPos;
+
+
     IEndLocation locationAdder;
 
     public ToLocationAdapter(Context mContext, ArrayList<ShortRoute_LocationModel> locations, IEndLocation locationAdder) {
@@ -61,13 +62,13 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
                     holder.locationText.setTextColor(Color.parseColor("#1cab50"));
                     isSelected = true; // If a seat has already been selected then don't add any more seats to the list
                     // Store the position of the selected seat
-                    seatPos = position;
-
 
                     location.setIs_clicked(true);
-                } else if(position == seatPos){ // if the current seat matches the selected seat
+
+                } else if( locationAdder.isSelected() ){ // if a location is selected already
                     // then release the selected seat and enable seat clicking again
                     isSelected = false;
+
                     locationAdder.RemoveDestinationLocation(location.getStart_location());
                     location.setIs_clicked(false);
                     holder.locationText.setTextColor(Color.WHITE);
@@ -99,5 +100,6 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
         boolean AddDestinationLocation(String locationName);
         void RemoveDestinationLocation(String locationName);
         boolean isSelected();
+
     }
 }
