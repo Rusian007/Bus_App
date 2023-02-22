@@ -74,55 +74,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-    <View
 
-        android:id="@+id/view4"
+    <Spinner
+        android:id="@+id/long_from_dst"
         android:layout_width="250dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/ColorBluGray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11">
-
-
-    </View>
-
-    <TextView
-        android:id="@+id/longfromlocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Dhaka"
+        android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="22dp"
-        app:layout_constraintEnd_toEndOf="@+id/view4"
-        app:layout_constraintStart_toStartOf="@+id/view4"
-        app:layout_constraintTop_toTopOf="@+id/view4" />
-
-    <ImageButton
-        android:id="@+id/fromdst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBottom_toBottomOf="@+id/view4"
-        app:layout_constraintEnd_toEndOf="@+id/view4"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toEndOf="@+id/longfromlocation"
-        app:layout_constraintTop_toTopOf="@+id/view4"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        android:background="@drawable/custom_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <View
         android:layout_width="294dp"
         android:layout_height="2dp"
-        android:layout_marginTop="12dp"
         android:background="#5f5f5f"
         app:layout_constraintBottom_toTopOf="@+id/textView19"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toBottomOf="@+id/long_from_dst" />
 
     <TextView
 
@@ -133,7 +106,7 @@
         android:layout_centerHorizontal="true"
 
 
-        android:layout_marginTop="105dp"
+        android:layout_marginTop="111dp"
         android:background="@color/ColorBluGray"
         android:fontFamily="@font/poppins_regular"
         android:paddingVertical="8dp"
@@ -143,63 +116,36 @@
         android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view4" />
+        app:layout_constraintTop_toBottomOf="@+id/long_from_dst" />
 
-    <View
-
-        android:id="@+id/view5"
+    <Spinner
+        android:id="@+id/long_to_dst"
         android:layout_width="250dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/ColorBluGray"
+        android:background="@drawable/custom_dropdown"
+        android:spinnerMode="dropdown"
+        android:textAlignment="center"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView19">
-
-
-    </View>
-
-    <TextView
-        android:id="@+id/longtolocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Mawa"
-        android:textColor="@color/white"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/view5"
-        app:layout_constraintEnd_toEndOf="@+id/view5"
-        app:layout_constraintStart_toStartOf="@+id/view5"
-        app:layout_constraintTop_toTopOf="@+id/view5" />
-
-    <ImageButton
-        android:id="@+id/todst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintBottom_toBottomOf="@+id/view5"
-        app:layout_constraintEnd_toEndOf="@+id/view5"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toEndOf="@+id/longtolocation"
-        app:layout_constraintTop_toTopOf="@+id/view5"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
     <Button
         android:id="@+id/nextbtn"
         android:layout_width="294dp"
         android:layout_height="58dp"
-        android:layout_marginTop="88dp"
         android:backgroundTint="@color/ColorBluGray"
         android:fontFamily="@font/poppins_bold"
 
-        android:onClick="goToSeatChoosing"
+        android:onClick="goToBusChoosing"
         android:text="next"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view5"
-        app:layout_constraintVertical_bias="0.703" />
+        app:layout_constraintTop_toBottomOf="@+id/long_to_dst"
+        app:layout_constraintVertical_bias="0.78" />
 
     <View
         android:layout_width="294dp"

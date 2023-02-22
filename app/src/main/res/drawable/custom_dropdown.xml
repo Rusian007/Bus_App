@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape>
+
+
+        <padding
+            android:bottom="8dp"
+            android:left="18dp"
+            android:right="18dp"
+            android:top="8dp"/>
+
+        <solid android:color="@color/ColorBluGray"/>
+
+    </shape>
+
+
+
+
+
+</item>
+
+    <item>
+        <bitmap android:gravity="right"
+
+            android:src="@drawable/dropicon_v2"
+
+            />
+    </item>
+
+
+</layer-list>

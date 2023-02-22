@@ -28,8 +28,7 @@ public class BookingSeatActivity extends AppCompatActivity {
 
     // go back to home page if booking is cancelled
     public void Cancel_booking_onClick(View view){
-        Intent intent = new Intent(this, ChooseLongRouteActivity.class);
-        startActivity(intent);
+
         this.finish();
     }
     public void Print_ticket_OnClick(View view){

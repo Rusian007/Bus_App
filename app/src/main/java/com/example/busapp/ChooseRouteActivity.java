@@ -24,12 +24,14 @@ public class ChooseRouteActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("ROUTE", "SHORT");
         startActivity(intent);
+        this.finish();
     }
 
     public void goToLongRoute_View(View view){
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("ROUTE", "LONG");
         startActivity(intent);
+        this.finish();
     }
 
     public void finishActivity(View v){
