@@ -60,6 +60,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         FromLocationSelected = intent.getStringExtra("FromLocation");
 
         fromLoc = findViewById(R.id.fromLocation);
+        fromLoc.setText(FromLocationSelected);
         toLoc = findViewById(R.id.toLocation);
         amount = findViewById(R.id.shortRoute_amount);
         printbtn = (Button) findViewById(R.id.ShortprintBtn);
@@ -129,6 +130,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     @Override
     public void RemoveDestinationLocation(String locationName) {
         endLocationSelected.remove(locationName);
+        checkLocations();
     }
 
     @Override
@@ -151,6 +153,9 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             fromLoc.setText(FromLocationSelected);
             toLoc.setText(endLocationSelected.get(0));
             amount.setText("500");
+        } else if(endLocationSelected.isEmpty()){
+            toLoc.setText("...");
+            amount.setText("...");
         }
     }
     public void finishActivity(View v){

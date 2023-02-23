@@ -2,6 +2,7 @@ package com.example.busapp.Booking.ShortRouteBooking;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -75,6 +76,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
     public void GoToNext_View(View view){
         if (startLocationSelected.size()>0){
             Intent intent = new Intent(getApplicationContext(), ShortRouteBookingActivity.class);
+
             intent.putExtra("FromLocation", startLocationSelected.get(0));
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
