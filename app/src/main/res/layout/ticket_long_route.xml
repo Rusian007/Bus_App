@@ -48,9 +48,9 @@
         android:id="@+id/long_route_ticket_serial"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:fontFamily="@font/poppins_regular"
+        android:layout_marginTop="35dp"
 
+        android:fontFamily="@font/poppins_regular"
         android:text="serial no:00001 "
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,10 +118,11 @@
         android:id="@+id/long_route_coach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
         android:fontFamily="@font/poppins_regular"
-        android:text="COACH:127 "
 
-        android:textSize="12sp"
+        android:text="COACH:127 "
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.713"
@@ -130,18 +131,31 @@
         app:layout_constraintVertical_bias="0.045" />
 
     <TextView
+        android:id="@+id/seat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+
+        android:text="seats: A1,A2,A3"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toEndOf="@+id/long_route_ticket_toLocation"
+        app:layout_constraintTop_toBottomOf="@+id/long_route_coach" />
+
+    <TextView
         android:id="@+id/Bustype_long_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:fontFamily="@font/poppins_regular"
+        android:layout_marginTop="5dp"
 
+        android:fontFamily="@font/poppins_regular"
         android:text="AC"
-        android:textSize="12sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.87"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/long_route_coach" />
+        app:layout_constraintTop_toBottomOf="@+id/seat" />
 
     <TextView
         android:id="@+id/date_long_route"
@@ -187,7 +201,6 @@
         android:layout_marginTop="2dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Amount: "
-        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.142"
@@ -389,11 +402,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:fontFamily="@font/poppins_regular"
-        android:text="seats: 2"
-        android:textSize="12sp"
+        android:fontFamily="@font/poppins_bold"
+
+        android:text="seats: A1,A2,A3"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/long_route_ticket_toLocation_GCpy" />
 
