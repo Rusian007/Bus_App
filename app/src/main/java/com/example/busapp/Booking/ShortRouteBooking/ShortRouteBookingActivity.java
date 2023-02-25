@@ -98,7 +98,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             Toast.makeText(getApplicationContext(),"Your Ticket is being printed !", Toast.LENGTH_SHORT).show();
             // Print ticket here
             // Change later
-            Intent intent = new Intent(this, ShortRouteFromLoationActivity.class);
+            Intent intent = new Intent(this, ShortRouteBookingActivity.class);
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -109,6 +109,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                     finish();
                 }
             }, 1000);
+
 
 
         }

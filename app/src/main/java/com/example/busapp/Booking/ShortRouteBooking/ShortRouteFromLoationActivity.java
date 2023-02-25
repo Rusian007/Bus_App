@@ -89,13 +89,14 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
 
     @Override
     public boolean isSelected() {
-        if (startLocationSelected.size()>0 && !clicked){
+        if (startLocationSelected.isEmpty() && !clicked){
             clicked = true;
-            return true;
-        }
-        else{
-            clicked = false;
             return false;
+        } else if(startLocationSelected.size() > 0 && clicked){
+            clicked = false;
+            return true;
+        } else{
+            return true;
         }
 
     }

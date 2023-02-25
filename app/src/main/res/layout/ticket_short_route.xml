@@ -223,4 +223,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/anotherview1" />
+
+    <TextView
+        android:id="@+id/Bustype_short_route"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/poppins_regular"
+        android:text="non-AC"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toEndOf="@+id/complainText"
+        app:layout_constraintTop_toBottomOf="@+id/anotherview" />
 </androidx.constraintlayout.widget.ConstraintLayout>

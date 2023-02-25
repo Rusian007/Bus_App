@@ -1,5 +1,6 @@
 package com.example.busapp.Adaptar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -41,7 +42,7 @@ public class FromLocationAdapter extends RecyclerView.Adapter<FromLocationAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FromLocationAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FromLocationAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ShortRoute_LocationModel location;
         holder.locationText.setText(locations.get(position).getStart_location());
         location = locations.get(position);
@@ -65,7 +66,7 @@ public class FromLocationAdapter extends RecyclerView.Adapter<FromLocationAdapte
 
                         Startlocation.AddStartLocation(location.getStart_location());
                         location.setIs_clicked(true);
-                    } else if(position == seatPos){ // if the current seat matches the selected seat
+                    } else if(Startlocation.isSelected()){ // if the current seat matches the selected seat
                         // then release the selected seat and enable seat clicking again
                         isSelected = false;
                         Startlocation.RemoveStartLocation(location.getStart_location());
