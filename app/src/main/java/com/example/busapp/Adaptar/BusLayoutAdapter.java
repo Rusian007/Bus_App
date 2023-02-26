@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Booking.LongRouteBooking.LongRouteSeatChoosingActivity;
-import com.example.busapp.Booking.SelectSeatActivity;
+import com.example.busapp.Booking.LongRouteBooking.LongRouteSelectSeatActivity;
 import com.example.busapp.Model.BusModel;
 import com.example.busapp.R;
 
@@ -67,7 +67,7 @@ public class BusLayoutAdapter extends RecyclerView.Adapter<BusLayoutAdapter.View
                     isClicked = false;
                 }
 
-                Intent seatIntent = new Intent(v.getContext(), LongRouteSeatChoosingActivity.class);
+                Intent seatIntent = new Intent(v.getContext(), LongRouteSelectSeatActivity.class);
                 seatIntent.putExtra("BUSNAME", holder.showText.getText().toString());
                 v.getContext().startActivity(seatIntent);
                 ((Activity)mContext).finish();

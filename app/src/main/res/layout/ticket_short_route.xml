@@ -231,7 +231,7 @@
         android:layout_marginTop="3dp"
         android:fontFamily="@font/poppins_regular"
         android:text="non-AC"
-        android:textSize="12sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toEndOf="@+id/complainText"

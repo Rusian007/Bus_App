@@ -47,7 +47,7 @@
         android:fontFamily="@font/poppins_bold"
         android:text="Destination"
         android:textColor="@color/ColorBluGray"
-        android:textSize="40dp"
+        android:textSize="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"

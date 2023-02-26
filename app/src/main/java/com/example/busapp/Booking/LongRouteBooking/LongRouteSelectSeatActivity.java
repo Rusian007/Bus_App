@@ -1,4 +1,4 @@
-package com.example.busapp.Booking;
+package com.example.busapp.Booking.LongRouteBooking;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,11 +24,11 @@ import com.example.busapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAdapter.IBusSeat{
+public class LongRouteSelectSeatActivity extends AppCompatActivity implements  BusSeatAdapter.IBusSeat{
     RecyclerView busSeatRecycleView;
     BusSeatAdapter adapter;
     ImageButton back;
-    TextView busSeatNameListText;
+
     ArrayList<String> SelectedBusSeatsList;
     Button seatConfirmedButton;
 
@@ -42,8 +42,8 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
 
         String BusName = (String) getIntent().getStringExtra("BUSNAME");
 
-        TextView busNameText = findViewById(R.id.busNumber);
-        busSeatNameListText = findViewById(R.id.seatNameList);
+        TextView busNameText = findViewById(R.id.busName);
+
         SelectedBusSeatsList = new ArrayList<>();
         seatConfirmedButton = (Button) findViewById(R.id.SeatConfirmButton); // Confirm button after selecting seats
 
@@ -149,22 +149,17 @@ public class SelectSeatActivity extends AppCompatActivity implements  BusSeatAda
             SelectedBusSeatsList.remove(seatname);
          //  Log.d("seats", "Seat Removed: "+ "Removed******");
             //print Out selected Seats
-            PrintOutSeats(SelectedBusSeatsList);
+
         }else {
             SelectedBusSeatsList.add(seatname);
             //print Out selected Seats
-            PrintOutSeats(SelectedBusSeatsList);
+
         }
 
         return RestrictSeats;
 
     }
-    private void PrintOutSeats(ArrayList<String> seatList){
-            busSeatNameListText.setText(": ");
 
-            int size = seatList.size();
-        busSeatNameListText.append(Integer.toString(size));
-    }
     public void finishActivity(View v){
         this.finish();
     }

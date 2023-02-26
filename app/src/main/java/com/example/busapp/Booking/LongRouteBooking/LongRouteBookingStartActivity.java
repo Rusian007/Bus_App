@@ -17,6 +17,7 @@ import com.example.busapp.ChooseLongRouteActivity;
 import com.example.busapp.R;
 
 public class LongRouteBookingStartActivity extends AppCompatActivity {
+    String FromLocation, ToLocation;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +50,8 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
                                        int arg2, long arg3) {
                 // TODO Auto-generated method stub
                 String location =dropdown.getSelectedItem().toString();
-
-                Log.e("Selected item : ",location);
+                FromLocation = location;
+            //    Log.e("Selected item : ",location);
             }
 
             @Override
@@ -71,11 +72,34 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(R.layout.spinner_list);
 
         dropdown.setAdapter(adapter);
+
+
+
+        // see what Item has been selected
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                // TODO Auto-generated method stub
+                String location =dropdown.getSelectedItem().toString();
+                ToLocation = location;
+                // Log.e("Selected item : ",location);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
     }
 
     public void goToBusChoosing(View view){
         Intent intent = new Intent(this, SelectBusActivity.class);
+        intent.putExtra("LOCATION", FromLocation + " to "+ ToLocation);
         startActivity(intent);
+
     }
     public void goBack(View view){
         this.finish();
