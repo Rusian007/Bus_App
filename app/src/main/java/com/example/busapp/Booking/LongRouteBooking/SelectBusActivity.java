@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class SelectBusActivity extends AppCompatActivity
 {
     private ArrayList<BusModel> theBusNames = new ArrayList<>();
-    String LocationText;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,9 +28,6 @@ public class SelectBusActivity extends AppCompatActivity
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.select_bus_view);
-
-        // Location Intent
-        String LocationText = getIntent().getStringExtra("LOCATION");
 
         //
         InitializeNamesArray();

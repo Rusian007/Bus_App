@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.busapp.ChooseLongRouteActivity;
+import com.example.busapp.Database.Database;
 import com.example.busapp.R;
 
 public class LongRouteBookingStartActivity extends AppCompatActivity {
@@ -97,7 +98,10 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
 
     public void goToBusChoosing(View view){
         Intent intent = new Intent(this, SelectBusActivity.class);
-        intent.putExtra("LOCATION", FromLocation + " to "+ ToLocation);
+
+        Database db = new Database(LongRouteBookingStartActivity.this);
+        db.addNewLongLocation(FromLocation, ToLocation);
+
         startActivity(intent);
 
     }
