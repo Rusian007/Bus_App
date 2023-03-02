@@ -2,6 +2,7 @@ package com.example.busapp.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -73,4 +74,42 @@ public class Database extends SQLiteOpenHelper {
             Toast.makeText(context, "Location Saved!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public Cursor getLocations(Database db){
+        SQLiteDatabase SQ = db.getReadableDatabase();
+        String query = "SELECT * FROM "+ TABLE_NAME +" WHERE ID = 1";
+
+        String[]columns = {LONG_FROM_LOCATION, LONG_TO_LOCATION};
+        Cursor cursor = SQ.query(TABLE_NAME, columns, null,null,null, null, null);
+
+        return cursor;
+    }
+    public boolean IsTableEmpty(Database table){
+        SQLiteDatabase db = table.getWritableDatabase();
+        String count = "SELECT count(*) FROM "+TABLE_NAME;
+        Cursor mcursor = db.rawQuery(count, null);
+        mcursor.moveToFirst();
+        int icount = mcursor.getInt(0);
+        if(icount>0)
+            //leave
+            return false;
+        else
+            return true;
+    }
+    public void UpdateLocations(Database table, String fromLoc, String toLoc){
+        SQLiteDatabase db = table.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(LONG_FROM_LOCATION, fromLoc);
+        cv.put(LONG_TO_LOCATION, toLoc);
+        String whereClause = "Counter = ?";
+        String[] whereArgs = {String.valueOf(1)};
+        long result =  db.update(TABLE_NAME,cv,whereClause,whereArgs);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Location Updated :)", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

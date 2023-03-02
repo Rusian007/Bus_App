@@ -1,6 +1,7 @@
 package com.example.busapp.Booking.LongRouteBooking;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -100,7 +101,21 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SelectBusActivity.class);
 
         Database db = new Database(LongRouteBookingStartActivity.this);
-        db.addNewLongLocation(FromLocation, ToLocation);
+        //db.addNewLongLocation(FromLocation, ToLocation);
+
+     //   Cursor cr = db.getLocations(db);
+
+       // cr.moveToFirst();
+       // String number = cr.getString(0);
+      boolean ISTableEmpty = db.IsTableEmpty(db);
+
+       if(ISTableEmpty){
+           // If table is empty then we insert new row
+           db.addNewLongLocation(FromLocation, ToLocation);
+       } else {
+           // If table already exists then we just update the row
+            db.UpdateLocations(db, FromLocation, ToLocation);
+       }
 
         startActivity(intent);
 
