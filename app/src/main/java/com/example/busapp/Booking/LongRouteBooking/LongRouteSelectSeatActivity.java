@@ -1,7 +1,9 @@
 package com.example.busapp.Booking.LongRouteBooking;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.busapp.Adaptar.BusSeatAdapter;
 import com.example.busapp.Booking.LongRouteBooking.BookingSeatActivity;
 import com.example.busapp.Booking.LongRouteBooking.SelectBusActivity;
+import com.example.busapp.Database.Database;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 
@@ -28,6 +31,8 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
     RecyclerView busSeatRecycleView;
     BusSeatAdapter adapter;
     ImageButton back;
+    TextView locationText;
+    String fromLoc, toLoc, BusName;
 
     ArrayList<String> SelectedBusSeatsList;
     Button seatConfirmedButton;
@@ -40,9 +45,27 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         getSupportActionBar().hide();
         setContentView(R.layout.bus_seat_view);
 
-        String BusName = (String) getIntent().getStringExtra("BUSNAME");
+        // DB stuff
+        Database db = new Database(LongRouteSelectSeatActivity.this);
+        Cursor cursor = db.getLocations(db);
+
+        // Iterate through the results
+        while (cursor.moveToNext()) {
+            // Get the values from the cursor
+            fromLoc = cursor.getString(0);
+            toLoc = cursor.getString(1);
+
+        }
+
+        // Close the cursor
+        cursor.close();
+
+
+        BusName = (String) getIntent().getStringExtra("BUSNAME");
 
         TextView busNameText = findViewById(R.id.busName);
+        locationText = findViewById(R.id.locationText);
+        locationText.setText(fromLoc + " to " + toLoc);
 
         SelectedBusSeatsList = new ArrayList<>();
         seatConfirmedButton = (Button) findViewById(R.id.SeatConfirmButton); // Confirm button after selecting seats
@@ -62,6 +85,8 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
     public void ConfirmSeatButton_OnClickListener(View view){
         Intent intent = new Intent(this, BookingSeatActivity.class);
+        intent.putStringArrayListExtra("SEATLIST", SelectedBusSeatsList);
+        intent.putExtra("BUSNAME", BusName);
         startActivity(intent);
         this.finish();
     }

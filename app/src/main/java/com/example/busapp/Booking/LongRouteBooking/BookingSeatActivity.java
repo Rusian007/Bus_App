@@ -19,8 +19,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
+    TextView BusNameText, seatNamesText, totalSeatText;
+    ArrayList<String> selectedSeats;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +35,22 @@ public class BookingSeatActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_booking_seat);
         discountText = findViewById(R.id.discountText);
+        BusNameText = findViewById(R.id.BusName);
+        seatNamesText = findViewById(R.id.Printing_seats);
+        totalSeatText = findViewById(R.id.Total_Printing_seats);
+
+        String BusName = (String) getIntent().getStringExtra("BUSNAME");
+        BusNameText.setText(BusName);
+
+        selectedSeats = getIntent().getStringArrayListExtra("SEATLIST");
+        seatNamesText.setText("Seat: ");
+        for (String seat: selectedSeats){
+            seatNamesText.append(seat+", ");
+        }
+
+
+        totalSeatText.setText("Total Seats: "+ String.valueOf( selectedSeats.size()));
+
 
 
         discountText.setOnFocusChangeListener(new View.OnFocusChangeListener() {

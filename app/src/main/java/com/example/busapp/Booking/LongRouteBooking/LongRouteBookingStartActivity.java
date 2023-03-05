@@ -83,10 +83,10 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                // TODO Auto-generated method stub
+
                 String location =dropdown.getSelectedItem().toString();
                 ToLocation = location;
-                // Log.e("Selected item : ",location);
+
             }
 
             @Override
