@@ -91,6 +91,9 @@ public class BookingSeatActivity extends AppCompatActivity {
     }
     public void Print_ticket_OnClick(View view){
         Toast.makeText(getApplicationContext(),"Printing Ticket ....", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, SelectBusActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
 }
