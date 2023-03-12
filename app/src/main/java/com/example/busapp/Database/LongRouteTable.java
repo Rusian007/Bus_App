@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-public class Database extends SQLiteOpenHelper {
+public class LongRouteTable extends SQLiteOpenHelper {
 
-    private static Database sqLiteManager;
+    private static LongRouteTable sqLiteManager;
     private Context context;
 
     public static final int DATABASE_VERSION = 1;
@@ -20,8 +20,8 @@ public class Database extends SQLiteOpenHelper {
     private static final String LONG_FROM_LOCATION = "FromLocation";
     private static final  String LONG_TO_LOCATION = "ToLocation";
 
-    public Database(Context context) {
-        super(context,DATABASE_NAME,null, DATABASE_VERSION);
+    public LongRouteTable(Context context) {
+        super(context, DATABASE_NAME,null, DATABASE_VERSION);
         this.context=context;
     }
 
@@ -75,7 +75,7 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getLocations(Database db){
+    public Cursor getLocations(LongRouteTable db){
         SQLiteDatabase SQ = db.getReadableDatabase();
         String query = "SELECT * FROM "+ TABLE_NAME +" WHERE ID = 1";
 
@@ -84,7 +84,7 @@ public class Database extends SQLiteOpenHelper {
 
         return cursor;
     }
-    public boolean IsTableEmpty(Database table){
+    public boolean IsTableEmpty(LongRouteTable table){
         SQLiteDatabase db = table.getWritableDatabase();
         String count = "SELECT count(*) FROM "+TABLE_NAME;
         Cursor mcursor = db.rawQuery(count, null);
@@ -96,7 +96,7 @@ public class Database extends SQLiteOpenHelper {
         else
             return true;
     }
-    public void UpdateLocations(Database table, String fromLoc, String toLoc){
+    public void UpdateLocations(LongRouteTable table, String fromLoc, String toLoc){
         SQLiteDatabase db = table.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(LONG_FROM_LOCATION, fromLoc);

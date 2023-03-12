@@ -3,7 +3,6 @@ package com.example.busapp.Booking.LongRouteBooking;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,9 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Adaptar.BusSeatAdapter;
-import com.example.busapp.Booking.LongRouteBooking.BookingSeatActivity;
-import com.example.busapp.Booking.LongRouteBooking.SelectBusActivity;
-import com.example.busapp.Database.Database;
+import com.example.busapp.Database.LongRouteTable;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 
@@ -46,7 +43,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         setContentView(R.layout.bus_seat_view);
 
         // DB stuff
-        Database db = new Database(LongRouteSelectSeatActivity.this);
+        LongRouteTable db = new LongRouteTable(LongRouteSelectSeatActivity.this);
         Cursor cursor = db.getLocations(db);
 
         // Iterate through the results

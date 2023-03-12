@@ -1,9 +1,7 @@
 package com.example.busapp.Booking.LongRouteBooking;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,8 +12,7 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.busapp.ChooseLongRouteActivity;
-import com.example.busapp.Database.Database;
+import com.example.busapp.Database.LongRouteTable;
 import com.example.busapp.R;
 
 public class LongRouteBookingStartActivity extends AppCompatActivity {
@@ -100,7 +97,7 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
     public void goToBusChoosing(View view){
         Intent intent = new Intent(this, SelectBusActivity.class);
 
-        Database db = new Database(LongRouteBookingStartActivity.this);
+        LongRouteTable db = new LongRouteTable(LongRouteBookingStartActivity.this);
         //db.addNewLongLocation(FromLocation, ToLocation);
 
      //   Cursor cr = db.getLocations(db);
