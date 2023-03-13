@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Adaptar.BusSeatAdapter;
-import com.example.busapp.Database.LongRouteTable;
+import com.example.busapp.Database.Database;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 
@@ -43,7 +43,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         setContentView(R.layout.bus_seat_view);
 
         // DB stuff
-        LongRouteTable db = new LongRouteTable(LongRouteSelectSeatActivity.this);
+        Database db = new Database(LongRouteSelectSeatActivity.this);
         Cursor cursor = db.getLocations(db);
 
         // Iterate through the results

@@ -12,7 +12,7 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.busapp.Database.LongRouteTable;
+import com.example.busapp.Database.Database;
 import com.example.busapp.R;
 
 public class LongRouteBookingStartActivity extends AppCompatActivity {
@@ -97,7 +97,7 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
     public void goToBusChoosing(View view){
         Intent intent = new Intent(this, SelectBusActivity.class);
 
-        LongRouteTable db = new LongRouteTable(LongRouteBookingStartActivity.this);
+        Database db = new Database(LongRouteBookingStartActivity.this);
         //db.addNewLongLocation(FromLocation, ToLocation);
 
      //   Cursor cr = db.getLocations(db);

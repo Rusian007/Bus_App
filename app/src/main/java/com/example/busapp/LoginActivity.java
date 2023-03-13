@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,10 +12,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.busapp.Booking.LongRouteBooking.LongRouteBookingStartActivity;
 import com.example.busapp.Booking.ShortRouteBooking.ShortRouteFromLoationActivity;
-import com.example.busapp.Database.LongRouteTable;
-import com.example.busapp.Database.TokenTable;
+import com.example.busapp.Database.Database;
 import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.LoginApi;
 import com.example.busapp.retrofit.ApiModels.TokenModel;
@@ -26,7 +23,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import okhttp3.Credentials;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +30,7 @@ import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     Button button;
-    TokenTable db;
+    Database db;
     String route;
     LoginApi login;
     String token;
@@ -53,11 +49,14 @@ public class LoginActivity extends AppCompatActivity {
 
         usernameEdit = findViewById(R.id.username);
         passwordEdit = findViewById(R.id.password);
-        db = new TokenTable(LoginActivity.this);
+        db = new Database(LoginActivity.this);
 
 
 
-
+        boolean ISTableEmpty = db.IsTableEmpty(db);
+        if (!ISTableEmpty){
+            openNextActivity();
+        }
 
 
 

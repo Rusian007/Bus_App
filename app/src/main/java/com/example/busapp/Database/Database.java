@@ -5,22 +5,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
-public class LongRouteTable extends SQLiteOpenHelper {
+public class Database extends SQLiteOpenHelper {
 
-    private static LongRouteTable sqLiteManager;
+    private static Database sqLiteManager;
     private Context context;
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "e-ticket.db";
     public static final String TABLE_NAME = "Locations";
+    public static final String TABLE_NAME2 = "TokenTable";
     public static final String COUNTER = "Counter";
-
+    private static final String TOKEN = "Token";
     private static final String LONG_FROM_LOCATION = "FromLocation";
     private static final  String LONG_TO_LOCATION = "ToLocation";
 
-    public LongRouteTable(Context context) {
+    public Database(Context context) {
         super(context, DATABASE_NAME,null, DATABASE_VERSION);
         this.context=context;
     }
@@ -49,6 +51,18 @@ public class LongRouteTable extends SQLiteOpenHelper {
                 .append(" TEXT )");
 
         db.execSQL(sql.toString());
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(TABLE_NAME2)
+                .append("(")
+                .append(COUNTER)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(TOKEN)
+                .append(" TEXT )");
+
+        db.execSQL(sql.toString());
+        Log.d("********", "onCreate: "+"db created");
     }
 
     @Override
@@ -75,7 +89,7 @@ public class LongRouteTable extends SQLiteOpenHelper {
         }
     }
 
-    public Cursor getLocations(LongRouteTable db){
+    public Cursor getLocations(Database db){
         SQLiteDatabase SQ = db.getReadableDatabase();
         String query = "SELECT * FROM "+ TABLE_NAME +" WHERE ID = 1";
 
@@ -84,7 +98,7 @@ public class LongRouteTable extends SQLiteOpenHelper {
 
         return cursor;
     }
-    public boolean IsTableEmpty(LongRouteTable table){
+    public boolean IsTableEmpty(Database table){
         SQLiteDatabase db = table.getWritableDatabase();
         String count = "SELECT count(*) FROM "+TABLE_NAME;
         Cursor mcursor = db.rawQuery(count, null);
@@ -96,7 +110,7 @@ public class LongRouteTable extends SQLiteOpenHelper {
         else
             return true;
     }
-    public void UpdateLocations(LongRouteTable table, String fromLoc, String toLoc){
+    public void UpdateLocations(Database table, String fromLoc, String toLoc){
         SQLiteDatabase db = table.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(LONG_FROM_LOCATION, fromLoc);
@@ -111,5 +125,49 @@ public class LongRouteTable extends SQLiteOpenHelper {
         }
     }
 
+
+    public void addNewToken(String token){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(TOKEN, token);
+
+
+        long result = db.insert(TABLE_NAME2,null, contentValues);
+        if(result == -1){
+            Toast.makeText(context, "Failed to save token", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Location Saved!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public boolean IsTokenTableEmpty(Database table){
+        SQLiteDatabase db = table.getWritableDatabase();
+        String count = "SELECT count(*) FROM "+TABLE_NAME2;
+        Cursor mcursor = db.rawQuery(count, null);
+        mcursor.moveToFirst();
+        int icount = mcursor.getInt(0);
+        if(icount>0)
+            //leave
+            return false;
+        else
+            return true;
+    }
+    public void UpdateToken(Database table, String token){
+        SQLiteDatabase db = table.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(TOKEN, token);
+
+        String whereClause = "Counter = ?";
+        String[] whereArgs = {String.valueOf(1)};
+        long result =  db.update(TABLE_NAME2,cv,whereClause,whereArgs);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Location Updated :)", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
