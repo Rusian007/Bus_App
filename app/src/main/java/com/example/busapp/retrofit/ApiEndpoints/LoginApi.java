@@ -14,9 +14,6 @@ import retrofit2.http.POST;
 
 public interface LoginApi {
 
-    @GET("get-auth-token")
-    Call<TokenModel> login();
-
 
     @POST("get-auth-token/")
     Call<TokenModel> loginUser(@Body LoginCredentials req);

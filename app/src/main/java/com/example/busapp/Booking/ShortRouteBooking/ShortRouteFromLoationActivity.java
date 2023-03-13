@@ -13,11 +13,22 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.busapp.Adaptar.FromLocationAdapter;
-import com.example.busapp.ChooseLongRouteActivity;
+import com.example.busapp.Booking.LongRouteBooking.LongRouteBookingStartActivity;
+import com.example.busapp.Database.Database;
 import com.example.busapp.Model.ShortRoute_LocationModel;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiClient;
+import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
+import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ShortRouteFromLoationActivity extends AppCompatActivity implements FromLocationAdapter.IStartLocation {
     ArrayList<ShortRoute_LocationModel> fromLocations = new ArrayList<>();
@@ -39,15 +50,52 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
 
         setContentView(R.layout.short_route_from_location);
 
-        /// Dummy data - REMOVE in production
-        // call API
-        fromLocations.add(new ShortRoute_LocationModel("Kakrail"));
-        fromLocations.add(new ShortRoute_LocationModel("Dhaka"));
-        fromLocations.add(new ShortRoute_LocationModel("Mawa"));
-        fromLocations.add(new ShortRoute_LocationModel("Barishal"));
-        fromLocations.add(new ShortRoute_LocationModel("Mothijhil"));
+        Database db = new Database(ShortRouteFromLoationActivity.this);
+        String token = db.GetToken(db);
 
-        initialize();
+        System.out.println("CAlling API");
+
+        // call API
+        ApiClient client = new ApiClient();
+        Retrofit retrofit = client.getRetrofitInstance();
+        ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
+
+        Call<ShortRoutePointModel> call = shortapi.getShortRoutePoints("Token "+token);
+
+        call.enqueue(new Callback<ShortRoutePointModel>() {
+            @Override
+            public void onResponse(Call<ShortRoutePointModel> call, Response<ShortRoutePointModel> response) {
+                if (response.isSuccessful()) {
+                    ShortRoutePointModel model = response.body();
+
+                    List<ShortRoutePointModel.Route> routes = model.getRoutes();
+
+                    // do something with the routes
+                    for (ShortRoutePointModel.Route route : routes) {
+                        fromLocations.add(new ShortRoute_LocationModel(route.getName()));
+                    }
+
+                    initialize();
+                } else {
+                    // handle error
+                    Log.d("ERROR", "err: "+ response.errorBody().toString());
+                    Intent intent = new Intent(getApplicationContext(), ShortRouteFromLoationActivity.class);
+                    Toast.makeText(getApplicationContext(), "Sorry something went wrong", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    ShortRouteFromLoationActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ShortRoutePointModel> call, Throwable t) {
+
+            }
+        });
+
+
+
+
+
     }
 
     public void initialize(){

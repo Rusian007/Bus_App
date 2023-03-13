@@ -15,8 +15,8 @@ public class Database extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "e-ticket.db";
-    public static final String TABLE_NAME = "Locations";
-    public static final String TABLE_NAME2 = "TokenTable";
+    public static final String LOCATION_TABLE = "Locations";
+    public static final String TOKENTABLE = "TokenTable";
     public static final String COUNTER = "Counter";
     private static final String TOKEN = "Token";
     private static final String LONG_FROM_LOCATION = "FromLocation";
@@ -41,7 +41,7 @@ public class Database extends SQLiteOpenHelper {
 
         sql = new StringBuilder()
                 .append("CREATE TABLE ")
-                .append(TABLE_NAME)
+                .append(LOCATION_TABLE)
                 .append("(")
                 .append(COUNTER)
                 .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
@@ -54,7 +54,7 @@ public class Database extends SQLiteOpenHelper {
 
         sql = new StringBuilder()
                 .append("CREATE TABLE ")
-                .append(TABLE_NAME2)
+                .append(TOKENTABLE)
                 .append("(")
                 .append(COUNTER)
                 .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
@@ -68,7 +68,7 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onUpgrade (SQLiteDatabase db, int oldVersion, int newVersion) {
 
-            db.execSQL("DROP TABLE IF EXISTS "+ TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS "+ LOCATION_TABLE);
             onCreate(db);
 
     }
@@ -81,7 +81,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(LONG_FROM_LOCATION, from_location);
         contentValues.put(LONG_TO_LOCATION, to_location);
 
-        long result = db.insert(TABLE_NAME,null, contentValues);
+        long result = db.insert(LOCATION_TABLE,null, contentValues);
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }else {
@@ -91,16 +91,16 @@ public class Database extends SQLiteOpenHelper {
 
     public Cursor getLocations(Database db){
         SQLiteDatabase SQ = db.getReadableDatabase();
-        String query = "SELECT * FROM "+ TABLE_NAME +" WHERE ID = 1";
+        String query = "SELECT * FROM "+ LOCATION_TABLE +" WHERE ID = 1";
 
         String[]columns = {LONG_FROM_LOCATION, LONG_TO_LOCATION};
-        Cursor cursor = SQ.query(TABLE_NAME, columns, null,null,null, null, null);
+        Cursor cursor = SQ.query(LOCATION_TABLE, columns, null,null,null, null, null);
 
         return cursor;
     }
     public boolean IsTableEmpty(Database table){
         SQLiteDatabase db = table.getWritableDatabase();
-        String count = "SELECT count(*) FROM "+TABLE_NAME;
+        String count = "SELECT count(*) FROM "+ LOCATION_TABLE;
         Cursor mcursor = db.rawQuery(count, null);
         mcursor.moveToFirst();
         int icount = mcursor.getInt(0);
@@ -117,7 +117,7 @@ public class Database extends SQLiteOpenHelper {
         cv.put(LONG_TO_LOCATION, toLoc);
         String whereClause = "Counter = ?";
         String[] whereArgs = {String.valueOf(1)};
-        long result =  db.update(TABLE_NAME,cv,whereClause,whereArgs);
+        long result =  db.update(LOCATION_TABLE,cv,whereClause,whereArgs);
         if(result == -1){
             Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
         }else {
@@ -134,7 +134,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(TOKEN, token);
 
 
-        long result = db.insert(TABLE_NAME2,null, contentValues);
+        long result = db.insert(TOKENTABLE,null, contentValues);
         if(result == -1){
             Toast.makeText(context, "Failed to save token", Toast.LENGTH_SHORT).show();
         }else {
@@ -145,7 +145,7 @@ public class Database extends SQLiteOpenHelper {
 
     public boolean IsTokenTableEmpty(Database table){
         SQLiteDatabase db = table.getWritableDatabase();
-        String count = "SELECT count(*) FROM "+TABLE_NAME2;
+        String count = "SELECT count(*) FROM "+ TOKENTABLE;
         Cursor mcursor = db.rawQuery(count, null);
         mcursor.moveToFirst();
         int icount = mcursor.getInt(0);
@@ -162,12 +162,26 @@ public class Database extends SQLiteOpenHelper {
 
         String whereClause = "Counter = ?";
         String[] whereArgs = {String.valueOf(1)};
-        long result =  db.update(TABLE_NAME2,cv,whereClause,whereArgs);
+        long result =  db.update(TOKENTABLE,cv,whereClause,whereArgs);
         if(result == -1){
             Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(context, "Location Updated :)", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String GetToken(Database db){
+        SQLiteDatabase SQ = db.getReadableDatabase();
+        String token=null;
+        String query = "SELECT "+ TOKEN +" FROM "+ TOKENTABLE +" WHERE "+COUNTER+" = 1";
+
+        Cursor cursor = SQ.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            token = cursor.getString(cursor.getInt(0));
+            // Do something with the token value
+        }
+        cursor.close();
+        return token;
     }
 
 }
