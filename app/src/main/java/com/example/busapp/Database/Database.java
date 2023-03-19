@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.busapp.LoginActivity;
+
 public class Database extends SQLiteOpenHelper {
 
     private static Database sqLiteManager;
@@ -17,6 +19,20 @@ public class Database extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "e-ticket.db";
     public static final String LOCATION_TABLE = "Locations";
     public static final String TOKENTABLE = "TokenTable";
+    public static final String POINTSTABLE = "PointsTable";
+    public static final String ROUTESTABLE = "RoutesTable";
+    public static final String ID = "ID";
+    public static final String STARTING_POINT_NAME = "starting_point_name";
+    public static final String ENDING_POINTS_NAME = "ending_point_name";
+    public static final String FAIR = "fair";
+    public static final String DISTANCE = "distance";
+    public static final String STARTING_POINT = "starting_point";
+    public static final String ENDING_POINT = "ending_point";
+
+
+    public static final String LOCATIONNAME = "name";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
     public static final String COUNTER = "Counter";
     private static final String TOKEN = "Token";
     private static final String LONG_FROM_LOCATION = "FromLocation";
@@ -63,6 +79,44 @@ public class Database extends SQLiteOpenHelper {
 
         db.execSQL(sql.toString());
         Log.d("********", "onCreate: "+"db created");
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(POINTSTABLE)
+                .append("(")
+                .append(COUNTER)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(LOCATIONNAME)
+                .append(" TEXT, ")
+                .append(LATITUDE)
+                .append(" TEXT, ")
+                .append(LONGITUDE)
+                .append(" TEXT )")
+        ;
+
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(ROUTESTABLE)
+                .append("(")
+                .append(ID)
+                .append(" INTEGER PRIMARY KEY , ")
+                .append(STARTING_POINT_NAME)
+                .append(" TEXT, ")
+                .append(ENDING_POINTS_NAME)
+                .append(" TEXT, ")
+                .append(FAIR)
+                .append(" REAL, ")
+                .append(DISTANCE)
+                .append(" REAL, ")
+                .append(STARTING_POINT)
+                .append(" INTEGER, ")
+                .append(ENDING_POINT)
+                .append(" INTEGER )")
+        ;
+
+        db.execSQL(sql.toString());
     }
 
     @Override
@@ -73,6 +127,53 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    // ************** Routes Table ***************
+
+
+    // ************** Points Table ***************
+    public Cursor getPoints(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+ POINTSTABLE ;
+        Cursor cursor = db.rawQuery(query,null);
+
+        return cursor;
+    }
+
+    public boolean doesPointExist(String name){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+
+        String query = "SELECT * FROM "+ POINTSTABLE +" WHERE name = '"+ name+"'";
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+           String theName = cursor.getString(cursor.getInt(0));
+
+            Log.d("**********", "doesPointExist: "+ theName);
+            return true;
+        }
+        else return false;
+    }
+    public void addNewPoints(String name, String latitude, String longitude){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(LOCATIONNAME, name);
+        contentValues.put(LATITUDE, latitude);
+        contentValues.put(LONGITUDE, longitude);
+
+        long result = db.insert(POINTSTABLE,null, contentValues);
+        if(result == -1){
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Location(s) Saved!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    // ************** Locations Table ***************
     public void addNewLongLocation(String from_location, String to_location){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -104,9 +205,11 @@ public class Database extends SQLiteOpenHelper {
         Cursor mcursor = db.rawQuery(count, null);
         mcursor.moveToFirst();
         int icount = mcursor.getInt(0);
-        if(icount>0)
-            //leave
+        if(icount>0){
+
             return false;
+        }
+
         else
             return true;
     }
@@ -126,6 +229,9 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
+
+
+    // ************** Token Table ***************
     public void addNewToken(String token){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -138,7 +244,7 @@ public class Database extends SQLiteOpenHelper {
         if(result == -1){
             Toast.makeText(context, "Failed to save token", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "Location Saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 

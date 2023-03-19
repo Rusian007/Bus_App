@@ -1,6 +1,10 @@
 package com.example.busapp.Booking.ShortRouteBooking;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -53,7 +57,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
         Database db = new Database(ShortRouteFromLoationActivity.this);
         String token = db.GetToken(db);
 
-        System.out.println("CAlling API");
+
 
         // call API
         ApiClient client = new ApiClient();
@@ -62,40 +66,75 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
 
         Call<ShortRoutePointModel> call = shortapi.getShortRoutePoints("Token "+token);
 
-        call.enqueue(new Callback<ShortRoutePointModel>() {
-            @Override
-            public void onResponse(Call<ShortRoutePointModel> call, Response<ShortRoutePointModel> response) {
-                if (response.isSuccessful()) {
-                    ShortRoutePointModel model = response.body();
+        if (isNetworkAvailable()) {
+            // Internet connection is available
 
-                    List<ShortRoutePointModel.Route> routes = model.getRoutes();
+            call.enqueue(new Callback<ShortRoutePointModel>() {
+                @Override
+                public void onResponse(Call<ShortRoutePointModel> call, Response<ShortRoutePointModel> response) {
+                    if (response.isSuccessful()) {
+                        ShortRoutePointModel model = response.body();
 
-                    // do something with the routes
-                    for (ShortRoutePointModel.Route route : routes) {
-                        fromLocations.add(new ShortRoute_LocationModel(route.getName()));
+                        List<ShortRoutePointModel.Route> routes = model.getRoutes();
+
+                        // do something with the routes
+                        for (ShortRoutePointModel.Route route : routes) {
+                            fromLocations.add(new ShortRoute_LocationModel(route.getName()));
+                           if( db.doesPointExist(route.getName())){
+                               // exists
+                           } else {
+                               db.addNewPoints(route.getName(), route.getLatitude(), route.getLongitude());
+                           }
+                           //
+                        }
+
+                        initialize();
+                    } else {
+                        // handle error
+                        Log.d("ERROR", "err: "+ response.errorBody().toString());
+                        Intent intent = new Intent(getApplicationContext(), ShortRouteFromLoationActivity.class);
+                        Toast.makeText(getApplicationContext(), "Sorry something went wrong", Toast.LENGTH_SHORT).show();
+                        startActivity(intent);
+                        ShortRouteFromLoationActivity.this.finish();
                     }
-
-                    initialize();
-                } else {
-                    // handle error
-                    Log.d("ERROR", "err: "+ response.errorBody().toString());
-                    Intent intent = new Intent(getApplicationContext(), ShortRouteFromLoationActivity.class);
-                    Toast.makeText(getApplicationContext(), "Sorry something went wrong", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                    ShortRouteFromLoationActivity.this.finish();
                 }
+
+                @Override
+                public void onFailure(Call<ShortRoutePointModel> call, Throwable t) {
+
+                }
+            });
+
+        } else {
+            // No internet connection available
+            Toast.makeText(getApplicationContext(), "Internet is not available", Toast.LENGTH_SHORT).show();
+            Cursor cv = db.getPoints();
+
+            if (cv.moveToFirst()) {
+                do {
+                    // Retrieve values from the current row of the Cursor object
+
+                    String name = cv.getString(cv.getColumnIndex("name"));
+                    double latitude = cv.getDouble(cv.getColumnIndex("latitude"));
+                    double longitude = cv.getDouble(cv.getColumnIndex("longitude"));
+                    // Do something with the retrieved values
+                    fromLocations.add(new ShortRoute_LocationModel(name));
+                    Log.d("DATABASE", "Point: , " + name + ", " + latitude + ", " + longitude);
+                    initialize();
+                } while (cv.moveToNext());
             }
-
-            @Override
-            public void onFailure(Call<ShortRoutePointModel> call, Throwable t) {
-
-            }
-        });
+        }
 
 
 
 
 
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void initialize(){

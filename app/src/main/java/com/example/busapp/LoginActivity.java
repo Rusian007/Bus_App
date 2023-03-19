@@ -53,8 +53,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-        boolean ISTableEmpty = db.IsTableEmpty(db);
+        boolean ISTableEmpty = db.IsTokenTableEmpty(db);
         if (!ISTableEmpty){
+
             openNextActivity();
         }
 
@@ -102,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Token saved: "+token, Toast.LENGTH_SHORT).show();
 
 
-                        boolean ISTableEmpty = db.IsTableEmpty(db);
+                        boolean ISTableEmpty = db.IsTokenTableEmpty(db);
 
                         if(ISTableEmpty){
                             // If table is empty then we insert new row
