@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void callLoginApi(String username, String password){
+
         ApiClient client = new ApiClient();
         Retrofit retrofit = client.getRetrofitInstance();
         LoginApi login = retrofit.create(LoginApi.class);
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
                 if (response.isSuccessful()) {
+
 
 
 
@@ -136,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TokenModel> call, Throwable t) {
-
+                Toast.makeText(LoginActivity.this, "reciving req fail", Toast.LENGTH_SHORT).show();
             }
         });
 

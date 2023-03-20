@@ -38,6 +38,9 @@ public class Database extends SQLiteOpenHelper {
     private static final String LONG_FROM_LOCATION = "FromLocation";
     private static final  String LONG_TO_LOCATION = "ToLocation";
 
+    private static final String SHORTLOCATIONCACHE = "CacheTable";
+    private static final String SHORTFROMLOCATIONSELECTED = "FromLocationSelected";
+
     public Database(Context context) {
         super(context, DATABASE_NAME,null, DATABASE_VERSION);
         this.context=context;
@@ -64,6 +67,17 @@ public class Database extends SQLiteOpenHelper {
                 .append(LONG_FROM_LOCATION)
                 .append(" TEXT, ")
                 .append(LONG_TO_LOCATION)
+                .append(" TEXT )");
+
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(SHORTLOCATIONCACHE)
+                .append("(")
+                .append(COUNTER)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(SHORTFROMLOCATIONSELECTED)
                 .append(" TEXT )");
 
         db.execSQL(sql.toString());
@@ -126,8 +140,114 @@ public class Database extends SQLiteOpenHelper {
             onCreate(db);
 
     }
+    // ************** Short Location Cache ***************
+    public String getShortLocationCache(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String location=null;
+        String query = "SELECT "+ SHORTFROMLOCATIONSELECTED +" FROM "+ SHORTLOCATIONCACHE +" WHERE "+COUNTER+" = 1";
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            location = cursor.getString(cursor.getColumnIndex(SHORTFROMLOCATIONSELECTED));
+            // Do something with the token value
+        }
+        cursor.close();
+        return location;
+    }
+    public boolean doesCacheExist(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+
+        String query = "SELECT * FROM "+ SHORTLOCATIONCACHE ;
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            String loc = cursor.getString(cursor.getColumnIndex("FromLocationSelected"));
+
+            return true;
+        }
+        else return false;
+    }
+
+    public void setShortLocationCache(String locationName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(SHORTFROMLOCATIONSELECTED, locationName);
+
+        String whereClause = "Counter = ?";
+        String[] whereArgs = {String.valueOf(1)};
+        long result =  db.update(SHORTLOCATIONCACHE,cv,whereClause,whereArgs);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Location Updated :)", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void newShortLocationCache(String locationName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(SHORTFROMLOCATIONSELECTED, locationName);
+
+
+
+        long result =  db.insert(SHORTLOCATIONCACHE,null,cv);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Inserted :)", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     // ************** Routes Table ***************
+    public Cursor returnEndingLocation(String name){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+       String query = "SELECT * FROM "+ ROUTESTABLE +" WHERE starting_point_name = '"+ name+"'";
+
+        Cursor cursor = db.rawQuery(query,null);
+        return cursor;
+    }
+
+    public boolean doesRouteExist(String name){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+
+        String query = "SELECT * FROM "+ ROUTESTABLE +" WHERE starting_point_name = '"+ name+"'";
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            String theName = cursor.getString(cursor.getColumnIndex("starting_point_name"));
+
+            return true;
+        }
+        else return false;
+    }
+
+    public void addNewRoutes(int id , String starting_point_name, String ending_point_name, double fair, double distance, int starting_point, int ending_point){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(ID, id);
+        contentValues.put(STARTING_POINT_NAME, starting_point_name);
+        contentValues.put(ENDING_POINTS_NAME, ending_point_name);
+        contentValues.put(FAIR, fair);
+        contentValues.put(DISTANCE, distance);
+        contentValues.put(STARTING_POINT, starting_point);
+        contentValues.put(ENDING_POINT, ending_point);
+
+        long result = db.insert(ROUTESTABLE,null, contentValues);
+        if(result == -1){
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Location(s) Saved!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
 
     // ************** Points Table ***************
@@ -148,9 +268,9 @@ public class Database extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.moveToFirst()) {
-           String theName = cursor.getString(cursor.getInt(0));
+          String theName = cursor.getString(cursor.getColumnIndex("name"));
 
-            Log.d("**********", "doesPointExist: "+ theName);
+
             return true;
         }
         else return false;

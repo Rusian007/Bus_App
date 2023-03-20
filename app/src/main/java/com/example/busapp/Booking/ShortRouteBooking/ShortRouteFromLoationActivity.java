@@ -39,6 +39,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
     ArrayList<String> startLocationSelected = new ArrayList<>();
     boolean clicked = false;
     Button nextBTN;
+    Database db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
 
         setContentView(R.layout.short_route_from_location);
 
-        Database db = new Database(ShortRouteFromLoationActivity.this);
+        db = new Database(ShortRouteFromLoationActivity.this);
         String token = db.GetToken(db);
 
 
@@ -119,7 +120,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
                     double longitude = cv.getDouble(cv.getColumnIndex("longitude"));
                     // Do something with the retrieved values
                     fromLocations.add(new ShortRoute_LocationModel(name));
-                    Log.d("DATABASE", "Point: , " + name + ", " + latitude + ", " + longitude);
+
                     initialize();
                 } while (cv.moveToNext());
             }
@@ -165,6 +166,12 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
             Intent intent = new Intent(getApplicationContext(), ShortRouteBookingActivity.class);
 
             intent.putExtra("FromLocation", startLocationSelected.get(0));
+           if( db.doesCacheExist()){
+               db.setShortLocationCache(startLocationSelected.get(0));
+           } else{
+               db.newShortLocationCache(startLocationSelected.get(0));
+           }
+
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             this.finish();

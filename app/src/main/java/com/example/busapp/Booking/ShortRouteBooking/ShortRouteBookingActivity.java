@@ -1,20 +1,15 @@
 package com.example.busapp.Booking.ShortRouteBooking;
 
-import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +18,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.busapp.Adaptar.FromLocationAdapter;
 import com.example.busapp.Adaptar.ToLocationAdapter;
-import com.example.busapp.ChooseRouteActivity;
+import com.example.busapp.Database.Database;
 import com.example.busapp.Model.ShortRoute_LocationModel;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiClient;
+import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
+import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
+import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ShortRouteBookingActivity extends AppCompatActivity implements ToLocationAdapter.IEndLocation {
 
@@ -38,9 +42,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     Button printbtn;
     boolean clicked= false ;
     private TextView fromLoc, toLoc, amount;
-
+    Database db;
 
     ArrayList<String> endLocationSelected = new ArrayList<>();
+    ArrayList<String> endLocationSelectedPrice = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +62,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         setContentView(R.layout.short_route_to_location);
 
         Intent intent = getIntent();
-        FromLocationSelected = intent.getStringExtra("FromLocation");
+        db= new Database(ShortRouteBookingActivity.this);
+
+        FromLocationSelected = db.getShortLocationCache();
+
 
         fromLoc = findViewById(R.id.fromLocation);
         fromLoc.setText(FromLocationSelected);
@@ -66,21 +74,123 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         printbtn = (Button) findViewById(R.id.ShortprintBtn);
 
 
-        /// Dummy data - REMOVE in production
         // call API - start a method
-        toLocations.add(new ShortRoute_LocationModel("Mawa", "500/-"));
-        toLocations.add(new ShortRoute_LocationModel("Dhaka", "55/-"));
-        toLocations.add(new ShortRoute_LocationModel("Barishal", "1000/-"));
-        toLocations.add(new ShortRoute_LocationModel("Khulna","2000/-"));
+        callApi();
+
 
         printbtn.setVisibility(View.INVISIBLE);
-        initRecycleView();
+
 
     }
 
+    private void callApi() {
+
+
+        String token = db.GetToken(db);
+
+
+
+        // call API
+        ApiClient client = new ApiClient();
+        Retrofit retrofit = client.getRetrofitInstance();
+        ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
+
+        Call<ShortRouteModel> call = shortapi.getShortRoutes("Token "+token);
+
+        if (isNetworkAvailable()) {
+            // Internet connection is available
+
+            call.enqueue(new Callback<com.example.busapp.retrofit.ApiModels.ShortRouteModel>() {
+                @Override
+                public void onResponse(Call<ShortRouteModel> call, Response<ShortRouteModel> response) {
+                    if (response.isSuccessful()) {
+                        ShortRouteModel model = response.body();
+
+                        List<ShortRouteModel.Route> routes = model.getRoutes();
+
+                        // do something with the routes
+                        for (ShortRouteModel.Route route : routes) {
+                            int price = route.getFair();
+
+
+
+                            // if that route does not exist the intert that in db
+                            if( db.doesRouteExist(route.getStartingPointName())){
+                                // exists
+                            } else {
+                                // does not exist
+                                double distance;
+                                if(route.getDistance() == null){
+                                    distance = 0;
+                                } else {
+                                    distance = route.getDistance();
+                                }
+
+                                db.addNewRoutes(route.getId(), route.getStartingPointName(), route.getEndingPointName(), route.getFair(), distance, route.getStartingPoint(), route.getEndingPoint());
+                            }
+                            //
+                        }
+                        Cursor cv = db.returnEndingLocation(FromLocationSelected);
+
+                        if (cv.moveToFirst()) {
+                            do {
+                                // Retrieve values from the current row of the Cursor object
+
+
+                                getAndSetLocation(cv);
+                            } while (cv.moveToNext());
+                        }
+
+
+                    } else {
+                        // handle error
+                        Log.d("ERROR", "err: "+ response.errorBody().toString());
+                        Toast.makeText(getApplicationContext(), "Sorry something went wrong", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ShortRouteModel> call, Throwable t) {
+
+                }
+            });
+
+        } else {
+            // No internet connection available
+
+            Cursor cv = db.returnEndingLocation(FromLocationSelected);
+
+            if (cv.moveToFirst()) {
+                do {
+                    // Retrieve values from the current row of the Cursor object
+
+
+                    getAndSetLocation(cv);
+                } while (cv.moveToNext());
+            }
+
+        }
+
+    }
+
+    void getAndSetLocation(Cursor cv){
+        String endingLocationName = cv.getString(cv.getColumnIndex("ending_point_name"));
+        double fair = cv.getDouble(cv.getColumnIndex("fair"));
+        toLocations.add(new ShortRoute_LocationModel(endingLocationName, String.valueOf(fair)));
+        // Do something with the retrieved values
+
+        Log.d("DATABASE", "Point: , " + fair + ", " + endingLocationName );
+        initRecycleView();
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     private void initRecycleView() {
-
 
         // To List Adapter
         RecyclerView toListRecyclerView = findViewById(R.id.toLocation_recycleView);
@@ -118,9 +228,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     }
 
     @Override
-    public boolean AddDestinationLocation(String locationName) {
+    public boolean AddDestinationLocation(String locationName , String price) {
         if (endLocationSelected.isEmpty()){
             endLocationSelected.add(locationName);
+            endLocationSelectedPrice.add(price);
             checkLocations();
             printbtn.setVisibility(View.VISIBLE);
         }
@@ -153,7 +264,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         if (endLocationSelected.size() > 0 ){
             fromLoc.setText(FromLocationSelected);
             toLoc.setText(endLocationSelected.get(0));
-            amount.setText("500");
+            amount.setText(endLocationSelectedPrice.get(0));
         } else if(endLocationSelected.isEmpty()){
             toLoc.setText("...");
             amount.setText("...");
