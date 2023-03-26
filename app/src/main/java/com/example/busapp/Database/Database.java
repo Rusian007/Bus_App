@@ -1,5 +1,6 @@
 package com.example.busapp.Database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -40,6 +41,10 @@ public class Database extends SQLiteOpenHelper {
 
     private static final String SHORTLOCATIONCACHE = "CacheTable";
     private static final String SHORTFROMLOCATIONSELECTED = "FromLocationSelected";
+
+    private static final String MACTABLE = "MacTable";
+
+    private static final String MACADDRESS = "Address";
 
     public Database(Context context) {
         super(context, DATABASE_NAME,null, DATABASE_VERSION);
@@ -131,6 +136,19 @@ public class Database extends SQLiteOpenHelper {
         ;
 
         db.execSQL(sql.toString());
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(MACTABLE)
+                .append("(")
+                .append(ID)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(MACADDRESS)
+                .append(" TEXT ) ")
+
+        ;
+
+        db.execSQL(sql.toString());
     }
 
     @Override
@@ -140,6 +158,60 @@ public class Database extends SQLiteOpenHelper {
             onCreate(db);
 
     }
+    // ************** MAC table ***************
+    @SuppressLint("Range")
+    public String getMacAddress(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String address=null;
+        String query = "SELECT "+ MACADDRESS +" FROM "+ MACTABLE +" WHERE "+ID+" = 1";
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            address = cursor.getString(cursor.getColumnIndex(MACADDRESS));
+            // Do something with the token value
+        }
+        cursor.close();
+        return address;
+    }
+    public boolean doesMacExist(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+ MACTABLE ;
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            String loc = cursor.getString(cursor.getColumnIndex(MACADDRESS));
+            return true;
+        }
+        else return false;
+    }
+
+    public void setMacAddress(String address){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(MACADDRESS, address);
+
+        String whereClause = "ID = ?";
+        String[] whereArgs = {String.valueOf(1)};
+        long result =  db.update(MACTABLE,cv,whereClause,whereArgs);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void newMacAddress(String address){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(MACADDRESS, address);
+
+        long result =  db.insert(MACTABLE,null,cv);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
     // ************** Short Location Cache ***************
     public String getShortLocationCache(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -165,7 +237,6 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.moveToFirst()) {
             String loc = cursor.getString(cursor.getColumnIndex("FromLocationSelected"));
-
             return true;
         }
         else return false;
@@ -181,8 +252,6 @@ public class Database extends SQLiteOpenHelper {
         long result =  db.update(SHORTLOCATIONCACHE,cv,whereClause,whereArgs);
         if(result == -1){
             Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Location Updated :)", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -196,8 +265,6 @@ public class Database extends SQLiteOpenHelper {
         long result =  db.insert(SHORTLOCATIONCACHE,null,cv);
         if(result == -1){
             Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Inserted :)", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -243,8 +310,6 @@ public class Database extends SQLiteOpenHelper {
         long result = db.insert(ROUTESTABLE,null, contentValues);
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Location(s) Saved!", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -269,8 +334,6 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.moveToFirst()) {
           String theName = cursor.getString(cursor.getColumnIndex("name"));
-
-
             return true;
         }
         else return false;
@@ -286,10 +349,7 @@ public class Database extends SQLiteOpenHelper {
         long result = db.insert(POINTSTABLE,null, contentValues);
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Location(s) Saved!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
 
@@ -343,8 +403,6 @@ public class Database extends SQLiteOpenHelper {
         long result =  db.update(LOCATION_TABLE,cv,whereClause,whereArgs);
         if(result == -1){
             Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Location Updated :)", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -363,8 +421,6 @@ public class Database extends SQLiteOpenHelper {
         long result = db.insert(TOKENTABLE,null, contentValues);
         if(result == -1){
             Toast.makeText(context, "Failed to save token", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 

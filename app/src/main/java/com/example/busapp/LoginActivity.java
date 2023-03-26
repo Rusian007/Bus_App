@@ -1,9 +1,22 @@
 package com.example.busapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,6 +25,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.busapp.Booking.ShortRouteBooking.ShortRouteBookingActivity;
 import com.example.busapp.Booking.ShortRouteBooking.ShortRouteFromLoationActivity;
 import com.example.busapp.Database.Database;
 import com.example.busapp.retrofit.ApiClient;
@@ -22,6 +36,7 @@ import com.example.busapp.retrofit.RequestModel.LoginCredentials;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +45,7 @@ import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     Button button;
+
     Database db;
     String route;
     LoginApi login;
@@ -50,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameEdit = findViewById(R.id.username);
         passwordEdit = findViewById(R.id.password);
         db = new Database(LoginActivity.this);
-
-
 
         boolean ISTableEmpty = db.IsTokenTableEmpty(db);
         if (!ISTableEmpty){
@@ -142,9 +156,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
+
 
 
     private void openNextActivity() {
