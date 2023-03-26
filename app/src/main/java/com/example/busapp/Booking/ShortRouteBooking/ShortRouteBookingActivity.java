@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
     String FromLocationSelected;
+    boolean donePrint = false;
     Button printbtn;
     boolean clicked = false;
     BluetoothAdapter bluetoothAdapter;
@@ -226,7 +228,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             }
 
            // discoverDevices();
-           // Bluetoothprint();
+           Bluetoothprint();
 /*
 
             Intent intent = new Intent(this, ShortRouteBookingActivity.class);
@@ -307,9 +309,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     // print the ticket
     void Bluetoothprint() {
-        Log.d("#########", "Bluetooth enabled ");
+        String MacAddress = db.getMacAddress();
+        Log.d("#########", "Bluetooth enabled "+MacAddress);
         BluetoothSocket socket = null;
-        BluetoothDevice printer = bluetoothAdapter.getRemoteDevice("1B:08:41:2A:1E:4E"); // replace with your printer's MAC address
+        BluetoothDevice printer = bluetoothAdapter.getRemoteDevice(MacAddress.replaceAll("\\s", "")); // replace with your printer's MAC address
         UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 
@@ -332,9 +335,14 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             String bigText = "MAWA PARIBAHAN PVT LTD (ELISH)";
             String smallText = "www.elishparibahan.com";
             String normalText1 = "serial no:00001 ";
-            String normalText2 = "From: Dhaka";
-            String normalText3 = "To: Mawa";
-            String date = "issue date and time: 25-03-2023";
+            String normalText2 = "From: "+FromLocationSelected;
+            String normalText3 = "To: "+endLocationSelected.get(0);
+
+
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String formattedDate = currentDate.format(dateFormatter);
+            String date = "issue date and time: "+formattedDate;
 
             // Set the text alignment to center
             byte[] alignCenter = {0x1B, 0x61, 0x01};
@@ -419,7 +427,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
             outputStream.write(alignStart);
             outputStream.write(boldOn);
-            String line2 = "Amount 100/- \n";
+            String line2 = "Amount: "+endLocationSelectedPrice.get(0)+" /- \n";
             outputStream.write(line2.getBytes());
 
             outputStream.write(boldOff);
@@ -449,9 +457,25 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             outputStream.write(eject);
             Log.d("*******", "ejecting");
             outputStream.flush();
+            donePrint = true;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+
+        if (donePrint){
+            // printing is Done, Restart the class
+            Intent intent = new Intent(this, ShortRouteBookingActivity.class);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    finish();
+                }
+            }, 1000);
         }
     }
 
