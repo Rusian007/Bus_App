@@ -98,6 +98,13 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         Intent intent = getIntent();
         db = new Database(ShortRouteBookingActivity.this);
 
+        toLocations.clear();
+        toLocations.trimToSize();
+        endLocationSelected.clear();
+        endLocationSelected.trimToSize();
+        endLocationSelectedPrice.clear();
+        endLocationSelectedPrice.trimToSize();
+
         FromLocationSelected = db.getShortLocationCache();
 
 
@@ -335,7 +342,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                 Log.d("******", "Socket is NOT connected: ");
             }
             // Define the text to be printed
-            String bigText = "MAWA PARIBAHAN PVT LTD (ELISH)";
+            String bigText = "মাওয়া পরিবহন (প্রাঃ) লিঃ ( ইলিশ )";
             String smallText = "www.elishparibahan.com";
             String normalText1 = "serial no:00001 ";
             String normalText2 = "From: "+FromLocationSelected;
