@@ -62,6 +62,7 @@ import retrofit2.Retrofit;
 public class ShortRouteBookingActivity extends AppCompatActivity implements ToLocationAdapter.IEndLocation {
 
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
+    BluetoothSocket socket = null;
     String FromLocationSelected;
     boolean donePrint = false;
     Button printbtn;
@@ -79,6 +80,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     private Set<BluetoothDevice> pairedDevices;
     private ArrayAdapter<String> devicesList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,12 +225,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             if (!bluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            } else {
-                requestBluetoothPermissions();
             }
 
-           // discoverDevices();
-           Bluetoothprint();
+            // discoverDevices();
+            Bluetoothprint();
 /*
 
             Intent intent = new Intent(this, ShortRouteBookingActivity.class);
@@ -248,6 +248,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             Toast.makeText(getApplicationContext(), "You must select an end location", Toast.LENGTH_SHORT).show();
 
     }
+
     // Call this method from your activity to start the device discovery
     private void discoverDevices() {
         // Get the Bluetooth adapter
@@ -259,13 +260,11 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         }
 
 
-
         // Get a list of paired devices
         pairedDevices = bluetoothAdapter.getBondedDevices();
 
         // Start discovery of nearby devices
         bluetoothAdapter.startDiscovery();
-
 
 
         // Create a list of device names to display to the user
@@ -310,13 +309,17 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     // print the ticket
     void Bluetoothprint() {
         String MacAddress = db.getMacAddress();
-        Log.d("#########", "Bluetooth enabled "+MacAddress);
-        BluetoothSocket socket = null;
+        Log.d("#########", "Bluetooth enabled " + MacAddress);
+
         BluetoothDevice printer = bluetoothAdapter.getRemoteDevice(MacAddress.replaceAll("\\s", "")); // replace with your printer's MAC address
         UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 
         try {
+
+            if (ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 9);
+            }
 
             socket = printer.createRfcommSocketToServiceRecord(MY_UUID);
             socket.connect();
@@ -470,12 +473,16 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 }
-            }, 1000);
+            }, 1500);
         }
     }
 
