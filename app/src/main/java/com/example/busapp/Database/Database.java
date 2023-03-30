@@ -459,7 +459,7 @@ public class Database extends SQLiteOpenHelper {
 
         Cursor cursor = SQ.rawQuery(query,null);
         if (cursor.moveToFirst()) {
-            token = cursor.getString(cursor.getInt(0));
+            token = cursor.getString(cursor.getColumnIndex("Token"));
             // Do something with the token value
         }
         cursor.close();
