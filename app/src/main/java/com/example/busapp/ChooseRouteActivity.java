@@ -60,41 +60,52 @@ public class ChooseRouteActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Device does not support bluetooth", Toast.LENGTH_SHORT).show();
             return;
         }
+        //Take relevant permissions
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,  new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 3);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, 1);
+        }
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
+
+        } else {
+            startBluetoothScan();
         }
 
+
+
+
+        db = new Database(ChooseRouteActivity.this);
+
+    }
+
+    private void startSnackBar(){
         parentLayout = findViewById(android.R.id.content);
-        Snackbar snackbar = Snackbar.make(parentLayout, "Connecting to Bluetooth, please wait", Snackbar.LENGTH_INDEFINITE);
+        Snackbar snackbar = Snackbar.make(parentLayout, "Searching for available devices, Please Wait.", Snackbar.LENGTH_INDEFINITE);
 
         View snackbarView = snackbar.getView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
         params.gravity = Gravity.TOP;
         snackbarView.setLayoutParams(params);
         snackbar.show();
-
-        db = new Database(ChooseRouteActivity.this);
-
     }
 
 
-    @Override
-    protected void onResume() {
+
+    protected void startBluetoothScan() {
         super.onResume();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, 1);
-        }
+
         if(ContextCompat.checkSelfPermission(ChooseRouteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 5);
         }
         if(ContextCompat.checkSelfPermission(ChooseRouteActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 6);
         }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,  new String[]{Manifest.permission.BLUETOOTH_ADMIN}, 3);
-        }
 
+        startSnackBar();
         bluetoothAdapter.startDiscovery();
         ArrayList<String> arrayList = new ArrayList<>();
 
@@ -172,6 +183,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Bluetooth was enabled, do something
                 Toast.makeText(getApplicationContext(), "Scanning started", Toast.LENGTH_SHORT).show();
+                startBluetoothScan();
                 loading = false;
             } else {
                 // Bluetooth was not enabled, do something else or show an error message

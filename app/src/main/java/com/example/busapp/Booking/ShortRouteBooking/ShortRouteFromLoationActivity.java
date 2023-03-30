@@ -93,16 +93,14 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
                     } else {
                         // handle error
                         Log.d("ERROR", "err: "+ response.errorBody().toString());
-                        Intent intent = new Intent(getApplicationContext(), ShortRouteFromLoationActivity.class);
-                        Toast.makeText(getApplicationContext(), "Sorry something went wrong", Toast.LENGTH_SHORT).show();
-                        startActivity(intent);
-                        ShortRouteFromLoationActivity.this.finish();
+                        Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  "+ response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ShortRoutePointModel> call, Throwable t) {
-
+                    Toast.makeText(getApplicationContext(), " Having Internet Issues. Not Connected to Server. ", Toast.LENGTH_SHORT).show();
                 }
             });
 

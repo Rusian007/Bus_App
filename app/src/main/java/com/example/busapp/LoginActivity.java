@@ -45,11 +45,11 @@ import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     Button button;
-
     Database db;
     String route;
     LoginApi login;
     String token;
+    boolean isTokenSaved = false;
     EditText usernameEdit, passwordEdit;
 
     @Override
@@ -73,8 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             openNextActivity();
         }
 
-
-
         button = (Button) findViewById(R.id.submit);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,11 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 callLoginApi(username, password);
-
-
             }
         });
-
 
     }
 
@@ -107,19 +102,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
                 if (response.isSuccessful()) {
 
-
-
-
                     TokenModel loginResponse = response.body();
                     token = loginResponse.getToken();
                     // save the token or proceed to the next screen
                     CheckBox checkBox = findViewById(R.id.RememberCheck);
+                    boolean ISTableEmpty = db.IsTokenTableEmpty(db);
                     if (checkBox.isChecked()) {
                         // CheckBox is checked, do something
                         Toast.makeText(LoginActivity.this, "Token saved: "+token, Toast.LENGTH_SHORT).show();
 
 
-                        boolean ISTableEmpty = db.IsTokenTableEmpty(db);
 
                         if(ISTableEmpty){
                             // If table is empty then we insert new row
@@ -133,6 +125,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     } else {
                         // CheckBox is not checked, do something else
+
+                        // for now we still save the token in database - this maybe change later
+                        if(ISTableEmpty){
+                            db.addNewToken(token);
+                        } else {
+                            db.UpdateToken(db, token);
+                        }
                         openNextActivity();
                     }
 
@@ -152,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TokenModel> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Request Send Failed, Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Request Send Failed, Please Check Your Internet Connection or Maybe The Server Is Down.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -173,8 +172,5 @@ public class LoginActivity extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             this.finish();
         }
-
     }
-
-
 }
