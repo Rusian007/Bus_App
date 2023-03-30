@@ -54,9 +54,16 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 0);
+
+        } else {
+            startBluetoothScan();
+        }
 
 
-        startBluetoothScan();
 
 
 
@@ -148,6 +155,25 @@ public class ChooseRouteActivity extends AppCompatActivity {
         super.onDestroy();
 
         unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                // Bluetooth was enabled, do something
+
+                startBluetoothScan();
+
+
+
+            } else {
+                // Bluetooth was not enabled, do something else or show an error message
+                Toast.makeText(getApplicationContext(), "You must Enable Bluetooth", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 

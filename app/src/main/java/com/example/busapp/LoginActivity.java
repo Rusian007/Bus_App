@@ -50,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
     LoginApi login;
     String token;
     boolean isTokenSaved = false;
+
+
     EditText usernameEdit, passwordEdit;
 
     @Override
@@ -72,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
             openNextActivity();
         }
+
 
         button = (Button) findViewById(R.id.submit);
         button.setOnClickListener(new View.OnClickListener() {
@@ -173,4 +176,5 @@ public class LoginActivity extends AppCompatActivity {
             this.finish();
         }
     }
+
 }

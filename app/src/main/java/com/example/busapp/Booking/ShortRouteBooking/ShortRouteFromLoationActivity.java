@@ -1,5 +1,6 @@
 package com.example.busapp.Booking.ShortRouteBooking;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,6 +39,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
     ArrayList<ShortRoute_LocationModel> fromLocations = new ArrayList<>();
     ArrayList<String> startLocationSelected = new ArrayList<>();
     boolean clicked = false;
+
     Button nextBTN;
     Database db;
 

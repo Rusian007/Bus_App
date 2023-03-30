@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -47,19 +48,18 @@ public class SpalshActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH}, 1);
         }
-        if(ContextCompat.checkSelfPermission(SpalshActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 5);
-            blutoothAction1 = true;
-        }
-        if(ContextCompat.checkSelfPermission(SpalshActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 6);
-            blutoothAction2= true;
+        if (ContextCompat.checkSelfPermission(SpalshActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(SpalshActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 7);
+        } else{
+            StartNewActivity();
         }
 
 
 
-        handler=new Handler();
-        handler.postDelayed(new Runnable() {
+
+       // handler=new Handler();
+       /* handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!bluetoothAdapter.isEnabled()) {
@@ -67,10 +67,10 @@ public class SpalshActivity extends AppCompatActivity {
                     startActivityForResult(enableBtIntent, 0);
 
                 } else {
-                    StartNewActivity();
+
                 }
             }
-        },5555);
+        },5555);*/
 
     }
 
@@ -84,21 +84,32 @@ public class SpalshActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                // Bluetooth was enabled, do something
+        if (requestCode == 7) {
+            boolean fineLocationGranted = false;
+            boolean coarseLocationGranted = false;
+            for (int i = 0; i < permissions.length; i++) {
+                if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        fineLocationGranted = true;
+                    }
+                } else if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        coarseLocationGranted = true;
+                    }
+                }
+            }
 
+            if (fineLocationGranted && coarseLocationGranted) {
+                // Permissions granted
                 StartNewActivity();
-
-
-
             } else {
-                // Bluetooth was not enabled, do something else or show an error message
-                Toast.makeText(getApplicationContext(), "You must Enable Bluetooth", Toast.LENGTH_SHORT).show();
+                // Permissions denied
             }
         }
     }
+
+
 }
