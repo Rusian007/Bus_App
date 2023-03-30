@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat;
 
 public class SpalshActivity extends AppCompatActivity {
     Handler handler;
-    boolean blutoothAction = false;
+    boolean blutoothAction1 = false, blutoothAction2 = false;
     BluetoothAdapter bluetoothAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,9 +49,11 @@ public class SpalshActivity extends AppCompatActivity {
         }
         if(ContextCompat.checkSelfPermission(SpalshActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 5);
+            blutoothAction1 = true;
         }
         if(ContextCompat.checkSelfPermission(SpalshActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 6);
+            blutoothAction2= true;
         }
 
 
@@ -68,9 +70,11 @@ public class SpalshActivity extends AppCompatActivity {
                     StartNewActivity();
                 }
             }
-        },5000);
+        },5555);
 
     }
+
+
 
     public void StartNewActivity(){
         Intent intent=new Intent(SpalshActivity.this, ChooseRouteActivity.class);
@@ -78,9 +82,11 @@ public class SpalshActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 // Bluetooth was enabled, do something
