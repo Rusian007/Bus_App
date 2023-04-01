@@ -51,6 +51,7 @@
 
 
     <View
+        android:id="@+id/view7"
         android:layout_width="296dp"
         android:layout_height="2dp"
         android:layout_marginTop="20dp"
@@ -77,6 +78,20 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
+    <Button
+        android:id="@+id/bluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:backgroundTint="@color/ColorBluGray"
+        android:fontFamily="@font/poppins_bold"
+        android:onClick="startBouetoothButton"
+        android:text="new printer +"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view7"
+        app:layout_constraintVertical_bias="0.9" />
 
     <TextView
         android:id="@+id/textView5"
@@ -100,6 +115,8 @@
         android:textColor="@color/ColorBluGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView5" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

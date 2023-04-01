@@ -25,6 +25,7 @@ import com.example.busapp.R;
 import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
 import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
 
     Button nextBTN;
     Database db;
-
+    View parentLayout ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,77 +59,81 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
         setContentView(R.layout.short_route_from_location);
 
         db = new Database(ShortRouteFromLoationActivity.this);
-        String token = db.GetToken(db);
+        boolean tokenEmpty = db.IsTokenTableEmpty(db);
+        if(tokenEmpty){
+            parentLayout = findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(parentLayout, "Token Expired. Logout and login again to get a new session. App will not work.", Snackbar.LENGTH_INDEFINITE);
+            snackbar.show();
+        }else {
+            String token = db.GetToken(db);
 
 
+            // call API
+            ApiClient client = new ApiClient();
+            Retrofit retrofit = client.getRetrofitInstance();
+            ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
 
-        // call API
-        ApiClient client = new ApiClient();
-        Retrofit retrofit = client.getRetrofitInstance();
-        ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
+            Call<ShortRoutePointModel> call = shortapi.getShortRoutePoints("Token " + token);
 
-        Call<ShortRoutePointModel> call = shortapi.getShortRoutePoints("Token "+token);
+            if (isNetworkAvailable()) {
+                // Internet connection is available
 
-        if (isNetworkAvailable()) {
-            // Internet connection is available
+                call.enqueue(new Callback<ShortRoutePointModel>() {
+                    @Override
+                    public void onResponse(Call<ShortRoutePointModel> call, Response<ShortRoutePointModel> response) {
+                        if (response.isSuccessful()) {
+                            ShortRoutePointModel model = response.body();
 
-            call.enqueue(new Callback<ShortRoutePointModel>() {
-                @Override
-                public void onResponse(Call<ShortRoutePointModel> call, Response<ShortRoutePointModel> response) {
-                    if (response.isSuccessful()) {
-                        ShortRoutePointModel model = response.body();
+                            List<ShortRoutePointModel.Route> routes = model.getRoutes();
 
-                        List<ShortRoutePointModel.Route> routes = model.getRoutes();
+                            // do something with the routes
+                            for (ShortRoutePointModel.Route route : routes) {
+                                fromLocations.add(new ShortRoute_LocationModel(route.getName()));
+                                if (db.doesPointExist(route.getName())) {
+                                    // exists
+                                } else {
+                                    db.addNewPoints(route.getName(), route.getLatitude(), route.getLongitude());
+                                }
+                                //
+                            }
 
-                        // do something with the routes
-                        for (ShortRoutePointModel.Route route : routes) {
-                            fromLocations.add(new ShortRoute_LocationModel(route.getName()));
-                           if( db.doesPointExist(route.getName())){
-                               // exists
-                           } else {
-                               db.addNewPoints(route.getName(), route.getLatitude(), route.getLongitude());
-                           }
-                           //
+                            initialize();
+                        } else {
+                            // handle error
+                            Log.d("ERROR", "err: " + response.errorBody().toString());
+                            Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
                         }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ShortRoutePointModel> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), " Having Internet Issues. Not Connected to Server. ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } else {
+                // No internet connection available
+                Toast.makeText(getApplicationContext(), "Internet is not available", Toast.LENGTH_SHORT).show();
+                Cursor cv = db.getPoints();
+
+                if (cv.moveToFirst()) {
+                    do {
+                        // Retrieve values from the current row of the Cursor object
+
+                        String name = cv.getString(cv.getColumnIndex("name"));
+                        double latitude = cv.getDouble(cv.getColumnIndex("latitude"));
+                        double longitude = cv.getDouble(cv.getColumnIndex("longitude"));
+                        // Do something with the retrieved values
+                        fromLocations.add(new ShortRoute_LocationModel(name));
 
                         initialize();
-                    } else {
-                        // handle error
-                        Log.d("ERROR", "err: "+ response.errorBody().toString());
-                        Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  "+ response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-
-                    }
+                    } while (cv.moveToNext());
                 }
-
-                @Override
-                public void onFailure(Call<ShortRoutePointModel> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), " Having Internet Issues. Not Connected to Server. ", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        } else {
-            // No internet connection available
-            Toast.makeText(getApplicationContext(), "Internet is not available", Toast.LENGTH_SHORT).show();
-            Cursor cv = db.getPoints();
-
-            if (cv.moveToFirst()) {
-                do {
-                    // Retrieve values from the current row of the Cursor object
-
-                    String name = cv.getString(cv.getColumnIndex("name"));
-                    double latitude = cv.getDouble(cv.getColumnIndex("latitude"));
-                    double longitude = cv.getDouble(cv.getColumnIndex("longitude"));
-                    // Do something with the retrieved values
-                    fromLocations.add(new ShortRoute_LocationModel(name));
-
-                    initialize();
-                } while (cv.moveToNext());
             }
+
+
         }
-
-
-
-
 
     }
 

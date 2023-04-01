@@ -40,6 +40,7 @@ import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
 import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
 import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -62,6 +63,7 @@ import retrofit2.Retrofit;
 public class ShortRouteBookingActivity extends AppCompatActivity implements ToLocationAdapter.IEndLocation {
 
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
+    View parentLayout ;
     BluetoothSocket socket = null;
     String FromLocationSelected;
     boolean donePrint = false;
@@ -315,6 +317,12 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     // print the ticket
     void Bluetoothprint() {
+        boolean macExists = db.doesMacExist();
+        if (!macExists){
+            parentLayout = findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(parentLayout, "NO bluetooth device is saved, Please restart this app and connect to a new bluetooth device.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
         String MacAddress = db.getMacAddress();
         Log.d("#########", "Bluetooth enabled " + MacAddress);
 
@@ -470,7 +478,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             donePrint = true;
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            parentLayout = findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(parentLayout, "Connection failed, make sure your bluetooth device is turned on and restart this app.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+            Log.i("SOCKET ERROR", " : " + e.toString());
         }
 
         if (donePrint){

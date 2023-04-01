@@ -41,7 +41,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
     Database db;
     BluetoothAdapter bluetoothAdapter;
     BroadcastReceiver broadcastReceiver;
-    boolean loading = true, deviceConnected = false;
+    boolean registered = false, deviceConnected = false;
     View parentLayout ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,16 +51,16 @@ public class ChooseRouteActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.route_choose_view);
 
-
-
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
 
         } else {
-            startBluetoothScan();
+            parentLayout = findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(parentLayout, "Please connect to a new device, or the application will not work >_<.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+            deviceConnected = true;
         }
 
 
@@ -147,14 +147,16 @@ public class ChooseRouteActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(broadcastReceiver, intentFilter);
-
+        registered = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    if(registered){
+         unregisterReceiver(broadcastReceiver);
+    }
 
-        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -163,12 +165,9 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                // Bluetooth was enabled, do something
 
-                startBluetoothScan();
-
-
-
+                Toast.makeText(getApplicationContext(), "Connect to a new device if not already.", Toast.LENGTH_SHORT).show();
+                deviceConnected = true;
             } else {
                 // Bluetooth was not enabled, do something else or show an error message
                 Toast.makeText(getApplicationContext(), "You must Enable Bluetooth", Toast.LENGTH_SHORT).show();
@@ -200,7 +199,9 @@ public class ChooseRouteActivity extends AppCompatActivity {
             Toast.makeText(this, "Need to connect to Bluetooth First", Toast.LENGTH_SHORT).show();
         }
     }
-
+    public void startBouetoothButton(View view){
+        startBluetoothScan();
+    }
     public void finishActivity(View v){
         this.finish();
     }
