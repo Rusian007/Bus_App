@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
     BluetoothAdapter bluetoothAdapter;
     BroadcastReceiver broadcastReceiver;
     boolean registered = false, deviceConnected = false;
+    TextView logoutTextView;
     View parentLayout ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
         setContentView(R.layout.route_choose_view);
-
+         logoutTextView = findViewById(R.id.logout);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -63,8 +65,8 @@ public class ChooseRouteActivity extends AppCompatActivity {
             deviceConnected = true;
         }
 
-
-
+// Logout btn on click action
+        Logout();
 
 
         db = new Database(ChooseRouteActivity.this);
@@ -199,6 +201,31 @@ public class ChooseRouteActivity extends AppCompatActivity {
             Toast.makeText(this, "Need to connect to Bluetooth First", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void Logout(){
+        logoutTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Perform action when TextView is clicked
+                if(db.IsTokenTableEmpty(db)){
+                    Toast.makeText(getApplicationContext(), "Login First", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    if (db.DeleteToken(db)){
+                        Toast.makeText(getApplicationContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+                    } else{
+                        Toast.makeText(getApplicationContext(), "Internal error, not logged out", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+            }
+        });
+    }
+
+
+
+
     public void startBouetoothButton(View view){
         startBluetoothScan();
     }

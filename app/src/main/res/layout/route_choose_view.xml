@@ -105,13 +105,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/bookingText"
+        android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="64dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Logout"
+        android:clickable="true"
         android:textColor="@color/ColorBluGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView5" />

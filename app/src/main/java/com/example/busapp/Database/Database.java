@@ -466,4 +466,14 @@ public class Database extends SQLiteOpenHelper {
         return token;
     }
 
+    public boolean DeleteToken(Database db){
+        SQLiteDatabase SQ = db.getWritableDatabase();
+
+        // Delete the first token from the table
+        int deletedRows = SQ.delete(TOKENTABLE, COUNTER + " = 1", null);
+
+        return (deletedRows == 1); // Returns true if one row is deleted, false otherwise
+    }
+
+
 }
