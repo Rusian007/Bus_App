@@ -350,7 +350,8 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                 Log.d("******", "Socket is NOT connected: ");
             }
             // Define the text to be printed
-            String bigText = "মাওয়া পরিবহন (প্রাঃ) লিঃ ( ইলিশ )";
+            String bigText = "MAWA PARIBAHAN PVT LTD (ELISH)";
+           // String bigText = "\u09AE\u09BE\u0993\u09DF\u09BE \u09AA\u09B0\u09BF\u09AC\u09B9\u09A8 (\u09AA\u09CD\u09B0\u09BE\u09B9)\u09B2\u09BF\u0993 (\u0987\u09B2\u09BF\u09B6 )"; // Bangla text in Unicode
             String smallText = "www.elishparibahan.com";
             String normalText1 = "serial no:00001 ";
             String normalText2 = "From: "+FromLocationSelected;
@@ -367,7 +368,9 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             byte[] alignStart = {0x1B, 0x61, 0x00};
 
             // Set the text size to big
-            byte[] textSizeBig = {0x1D, 0x21, 0x11};
+            //byte[] textSizeBig = {0x1D, 0x21, 0x11};
+            byte[] textSizeBig = new byte[]{0x1D, 0x21, 0x14}; // 0x30 is the command for double height and double width text
+
 
             // Set the text size to small
             byte[] textSizeSmall = {0x1B, 0x21, 0x00};
@@ -377,10 +380,6 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
             // Set the text to regular
             byte[] boldOff = {0x1B, 0x45, 0x00};
-
-
-
-
 
             byte[] initializePrinter = {27, 64}; // initialize the printer
             byte[] printText = {27, 74, 2, 27, 100, 5}; // print the text and feed 4 lines
