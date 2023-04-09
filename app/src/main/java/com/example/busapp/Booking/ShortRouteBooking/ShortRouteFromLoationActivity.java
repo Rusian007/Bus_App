@@ -100,7 +100,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
                             initialize();
                         } else {
                             // handle error
-                            Log.d("ERROR", "err: " + response.errorBody().toString());
+                            Log.d("ERROR", "err: " + response.raw().body());
                             Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
 
                         }
