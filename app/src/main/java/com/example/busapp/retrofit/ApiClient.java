@@ -10,7 +10,7 @@ public class ApiClient {
 
 //Define the base URL//
 
-    private static final String BASE_URL = "https://bus-k3cz.onrender.com";
+    private static final String BASE_URL = "http://rusian.pythonanywhere.com/";
 
 //Create the Retrofit instance//
 

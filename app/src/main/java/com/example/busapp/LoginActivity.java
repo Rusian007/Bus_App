@@ -154,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TokenModel> call, Throwable t) {
+                Log.d("ERROR", ": "+t);
                 Toast.makeText(LoginActivity.this, "Request Send Failed, Please Check Your Internet Connection or Maybe The Server Is Down.", Toast.LENGTH_SHORT).show();
             }
         });
