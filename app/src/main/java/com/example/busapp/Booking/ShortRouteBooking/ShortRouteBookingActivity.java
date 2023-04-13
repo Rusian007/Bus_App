@@ -148,7 +148,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                         for (ShortRouteModel.Route route : routes) {
                             int price = route.getFair();
                             // if that route does not exist the insert that in db
-                            if (db.doesRouteExist(route.getStartingPointName())) {
+                            if (db.doesRouteExist(route.getId())) {
                                 // exists
                             } else {
                                 // does not exist

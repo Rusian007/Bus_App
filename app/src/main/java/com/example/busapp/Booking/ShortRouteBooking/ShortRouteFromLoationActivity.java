@@ -92,7 +92,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
                                 if (db.doesPointExist(route.getName())) {
                                     // exists
                                 } else {
-                                    db.addNewPoints(route.getName(), route.getLatitude(), route.getLongitude());
+                                    db.addNewPoints( route.getName(), route.getLatitude(), route.getLongitude());
                                 }
                                 //
                             }

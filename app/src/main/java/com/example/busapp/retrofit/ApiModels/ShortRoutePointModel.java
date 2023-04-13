@@ -24,6 +24,8 @@ public class ShortRoutePointModel {
     }
 
     public static class Route {
+
+
         @SerializedName("name")
         private String name;
 

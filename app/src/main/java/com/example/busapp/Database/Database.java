@@ -279,12 +279,12 @@ public class Database extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public boolean doesRouteExist(String name){
+    public boolean doesRouteExist(int Id){
         SQLiteDatabase db = this.getReadableDatabase();
 
 
 
-        String query = "SELECT * FROM "+ ROUTESTABLE +" WHERE starting_point_name = '"+ name+"'";
+        String query = "SELECT * FROM "+ ROUTESTABLE +" WHERE ID = '"+ Id+"'";
 
         Cursor cursor = db.rawQuery(query,null);
         if (cursor.moveToFirst()) {
