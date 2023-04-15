@@ -22,7 +22,7 @@ public class TicketRequestBodyMultiple {
 
 
 
-    public class TicketModel {
+    public static class TicketModel {
         @SerializedName("route_id")
         private String routeId;
 

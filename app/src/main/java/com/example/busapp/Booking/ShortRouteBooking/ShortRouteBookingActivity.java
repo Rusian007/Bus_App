@@ -250,8 +250,9 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                 }
             });
         } else{
-            //TODO : save to offline database
-            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+
+            db.newTicketSold(endLocationId,1);
+            Toast.makeText(getApplicationContext(), "Network not available, Saving ticket on phone", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -299,8 +300,8 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             }
 
             // discoverDevices();
-
-           Bluetoothprint();
+           //CallApiSendData();
+            Bluetoothprint();
 
 
         } else

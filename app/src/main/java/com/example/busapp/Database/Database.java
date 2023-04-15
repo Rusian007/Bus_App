@@ -255,7 +255,51 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    // ************** Saved Ticket Sell Table
+    // ************** Saved Ticket Sell Table *****************
+    @SuppressLint("Range")
+    public Cursor getSoldTickets(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Integer> integerList = new ArrayList<>();
+        String query = "SELECT * FROM "+ TICKETSELLSAVEDTABLE ;
+
+        Cursor cursor = db.rawQuery(query,null);
+
+        return cursor;
+    }
+
+    public void deleteAllRecordsFromTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String tableName = TICKETSELLSAVEDTABLE;
+        db.delete(tableName, null, null);
+        db.close();
+    }
+
+    public boolean doesTicketSoldTableExist(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+ TICKETSELLSAVEDTABLE ;
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            @SuppressLint("Range") int Seats = cursor.getInt(cursor.getColumnIndex(SEATS));
+            return true;
+        }
+        else return false;
+    }
+
+
+
+    public void newTicketSold(int route_id, int seat){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(ROUTEID, route_id);
+        cv.put(SEATS, seat);
+
+        long result =  db.insert(TICKETSELLSAVEDTABLE,null,cv);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
     // ************** MAC table ***************
