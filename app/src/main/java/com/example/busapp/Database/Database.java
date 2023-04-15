@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.example.busapp.LoginActivity;
 
+import java.util.ArrayList;
+
 public class Database extends SQLiteOpenHelper {
 
     private static Database sqLiteManager;
@@ -46,18 +48,20 @@ public class Database extends SQLiteOpenHelper {
 
     private static final String MACADDRESS = "Address";
 
+    private static final String PRICECOUNTERTABLE = "PriceTable";
+    public static final String SEATNUMBER = "Seat";
+    public static final String AMOUNT = "Amount";
+
+    public static final String TICKETSELLSAVEDTABLE = "TicketTable";
+    public static final String ROUTEID = "route_id";
+    public static final String SEATS = "seats";
+
     public Database(Context context) {
         super(context, DATABASE_NAME,null, DATABASE_VERSION);
         this.context=context;
     }
 
-    // creates a single instance of database object
-  /*  public static Database instanceOfDatabase(Context context){
-        if(sqLiteManager == null)
-            sqLiteManager = new Database(context);
 
-        return sqLiteManager;
-    } */
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -149,6 +153,33 @@ public class Database extends SQLiteOpenHelper {
         ;
 
         db.execSQL(sql.toString());
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(PRICECOUNTERTABLE)
+                .append("(")
+                .append(ID)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(SEATNUMBER)
+                .append(" INTEGER , ")
+                .append(AMOUNT)
+                .append(" INTEGER )")
+
+        ;
+        db.execSQL(sql.toString());
+
+        sql = new StringBuilder()
+                .append("CREATE TABLE ")
+                .append(TICKETSELLSAVEDTABLE)
+                .append("(")
+                .append(ID)
+                .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+                .append(ROUTEID)
+                .append(" INTEGER , ")
+                .append(SEATS)
+                .append(" INTEGER )");
+
+        db.execSQL(sql.toString());
     }
 
     @Override
@@ -158,6 +189,75 @@ public class Database extends SQLiteOpenHelper {
             onCreate(db);
 
     }
+
+
+    // ************** Price Counter Table
+    @SuppressLint("Range")
+    public ArrayList<Integer> getPricesAndSeats(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        int TotalSeat=0;
+        int TotalAmount=0;
+        ArrayList<Integer> integerList = new ArrayList<>();
+
+
+        String query = "SELECT * FROM "+ PRICECOUNTERTABLE +" WHERE "+ID+" = 1";
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            TotalSeat = cursor.getInt(cursor.getColumnIndex(SEATNUMBER));
+            TotalAmount = cursor.getInt(cursor.getColumnIndex(AMOUNT));
+
+            integerList.add(TotalSeat);
+            integerList.add(TotalAmount);
+
+            // Do something with the token value
+        }
+        cursor.close();
+        return integerList;
+    }
+
+    public boolean doesPriceTableExist(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+ PRICECOUNTERTABLE ;
+
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            @SuppressLint("Range") int TotalSeats = cursor.getInt(cursor.getColumnIndex(SEATNUMBER));
+            return true;
+        }
+        else return false;
+    }
+
+    public void setPriceTable(int seats, int amount){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(SEATNUMBER, seats);
+        cv.put(AMOUNT, amount);
+
+        String whereClause = "ID = ?";
+        String[] whereArgs = {String.valueOf(1)};
+        long result =  db.update(PRICECOUNTERTABLE,cv,whereClause,whereArgs);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void newPriceTable(int seats, int amount){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(SEATNUMBER, seats);
+        cv.put(AMOUNT, amount);
+
+        long result =  db.insert(PRICECOUNTERTABLE,null,cv);
+        if(result == -1){
+            Toast.makeText(context, "Failed :(", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // ************** Saved Ticket Sell Table
+
+
     // ************** MAC table ***************
     @SuppressLint("Range")
     public String getMacAddress(){

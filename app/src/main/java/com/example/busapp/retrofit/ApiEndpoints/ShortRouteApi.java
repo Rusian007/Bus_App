@@ -4,13 +4,13 @@ import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
 import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
 import com.example.busapp.retrofit.ApiModels.ShortRouteTicketModel;
 import com.example.busapp.retrofit.ApiModels.TicketRequestBody;
+import com.example.busapp.retrofit.ApiModels.TicketRequestBodyMultiple;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 
 public interface ShortRouteApi {
@@ -24,6 +24,12 @@ public interface ShortRouteApi {
     Call<ShortRouteTicketModel> setSoldTicket(
             @Header("Authorization") String token,
             @Body TicketRequestBody requestBody
+    );
+
+    @POST("ticket/ticket_multiple/")
+    Call<TicketRequestBodyMultiple> postMultipleTickets(
+            @Header("Authorization") String token,
+            @Body TicketRequestBodyMultiple ticketRequestModel
     );
 
 }

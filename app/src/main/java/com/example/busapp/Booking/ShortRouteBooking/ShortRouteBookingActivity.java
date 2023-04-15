@@ -40,12 +40,16 @@ import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
 import com.example.busapp.retrofit.ApiModels.ShortRouteTicketModel;
 import com.example.busapp.retrofit.ApiModels.TicketRequestBody;
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -70,7 +74,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     int REQUEST_ENABLE_BT = 0;
     int endLocationId;
-    private TextView fromLoc, toLoc, amount;
+    private TextView fromLoc, toLoc, amount, todayDate, TicketSeatCount, TicketAmountCount;
     Database db;
 
     ArrayList<String> endLocationSelected = new ArrayList<>();
@@ -95,6 +99,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
         Intent intent = getIntent();
         db = new Database(ShortRouteBookingActivity.this);
+        AndroidThreeTen.init(this);
 
         toLocations.clear();
         toLocations.trimToSize();
@@ -111,16 +116,32 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         toLoc = findViewById(R.id.toLocation);
         amount = findViewById(R.id.shortRoute_amount);
         printbtn = (Button) findViewById(R.id.ShortprintBtn);
+        todayDate = findViewById(R.id.date);
+        TicketSeatCount = findViewById(R.id.ticketSeats);
+        TicketAmountCount = findViewById(R.id.ticketAmount);
 
+        if(!db.doesPriceTableExist()){
+            TicketSeatCount.setText("0");
+            TicketAmountCount.setText("0");
+            db.newPriceTable(0,0);
+        } else {
+            ArrayList<Integer> integerList = db.getPricesAndSeats();
+            SetSeatandAmount(String.valueOf(integerList.get(0)),String.valueOf(integerList.get(1)) );
+        }
 
         // call API - start a method
         callApi();
+        getTime();
         BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
         printbtn.setVisibility(View.INVISIBLE);
 
 
+    }
+    public void SetSeatandAmount(String seats, String amount){
+        TicketSeatCount.setText(seats);
+        TicketAmountCount.setText(amount);
     }
 
     private void callApi() {
@@ -191,6 +212,17 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     void CallApiSendData(){
         String token = db.GetToken(db);
+        ArrayList<Integer> integerList = db.getPricesAndSeats();
+
+        String stringValue = endLocationSelectedPrice.get(0);
+        int intValue = Integer.parseInt(stringValue.split("\\.")[0]);
+        int totalAmount = (int) integerList.get(1) + intValue;
+        int totalSeat = integerList.get(0)+1;
+
+
+        db.setPriceTable(totalSeat, totalAmount);
+
+        SetSeatandAmount(String.valueOf(totalSeat),String.valueOf(totalAmount));
         // call API
         ApiClient client = new ApiClient();
         Retrofit retrofit = client.getRetrofitInstance();
@@ -218,6 +250,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                 }
             });
         } else{
+            //TODO : save to offline database
             Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 
         }
@@ -269,20 +302,6 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
            Bluetoothprint();
 
-/*
-
-            Intent intent = new Intent(this, ShortRouteBookingActivity.class);
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    finish();
-                }
-            }, 1000);
-*/
 
         } else
             Toast.makeText(getApplicationContext(), "You must select an end location", Toast.LENGTH_SHORT).show();
@@ -355,9 +374,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             Snackbar snackbar = Snackbar.make(parentLayout, "NO bluetooth device is saved, Please restart this app and connect to a new bluetooth device.", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-
-
-
+        ArrayList<Integer> integerList = db.getPricesAndSeats();
 
         try {
             String MacAddress = db.getMacAddress();
@@ -388,7 +405,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             String bigText = "MAWA PARIBAHAN PVT LTD (ELISH)";
            // String bigText = "\u09AE\u09BE\u0993\u09DF\u09BE \u09AA\u09B0\u09BF\u09AC\u09B9\u09A8 (\u09AA\u09CD\u09B0\u09BE\u09B9)\u09B2\u09BF\u0993 (\u0987\u09B2\u09BF\u09B6 )"; // Bangla text in Unicode
             String smallText = "www.elishparibahan.com";
-            String normalText1 = "serial no:00001 ";
+            String normalText1 = "serial no: "+integerList.get(0);
             String normalText2 = "From: "+FromLocationSelected;
             String normalText3 = "To: "+endLocationSelected.get(0);
 
@@ -554,6 +571,18 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         }
     }
 
+    public void getTime(){
+        // Get the current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Define the date format
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // Format the current date to "DD/MM/YYYY" format
+        String formattedDate = currentDate.format(dateFormatter);
+        todayDate.setText(formattedDate);
+    }
+
 
     // Call this method to request Bluetooth permissions
     private void requestBluetoothPermissions() {
@@ -619,6 +648,12 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         startActivity(intent);
         this.finish();
     }
+    public void EndSaleClick(View v){
+        Intent intent = new Intent(getApplicationContext(), ShortRouteTicketActivity.class);
+        startActivity(intent);
+        this.finish();
+    }
+
 
 
 }
