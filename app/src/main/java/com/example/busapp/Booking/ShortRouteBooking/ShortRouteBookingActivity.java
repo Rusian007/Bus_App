@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -23,7 +22,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,19 +37,17 @@ import com.example.busapp.R;
 import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
 import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
-import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
+import com.example.busapp.retrofit.ApiModels.ShortRouteTicketModel;
+import com.example.busapp.retrofit.ApiModels.TicketRequestBody;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
@@ -73,7 +69,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     BroadcastReceiver broadcastReceiver;
 
     int REQUEST_ENABLE_BT = 0;
-
+    int endLocationId;
     private TextView fromLoc, toLoc, amount;
     Database db;
 
@@ -106,7 +102,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         endLocationSelected.trimToSize();
         endLocationSelectedPrice.clear();
         endLocationSelectedPrice.trimToSize();
-
+        endLocationId = -1;
         FromLocationSelected = db.getShortLocationCache();
 
 
@@ -193,13 +189,46 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         }
     }
 
+    void CallApiSendData(){
+        String token = db.GetToken(db);
+        // call API
+        ApiClient client = new ApiClient();
+        Retrofit retrofit = client.getRetrofitInstance();
+        ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
+
+        Call<ShortRouteTicketModel> call = shortapi.setSoldTicket("Token " + token, new TicketRequestBody(String.valueOf(endLocationId), "1"));
+
+        if(isNetworkAvailable()){
+            call.enqueue(new Callback<ShortRouteTicketModel>() {
+                @Override
+                public void onResponse(Call<ShortRouteTicketModel> call, Response<ShortRouteTicketModel> response) {
+                    if (response.isSuccessful()) {
+                        ShortRouteTicketModel model = response.body();
+                        Log.d("****", ": "+ model.getTicket().getBookedBy());
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Error Occured on sending request" , Toast.LENGTH_SHORT).show();
+                        Log.d("****", "Error Occured on sending request");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ShortRouteTicketModel> call, Throwable t) {
+                    Log.d("****", "Error Occured on sending request");
+                    Toast.makeText(getApplicationContext(), "Error Occured on sending request" + t, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else{
+            Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     void getAndSetLocation(Cursor cv) {
         String endingLocationName = cv.getString(cv.getColumnIndex("ending_point_name"));
         double fair = cv.getDouble(cv.getColumnIndex("fair"));
-        toLocations.add(new ShortRoute_LocationModel(endingLocationName, String.valueOf(fair)));
-        // Do something with the retrieved values
+        int id = cv.getInt(cv.getColumnIndex("ID"));
+        toLocations.add(new ShortRoute_LocationModel(endingLocationName, String.valueOf(fair), id));
 
-        Log.d("DATABASE", "Point: , " + fair + ", " + endingLocationName);
         initRecycleView();
     }
 
@@ -237,7 +266,9 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             }
 
             // discoverDevices();
-            Bluetoothprint();
+
+           Bluetoothprint();
+
 /*
 
             Intent intent = new Intent(this, ShortRouteBookingActivity.class);
@@ -317,20 +348,24 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     // print the ticket
     void Bluetoothprint() {
+
         boolean macExists = db.doesMacExist();
         if (!macExists){
             parentLayout = findViewById(android.R.id.content);
             Snackbar snackbar = Snackbar.make(parentLayout, "NO bluetooth device is saved, Please restart this app and connect to a new bluetooth device.", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-        String MacAddress = db.getMacAddress();
-        Log.d("#########", "Bluetooth enabled " + MacAddress);
 
-        BluetoothDevice printer = bluetoothAdapter.getRemoteDevice(MacAddress.replaceAll("\\s", "")); // replace with your printer's MAC address
-        UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
 
 
         try {
+            String MacAddress = db.getMacAddress();
+            Log.d("#########", "Bluetooth enabled " + MacAddress);
+
+            BluetoothDevice printer = bluetoothAdapter.getRemoteDevice(MacAddress.replaceAll("\\s", "")); // replace with your printer's MAC address
+            UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
 
             if (ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 9);
@@ -484,6 +519,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         }
 
         if (donePrint){
+            CallApiSendData();
             // printing is Done, Restart the class
             Intent intent = new Intent(this, ShortRouteBookingActivity.class);
             final Handler handler = new Handler();
@@ -499,7 +535,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     finish();
                 }
-            }, 1500);
+            }, 2500);
         }
     }
 
@@ -534,10 +570,11 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
 
     @Override
-    public boolean AddDestinationLocation(String locationName, String price) {
+    public boolean AddDestinationLocation(String locationName, String price, int id) {
         if (endLocationSelected.isEmpty()) {
             endLocationSelected.add(locationName);
             endLocationSelectedPrice.add(price);
+            endLocationId = id;
             checkLocations();
             printbtn.setVisibility(View.VISIBLE);
         }

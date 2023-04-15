@@ -58,7 +58,7 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
                 view.startAnimation(animation);
 
                 if (!locationAdder.isSelected()){
-                    locationAdder.AddDestinationLocation(location.getStart_location(), location.getPrice());
+                    locationAdder.AddDestinationLocation(location.getStart_location(), location.getPrice(), location.getId());
 
                     holder.locationText.setTextColor(Color.parseColor("#1cab50"));
                     isSelected = true; // If a seat has already been selected then don't add any more seats to the list
@@ -98,7 +98,7 @@ public class ToLocationAdapter extends RecyclerView.Adapter<ToLocationAdapter.Vi
     }
 
     public interface IEndLocation {
-        boolean AddDestinationLocation(String locationName, String locationPrice);
+        boolean AddDestinationLocation(String locationName, String locationPrice, int id);
         void RemoveDestinationLocation(String locationName);
         boolean isSelected();
 

@@ -3,6 +3,7 @@ package com.example.busapp.Model;
 public class ShortRoute_LocationModel {
 
     String start_location;
+    int Id;
     String price;
     boolean is_clicked = false;
 
@@ -17,11 +18,19 @@ public class ShortRoute_LocationModel {
     public ShortRoute_LocationModel(String start_location) {
         this.start_location = start_location;
     }
-    public ShortRoute_LocationModel(String start_location, String price) {
+    public ShortRoute_LocationModel(String start_location, String price, int id) {
         this.start_location = start_location;
         this.price = price;
+        this.Id = id;
     }
 
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public String getStart_location() {
         return start_location;
