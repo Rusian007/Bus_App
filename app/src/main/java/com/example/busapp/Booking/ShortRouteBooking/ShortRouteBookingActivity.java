@@ -74,7 +74,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
     int REQUEST_ENABLE_BT = 0;
     int endLocationId;
-    private TextView fromLoc, toLoc, amount, todayDate, TicketSeatCount, TicketAmountCount;
+    private TextView fromLoc, toLoc, amount, todayDate, TicketSeatCount, TicketAmountCount, UsernameText;
     Database db;
 
     ArrayList<String> endLocationSelected = new ArrayList<>();
@@ -119,6 +119,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
         todayDate = findViewById(R.id.date);
         TicketSeatCount = findViewById(R.id.ticketSeats);
         TicketAmountCount = findViewById(R.id.ticketAmount);
+        UsernameText = findViewById(R.id.start);
+
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
 
         if(!db.doesPriceTableExist()){
             TicketSeatCount.setText("0");

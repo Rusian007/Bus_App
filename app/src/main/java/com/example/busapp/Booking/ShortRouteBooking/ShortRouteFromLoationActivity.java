@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -44,6 +45,7 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
     Button nextBTN;
     Database db;
     View parentLayout ;
+    TextView UsernameText;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,12 @@ public class ShortRouteFromLoationActivity extends AppCompatActivity implements 
         setContentView(R.layout.short_route_from_location);
 
         db = new Database(ShortRouteFromLoationActivity.this);
+
+        UsernameText = findViewById(R.id.start);
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
         boolean tokenEmpty = db.IsTokenTableEmpty(db);
+
         if(tokenEmpty){
             parentLayout = findViewById(android.R.id.content);
             Snackbar snackbar = Snackbar.make(parentLayout, "Token Expired. Logout and login again to get a new session. App will not work.", Snackbar.LENGTH_INDEFINITE);

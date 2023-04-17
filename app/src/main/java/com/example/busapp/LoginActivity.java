@@ -118,11 +118,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(ISTableEmpty){
                             // If table is empty then we insert new row
-                            db.addNewToken(token);
+                            db.addNewToken(token, usernameEdit.getText().toString());
 
                         } else {
                             // If table already exists then we just update the row
-                            db.UpdateToken(db, token);
+                            db.UpdateToken(db, token, usernameEdit.getText().toString());
                         }
                         openNextActivity();
 
@@ -131,9 +131,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         // for now we still save the token in database - this maybe change later
                         if(ISTableEmpty){
-                            db.addNewToken(token);
+                            db.addNewToken(token, usernameEdit.getText().toString());
                         } else {
-                            db.UpdateToken(db, token);
+                            db.UpdateToken(db, token, usernameEdit.getText().toString());
                         }
                         openNextActivity();
                     }

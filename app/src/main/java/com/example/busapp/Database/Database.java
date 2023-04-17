@@ -22,6 +22,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "e-ticket.db";
     public static final String LOCATION_TABLE = "Locations";
     public static final String TOKENTABLE = "TokenTable";
+    public static final String USERNAME = "Username";
     public static final String POINTSTABLE = "PointsTable";
     public static final String ROUTESTABLE = "RoutesTable";
     public static final String ID = "ID";
@@ -98,6 +99,8 @@ public class Database extends SQLiteOpenHelper {
                 .append(COUNTER)
                 .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(TOKEN)
+                .append(" TEXT, ")
+                .append(USERNAME)
                 .append(" TEXT )");
 
         db.execSQL(sql.toString());
@@ -554,13 +557,13 @@ public class Database extends SQLiteOpenHelper {
 
 
     // ************** Token Table ***************
-    public void addNewToken(String token){
+    public void addNewToken(String token, String username){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(TOKEN, token);
-
+        contentValues.put(USERNAME, username);
 
         long result = db.insert(TOKENTABLE,null, contentValues);
         if(result == -1){
@@ -581,11 +584,11 @@ public class Database extends SQLiteOpenHelper {
         else
             return true;
     }
-    public void UpdateToken(Database table, String token){
+    public void UpdateToken(Database table, String token, String username){
         SQLiteDatabase db = table.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(TOKEN, token);
-
+        cv.put(USERNAME, username);
         String whereClause = "Counter = ?";
         String[] whereArgs = {String.valueOf(1)};
         long result =  db.update(TOKENTABLE,cv,whereClause,whereArgs);
@@ -608,6 +611,20 @@ public class Database extends SQLiteOpenHelper {
         }
         cursor.close();
         return token;
+    }
+
+    public String GetUsername(Database db){
+        SQLiteDatabase SQ = db.getReadableDatabase();
+        String username=null;
+        String query = "SELECT "+ USERNAME +" FROM "+ TOKENTABLE +" WHERE "+COUNTER+" = 1";
+
+        Cursor cursor = SQ.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            username = cursor.getString(cursor.getColumnIndex(USERNAME));
+            // Do something with the token value
+        }
+        cursor.close();
+        return username;
     }
 
     public boolean DeleteToken(Database db){
