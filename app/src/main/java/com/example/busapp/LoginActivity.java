@@ -108,26 +108,26 @@ public class LoginActivity extends AppCompatActivity {
                     TokenModel loginResponse = response.body();
                     token = loginResponse.getToken();
                     // save the token or proceed to the next screen
-                    CheckBox checkBox = findViewById(R.id.RememberCheck);
+                  //  CheckBox checkBox = findViewById(R.id.RememberCheck);
                     boolean ISTableEmpty = db.IsTokenTableEmpty(db);
-                    if (checkBox.isChecked()) {
-                        // CheckBox is checked, do something
-                        Toast.makeText(LoginActivity.this, "Token saved: "+token, Toast.LENGTH_SHORT).show();
+//                    if (checkBox.isChecked()) {
+//                        // CheckBox is checked, do something
+//                        Toast.makeText(LoginActivity.this, "Token saved: "+token, Toast.LENGTH_SHORT).show();
+//
+//
+//
+//                        if(ISTableEmpty){
+//                            // If table is empty then we insert new row
+//                            db.addNewToken(token, usernameEdit.getText().toString());
+//
+//                        } else {
+//                            // If table already exists then we just update the row
+//                            db.UpdateToken(db, token, usernameEdit.getText().toString());
+//                        }
+//                        openNextActivity();
 
 
 
-                        if(ISTableEmpty){
-                            // If table is empty then we insert new row
-                            db.addNewToken(token, usernameEdit.getText().toString());
-
-                        } else {
-                            // If table already exists then we just update the row
-                            db.UpdateToken(db, token, usernameEdit.getText().toString());
-                        }
-                        openNextActivity();
-
-                    } else {
-                        // CheckBox is not checked, do something else
 
                         // for now we still save the token in database - this maybe change later
                         if(ISTableEmpty){
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                             db.UpdateToken(db, token, usernameEdit.getText().toString());
                         }
                         openNextActivity();
-                    }
+
 
                 } else {
                     // handle the error

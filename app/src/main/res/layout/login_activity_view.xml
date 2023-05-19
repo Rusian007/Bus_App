@@ -110,21 +110,21 @@
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <CheckBox
-        android:id="@+id/RememberCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginBottom="252dp"
-        android:fontFamily="@font/poppins_light"
-        android:scaleX="0.90"
-        android:scaleY="0.90"
-        android:textColor="#5f5f5f"
-        android:text="Remember Me"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.155"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <CheckBox-->
+<!--        android:id="@+id/RememberCheck"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="48dp"-->
+<!--        android:layout_marginBottom="252dp"-->
+<!--        android:fontFamily="@font/poppins_light"-->
+<!--        android:scaleX="0.90"-->
+<!--        android:scaleY="0.90"-->
+<!--        android:textColor="#5f5f5f"-->
+<!--        android:text="Remember Me"-->
+<!--        android:textSize="14dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.155"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
     <TextView
         android:id="@+id/textView5"

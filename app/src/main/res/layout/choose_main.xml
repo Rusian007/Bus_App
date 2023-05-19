@@ -113,6 +113,7 @@
         android:layout_marginBottom="64dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Logout!"
+        android:clickable="true"
         android:textColor="@color/ColorBluGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView5" />

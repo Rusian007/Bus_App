@@ -627,13 +627,23 @@ public class Database extends SQLiteOpenHelper {
         return username;
     }
 
-    public boolean DeleteToken(Database db){
-        SQLiteDatabase SQ = db.getWritableDatabase();
+    public boolean DeleteToken(Database db){SQLiteDatabase SQ = db.getWritableDatabase();
 
-        // Delete the first token from the table
-        int deletedRows = SQ.delete(TOKENTABLE, COUNTER + " = 1", null);
+        // Get the first row in the table
+        Cursor cursor = SQ.rawQuery("SELECT * FROM TOKENTABLE ORDER BY COUNTER LIMIT 1", null);
 
-        return (deletedRows == 1); // Returns true if one row is deleted, false otherwise
+        // Check if there is a row
+        if (cursor.moveToFirst()) {
+            // Get the ID of the first row
+            int id = cursor.getInt(cursor.getColumnIndex("Counter"));
+
+            // Delete the row
+            SQ.delete(TOKENTABLE, "Counter = ?", new String[] { String.valueOf(id) });
+
+            return true;
+        }
+
+        return false;
     }
 
 

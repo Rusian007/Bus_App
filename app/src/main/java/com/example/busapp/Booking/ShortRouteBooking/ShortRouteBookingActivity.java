@@ -95,7 +95,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-        setContentView(R.layout.short_route_to_location);
+        setContentView(R.layout.short_route_to_location_view);
 
         Intent intent = getIntent();
         db = new Database(ShortRouteBookingActivity.this);
