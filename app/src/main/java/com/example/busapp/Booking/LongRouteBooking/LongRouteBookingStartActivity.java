@@ -1,19 +1,35 @@
 package com.example.busapp.Booking.LongRouteBooking;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.busapp.Database.Database;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
+import com.example.busapp.retrofit.ApiModels.LongRouteModel;
+import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LongRouteBookingStartActivity extends AppCompatActivity {
     String FromLocation, ToLocation;
@@ -25,16 +41,64 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.long_route_booking_start_view);
 
-        FromDropDown();
-        ToDropDown();
+        getLocationsFromApi();
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    private void getLocationsFromApi() {
+        Database db = new Database(LongRouteBookingStartActivity.this);
+        String token = db.GetToken(db);
+        ArrayList<String> items = new ArrayList<>();
+        if (isNetworkAvailable()) {
+            ApiClientLongRoute client = new ApiClientLongRoute();
+            Retrofit retrofit = client.getRetrofitInstance();
+            LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
+            Call<LongRouteModel> call = longRoute.getLongRoutes("Token " + token);
+
+            call.enqueue(new Callback<LongRouteModel>() {
+                @Override
+                public void onResponse(Call<LongRouteModel> call, Response<LongRouteModel> response) {
+                    if (response.isSuccessful()) {
+                        LongRouteModel model = response.body();
+
+                        List<LongRouteModel.Locations> routes = model.getRoutes();
+
+                        // do something with the routes
+                        for (LongRouteModel.Locations route : routes) {
+                            items.add(route.getName());
+                        }
+                        FromDropDown(items);
+                        ToDropDown(items);
+
+                    } else {
+                        // handle error
+                        Log.d("ERROR", "err: " + response.raw().body());
+                        Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LongRouteModel> call, Throwable t) {
+
+                }
+            });
+        }else {
+            // No internet connection available
+            Toast.makeText(getApplicationContext(), "Internet is not available", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
-    public void FromDropDown(){
+    public void FromDropDown( ArrayList<String> items){
         //get the spinner from the xml.
         Spinner dropdown = findViewById(R.id.long_from_dst);
         //create a list of items for the spinner. this will come from API/ TODO: Get data from api
-        String[] items = new String[]{"Dhaka", "Mawa", "Chottogram"};
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.color_spinner_layout, items);
         adapter.setDropDownViewResource(R.layout.spinner_list);
@@ -61,12 +125,9 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         });
     }
 
-    public void ToDropDown(){
+    public void ToDropDown(ArrayList<String> items){
         //get the spinner from the xml.
         Spinner dropdown = findViewById(R.id.long_to_dst);
-        //create a list of items for the spinner. this will come from API/ TODO: Get data from api
-        String[] items = new String[]{"Dhaka", "Gulistan", "Barishal"};
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.color_spinner_layout, items);
         adapter.setDropDownViewResource(R.layout.spinner_list);
 

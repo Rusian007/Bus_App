@@ -32,6 +32,7 @@ import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.LoginApi;
 import com.example.busapp.retrofit.ApiModels.TokenModel;
 import com.example.busapp.retrofit.ErrorsModel.LoginError;
+import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 import com.example.busapp.retrofit.RequestModel.LoginCredentials;
 import com.google.gson.Gson;
 
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity_view);
         Bundle bundle = getIntent().getExtras();
        route = bundle.getString("ROUTE"); // the selected route, long or short
-
+        Log.d("ROUTE", ": "+route);
 
         usernameEdit = findViewById(R.id.username);
         passwordEdit = findViewById(R.id.password);
@@ -87,13 +88,85 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "One of the fields is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                callLoginApi(username, password);
+                if (route.equals("LONG")){
+                    callLoginApiLongRoute(username, password);
+                } else {
+                    callLoginApi(username, password);
+                }
+
+            }
+        });
+
+    }
+    public void callLoginApiLongRoute(String username, String password){
+        ApiClientLongRoute client = new ApiClientLongRoute();
+        Retrofit retrofit = client.getRetrofitInstance();
+        LoginApi login = retrofit.create(LoginApi.class);
+        LoginCredentials credentials = new LoginCredentials(username, password);
+        Call<TokenModel> call = login.loginUser(credentials);
+        call.enqueue(new Callback<TokenModel>() {
+            @Override
+            public void onResponse(Call<TokenModel> call, Response<TokenModel> response) {
+                if (response.isSuccessful()) {
+
+                    TokenModel loginResponse = response.body();
+                    token = loginResponse.getToken();
+                    // save the token or proceed to the next screen
+                    //  CheckBox checkBox = findViewById(R.id.RememberCheck);
+                    boolean ISTableEmpty = db.IsTokenTableEmpty(db);
+//                    if (checkBox.isChecked()) {
+//                        // CheckBox is checked, do something
+//                        Toast.makeText(LoginActivity.this, "Token saved: "+token, Toast.LENGTH_SHORT).show();
+//
+//
+//
+//                        if(ISTableEmpty){
+//                            // If table is empty then we insert new row
+//                            db.addNewToken(token, usernameEdit.getText().toString());
+//
+//                        } else {
+//                            // If table already exists then we just update the row
+//                            db.UpdateToken(db, token, usernameEdit.getText().toString());
+//                        }
+//                        openNextActivity();
+
+
+
+
+                    // for now we still save the token in database - this maybe change later
+                    if(ISTableEmpty){
+                        db.addNewToken(token, usernameEdit.getText().toString());
+                    } else {
+                        db.UpdateToken(db, token, usernameEdit.getText().toString());
+                    }
+                    openNextActivity();
+
+
+                } else {
+                    // handle the error
+                    try {
+                        Gson gson = new Gson();
+                        LoginError errorResponse = gson.fromJson(response.errorBody().string(), LoginError.class);
+                        String errorMessage = errorResponse.getNonFieldErrors().get(0); // assuming the first error message is the relevant one
+                     Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenModel> call, Throwable t) {
+                Log.d("ERROR", ": "+t);
+                Toast.makeText(LoginActivity.this, "Request Send Failed, Please Check Your Internet Connection or Maybe The Server Is Down.", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    public void callLoginApi(String username, String password){
+
+  public void callLoginApi(String username, String password){
 
         ApiClient client = new ApiClient();
         Retrofit retrofit = client.getRetrofitInstance();

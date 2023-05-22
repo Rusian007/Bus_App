@@ -15,15 +15,15 @@
     <TextView
 
         android:id="@+id/recycleText"
-        android:layout_width="365dp"
-        android:layout_height="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center_vertical"
         android:text="Some text"
         android:textColor="@color/white"
-        android:textSize="31dp"
+        android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

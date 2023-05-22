@@ -599,12 +599,12 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public String GetToken(Database db){
+    public String GetToken(Database db) {
         SQLiteDatabase SQ = db.getReadableDatabase();
-        String token=null;
-        String query = "SELECT "+ TOKEN +" FROM "+ TOKENTABLE +" WHERE "+COUNTER+" = 1";
+        String token = null;
+        String query = "SELECT " + TOKEN + " FROM " + TOKENTABLE + " ORDER BY "+COUNTER+" ASC LIMIT 1";
 
-        Cursor cursor = SQ.rawQuery(query,null);
+        Cursor cursor = SQ.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             token = cursor.getString(cursor.getColumnIndex("Token"));
             // Do something with the token value
@@ -612,6 +612,7 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
         return token;
     }
+
 
     public String GetUsername(Database db){
         SQLiteDatabase SQ = db.getReadableDatabase();
