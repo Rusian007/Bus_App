@@ -157,7 +157,8 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
 
     public void goToBusChoosing(View view){
         Intent intent = new Intent(this, SelectBusActivity.class);
-
+        intent.putExtra("fromLocation", FromLocation);
+        intent.putExtra("toLocation", ToLocation);
         Database db = new Database(LongRouteBookingStartActivity.this);
         //db.addNewLongLocation(FromLocation, ToLocation);
 

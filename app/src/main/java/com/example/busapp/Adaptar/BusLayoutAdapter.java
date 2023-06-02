@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,8 +70,9 @@ public class BusLayoutAdapter extends RecyclerView.Adapter<BusLayoutAdapter.View
 
                 Intent seatIntent = new Intent(v.getContext(), LongRouteSelectSeatActivity.class);
                 seatIntent.putExtra("BUSNAME", holder.showText.getText().toString());
-                v.getContext().startActivity(seatIntent);
-                ((Activity)mContext).finish();
+                seatIntent.putExtra("BUSID", names.get(position).getID());
+               // v.getContext().startActivity(seatIntent);
+               // ((Activity)mContext).finish();
             }
         });
     }
@@ -79,11 +81,16 @@ public class BusLayoutAdapter extends RecyclerView.Adapter<BusLayoutAdapter.View
     public int getItemCount() {
         return names.size();
     }
+    public void filterList(ArrayList<BusModel> buses){
+        names = buses;
+        notifyDataSetChanged();
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView showText;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

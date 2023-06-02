@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText"
+        app:layout_constraintTop_toBottomOf="@+id/searchBus"
         app:layout_constraintVertical_bias="0.573">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -60,39 +60,22 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/searchBus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:background="@color/cardview_light_background"
+        android:elevation="5dp"
         android:ems="10"
-        android:padding="5dp"
         android:hint="Search Bus"
         android:inputType="text"
-        android:elevation="5dp"
-        android:background="@color/cardview_light_background"
+        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.213"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backbtn" />
 
-    <Button
-        android:id="@+id/long_route"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/cardview_light_background"
-        android:fontFamily="@font/poppins_bold"
-        android:textColor="@color/black"
-        android:text="go"
-        android:textSize="15dp"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toEndOf="@+id/editTextText"
-        app:layout_constraintTop_toBottomOf="@+id/backbtn" />
-
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/locationtxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_bold"
@@ -100,7 +83,7 @@
         app:layout_constraintBottom_toTopOf="@+id/BusrecycleView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText"
+        app:layout_constraintTop_toBottomOf="@+id/searchBus"
         app:layout_constraintVertical_bias="0.128" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
