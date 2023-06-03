@@ -104,10 +104,7 @@ public class SelectBusActivity extends AppCompatActivity
 
                         theBusNames.add(new BusModel(bus.getBusNumber(), bus.getId()));
 
-                        List<List<String>> seats =  bus.getSeatStructureJson();
-                        for(List<String> seat: seats){
-                            Log.d("SEAT ", seat.get(0));
-                        }
+
                     }
                     //Start the View
                     initRecycleView();

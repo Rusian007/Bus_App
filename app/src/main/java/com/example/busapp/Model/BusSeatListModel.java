@@ -3,10 +3,30 @@ package com.example.busapp.Model;
 
 public class BusSeatListModel {
 
-    public class Seat {
+    public static class Seat {
+
         public String SeatName;
         public boolean isAvailable;
         public boolean isClicked = false;
+
+        public Seat(String seatName, boolean isAvailable) {
+            SeatName = seatName;
+            this.isAvailable = isAvailable;
+        }
+        public Seat(){
+
+        }
+    }
+
+    public BusSeatListModel(Seat col1,Seat col2, Seat col3, Seat col4, Seat col5 ){
+        this.seatCol1 = col1;
+        this.seatCol2 = col2;
+        this.seatCol3 = col3;
+        this.seatCol4 = col4;
+        this.seatCol5 = col5;
+    }
+    public BusSeatListModel(){
+
     }
 
     private Seat seatCol1 = new Seat();

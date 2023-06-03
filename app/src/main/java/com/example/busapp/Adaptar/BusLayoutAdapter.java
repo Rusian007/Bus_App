@@ -70,9 +70,10 @@ public class BusLayoutAdapter extends RecyclerView.Adapter<BusLayoutAdapter.View
 
                 Intent seatIntent = new Intent(v.getContext(), LongRouteSelectSeatActivity.class);
                 seatIntent.putExtra("BUSNAME", holder.showText.getText().toString());
-                seatIntent.putExtra("BUSID", names.get(position).getID());
-               // v.getContext().startActivity(seatIntent);
-               // ((Activity)mContext).finish();
+
+                seatIntent.putExtra("BUSID",String.valueOf( names.get(position).getID()));
+                v.getContext().startActivity(seatIntent);
+               ((Activity)mContext).finish();
             }
         });
     }
