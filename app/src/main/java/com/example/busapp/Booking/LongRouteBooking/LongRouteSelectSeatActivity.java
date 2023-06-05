@@ -28,7 +28,9 @@ import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
 import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -70,10 +72,8 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         // Close the cursor
         cursor.close();
 
-
         BusName = (String) getIntent().getStringExtra("BUSNAME");
         busid =Integer.parseInt( getIntent().getStringExtra("BUSID"));
-
 
         TextView busNameText = findViewById(R.id.busName);
         locationText = findViewById(R.id.locationText);
@@ -87,8 +87,6 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
 
         busSeatRecycleView = findViewById(R.id.busSeatRecycleView);
-
-
 
 
         // Set recycle view
@@ -123,7 +121,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
     private List<BusSeatListModel> getSeatList(){
         List<BusSeatListModel> BusSeatList = new ArrayList<>();
-
+        List<String> bookedSeatsList = new ArrayList<>();
 
 
         //Dummy Data - for test
@@ -141,18 +139,29 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
         Call<LongRouteSeatModel> call = longRoute.getLongRouteSeatStructure("Token " + token, busid);
 
+        // Create a SimpleDateFormat instance with the desired format
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-d");
+
+        // Get the current date
+        Date currentDate = new Date();
+
+        // Format the current date using the SimpleDateFormat
+        String formattedDate = dateFormat.format(currentDate);
 
         //Get booked seats
         LongRouteApi longRoute2 = retrofit.create(LongRouteApi.class);
-        Call<GetBookedSeatsModel> call_seats = longRoute2.getBookedSeats("Token "+token, busid, "2023-5-21");
+        Call<GetBookedSeatsModel> call_seats = longRoute2.getBookedSeats("Token "+token, busid, formattedDate);
         call_seats.enqueue(new Callback<GetBookedSeatsModel>() {
             @Override
             public void onResponse(Call<GetBookedSeatsModel> call, Response<GetBookedSeatsModel> response) {
                 if(response.isSuccessful()){
                     GetBookedSeatsModel bookedSeats = response.body();
                     for(GetBookedSeatsModel.BookedSeat seat : bookedSeats.getBookedSeats()){
-                        Log.d("BOOK", seat.getSeatNo());
+                     //   Log.d("BOOK", seat.getSeatNo());
+                        bookedSeatsList.add(seat.getSeatNo());
+
                     }
+
                 }else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
                     Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
@@ -174,21 +183,30 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
                     LongRouteSeatModel seats = response.body();
 
-                    for(List<String> seat : seats.getSeatStructure()){
+                    // get the booked seats
 
-                 // Log.d("Seat", seat.toString());
+                  //  Log.d("TAG", bookedSeatsList.toString());
+                    // make the seats that are booked = false
+                    for(List<String> seat : seats.getSeatStructure()){
+                        boolean s1=true,s2=true,s3=true,s4=true,s5=true;
+                        if(bookedSeatsList.contains(seat.get(0))) s1=false;
+                        if(bookedSeatsList.contains(seat.get(1))) s2=false;
+                        if(bookedSeatsList.contains(seat.get(2))) s3=false;
+                        if(bookedSeatsList.contains(seat.get(3))) s4=false;
+                        if(bookedSeatsList.contains(seat.get(4))) s5=false;
+                        // Log.d("Seat", seat.toString());
                         BusSeatListModel busSeatRow = new BusSeatListModel(
-                                new BusSeatListModel.Seat(seat.get(0), true),
-                                new BusSeatListModel.Seat(seat.get(1), true),
-                                new BusSeatListModel.Seat(seat.get(2), true),
-                                new BusSeatListModel.Seat(seat.get(3), true),
-                                new BusSeatListModel.Seat(seat.get(4), true));
+                                new BusSeatListModel.Seat(seat.get(0), s1),
+                                new BusSeatListModel.Seat(seat.get(1), s2),
+                                new BusSeatListModel.Seat(seat.get(2), s3),
+                                new BusSeatListModel.Seat(seat.get(3), s4),
+                                new BusSeatListModel.Seat(seat.get(4), s5));
 
                         BusSeatList.add(busSeatRow);
 
                     }
 
-                   // Log.d("Seats", showAllSeats.toString());
+                    // Log.d("Seats", showAllSeats.toString());
 
                     adapter.notifyDataSetChanged();
 
@@ -261,6 +279,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
         return BusSeatList;
     }
+
 
     @Override
     public boolean AddSeat(String seatname) {
