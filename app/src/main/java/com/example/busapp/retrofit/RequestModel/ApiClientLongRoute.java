@@ -9,7 +9,7 @@ public class ApiClientLongRoute {
 
 //Define the base URL//
 
-    private static final String BASE_URL = "http://10.0.2.2:8000/";
+    private static final String BASE_URL = "http://samsun.pythonanywhere.com/";
 
 //Create the Retrofit instance//
 

@@ -1,14 +1,22 @@
 package com.example.busapp.retrofit.ApiEndpoints;
 
+import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
+import com.example.busapp.retrofit.ApiModels.GetFairModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteBusModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
+import com.example.busapp.retrofit.ApiModels.TicketResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface LongRouteApi {
@@ -26,6 +34,22 @@ public interface LongRouteApi {
             @Header("Authorization") String token,
             @Query("bus_id") int busId,
             @Query("date") String date
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/get_fair/")
+    Call<GetFairModel> getFair(
+            @Header("Authorization") String token,
+            @Field("starting_location_id") int startingLocationId,
+            @Field("ending_location_id") int endingLocationId,
+            @Field("bus_id") int busId,
+            @Field("seats") String seats
+    );
+
+    @POST("ticket/create_ticket/")
+    Call<TicketResponse> makeTicket(
+            @Header("Authorization") String token,
+            @Body CreateTicketRequest request
     );
 
 }

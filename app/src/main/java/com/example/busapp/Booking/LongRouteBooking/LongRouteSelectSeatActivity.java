@@ -101,6 +101,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         }
         intent.putStringArrayListExtra("SEATLIST", SelectedBusSeatsList);
         intent.putExtra("BUSNAME", BusName);
+        intent.putExtra("BUSID", busid);
         startActivity(intent);
         this.finish();
     }
@@ -185,7 +186,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
                     // get the booked seats
 
-                  //  Log.d("TAG", bookedSeatsList.toString());
+                 Log.d("TAG", bookedSeatsList.toString());
                     // make the seats that are booked = false
                     for(List<String> seat : seats.getSeatStructure()){
                         boolean s1=true,s2=true,s3=true,s4=true,s5=true;

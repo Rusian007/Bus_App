@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -33,6 +34,7 @@ import retrofit2.Retrofit;
 
 public class LongRouteBookingStartActivity extends AppCompatActivity {
     String FromLocation, ToLocation;
+    ArrayMap<String, Integer> routeMap;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,8 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         Database db = new Database(LongRouteBookingStartActivity.this);
         String token = db.GetToken(db);
         ArrayList<String> items = new ArrayList<>();
+        routeMap = new ArrayMap<>();
+
         if (isNetworkAvailable()) {
             ApiClientLongRoute client = new ApiClientLongRoute();
             Retrofit retrofit = client.getRetrofitInstance();
@@ -70,6 +74,10 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
                         // do something with the routes
                         for (LongRouteModel.Locations route : routes) {
                             items.add(route.getName());
+                            String name = route.getName();
+                            int id = route.getId();
+                           routeMap.put(name, id);
+
                         }
                         FromDropDown(items);
                         ToDropDown(items);
@@ -159,6 +167,13 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SelectBusActivity.class);
         intent.putExtra("fromLocation", FromLocation);
         intent.putExtra("toLocation", ToLocation);
+        Integer fromid = routeMap.get(FromLocation);
+        Integer toid = routeMap.get(ToLocation);
+
+            intent.putExtra("fromLocationID", fromid);
+
+            intent.putExtra("toLocationID", toid);
+
         Database db = new Database(LongRouteBookingStartActivity.this);
         //db.addNewLongLocation(FromLocation, ToLocation);
 
@@ -170,10 +185,10 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
 
        if(ISTableEmpty){
            // If table is empty then we insert new row
-           db.addNewLongLocation(FromLocation, ToLocation);
+           db.addNewLongLocationID(fromid,FromLocation, toid, ToLocation);
        } else {
            // If table already exists then we just update the row
-            db.UpdateLocations(db, FromLocation, ToLocation);
+            db.UpdateLocations(db, fromid,FromLocation, toid, ToLocation);
        }
 
         startActivity(intent);

@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.busapp.LoginActivity;
-
 import java.util.ArrayList;
 
 public class Database extends SQLiteOpenHelper {
@@ -40,7 +38,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String COUNTER = "Counter";
     private static final String TOKEN = "Token";
     private static final String LONG_FROM_LOCATION = "FromLocation";
+    private static final String LONG_FROM_LOCATION_NAME = "FromLocationName";
     private static final  String LONG_TO_LOCATION = "ToLocation";
+    private static final  String LONG_TO_LOCATION_NAME = "ToLocationName";
 
     private static final String SHORTLOCATIONCACHE = "CacheTable";
     private static final String SHORTFROMLOCATIONSELECTED = "FromLocationSelected";
@@ -75,8 +75,12 @@ public class Database extends SQLiteOpenHelper {
                 .append(COUNTER)
                 .append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
                 .append(LONG_FROM_LOCATION)
-                .append(" TEXT, ")
+                .append(" INTEGER, ")
                 .append(LONG_TO_LOCATION)
+                .append(" INTEGER ,")
+                .append(LONG_FROM_LOCATION_NAME)
+                .append(" TEXT, ")
+                .append(LONG_TO_LOCATION_NAME)
                 .append(" TEXT )");
 
         db.execSQL(sql.toString());
@@ -500,14 +504,16 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-    // ************** Locations Table ***************
-    public void addNewLongLocation(String from_location, String to_location){
+    // ************** Locations Table (Long Route) ***************
+    public void addNewLongLocationID(int from_location, String fromLocation, int to_location, String toLocation){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(LONG_FROM_LOCATION, from_location);
+        contentValues.put(LONG_FROM_LOCATION_NAME, fromLocation);
         contentValues.put(LONG_TO_LOCATION, to_location);
+        contentValues.put(LONG_TO_LOCATION_NAME, toLocation);
 
         long result = db.insert(LOCATION_TABLE,null, contentValues);
         if(result == -1){
@@ -521,6 +527,15 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase SQ = db.getReadableDatabase();
         String query = "SELECT * FROM "+ LOCATION_TABLE +" WHERE ID = 1";
 
+        String[]columns = {LONG_FROM_LOCATION_NAME, LONG_TO_LOCATION_NAME};
+        Cursor cursor = SQ.query(LOCATION_TABLE, columns, null,null,null, null, null);
+
+        return cursor;
+    }
+
+    public Cursor getLocationID(){
+        SQLiteDatabase SQ = this.getWritableDatabase();
+        String query = "SELECT * FROM "+ LOCATION_TABLE +" WHERE ID = 1";
         String[]columns = {LONG_FROM_LOCATION, LONG_TO_LOCATION};
         Cursor cursor = SQ.query(LOCATION_TABLE, columns, null,null,null, null, null);
 
@@ -540,11 +555,14 @@ public class Database extends SQLiteOpenHelper {
         else
             return true;
     }
-    public void UpdateLocations(Database table, String fromLoc, String toLoc){
+    public void UpdateLocations(Database table, int fromLoc, String fromLocation, int toLoc, String toLocation){
         SQLiteDatabase db = table.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(LONG_FROM_LOCATION, fromLoc);
+        cv.put(LONG_FROM_LOCATION_NAME, fromLocation);
         cv.put(LONG_TO_LOCATION, toLoc);
+        cv.put(LONG_TO_LOCATION_NAME, toLocation);
+
         String whereClause = "Counter = ?";
         String[] whereArgs = {String.valueOf(1)};
         long result =  db.update(LOCATION_TABLE,cv,whereClause,whereArgs);

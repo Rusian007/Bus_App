@@ -3,29 +3,47 @@ package com.example.busapp.Booking.LongRouteBooking;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.busapp.ChooseLongRouteActivity;
+import com.example.busapp.Database.Database;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
+import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
+import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
+import com.example.busapp.retrofit.ApiModels.GetFairModel;
+import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
+import com.example.busapp.retrofit.ApiModels.TicketResponse;
+import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
-    TextView BusNameText, seatNamesText, totalSeatText;
+    TextView BusNameText, seatNamesText, totalSeatText, printAmount;
     ArrayList<String> selectedSeats;
-
+    int fromLocationID, toLocationID, busID;
+    Button printTicketButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +56,16 @@ public class BookingSeatActivity extends AppCompatActivity {
         BusNameText = findViewById(R.id.BusName);
         seatNamesText = findViewById(R.id.Printing_seats);
         totalSeatText = findViewById(R.id.Total_Printing_seats);
+        printAmount = findViewById(R.id.Printing_amount);
+        printTicketButton = findViewById(R.id.Print_ticket_btn);
 
         String BusName = (String) getIntent().getStringExtra("BUSNAME");
         BusNameText.setText(BusName);
 
         selectedSeats = getIntent().getStringArrayListExtra("SEATLIST");
         seatNamesText.setText("Seat: ");
+
+        busID = getIntent().getIntExtra("BUSID", 0);
         for (String seat: selectedSeats){
             seatNamesText.append(seat+", ");
         }
@@ -51,7 +73,7 @@ public class BookingSeatActivity extends AppCompatActivity {
 
         totalSeatText.setText("Total Seats: "+ String.valueOf( selectedSeats.size()));
 
-
+        callFairApi();
 
         discountText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -60,6 +82,7 @@ public class BookingSeatActivity extends AppCompatActivity {
                     ((EditText) view).setCursorVisible(true);
                 } else {
                     ((EditText) view).setCursorVisible(false);
+
                 }
             }
         });
@@ -81,11 +104,112 @@ public class BookingSeatActivity extends AppCompatActivity {
         });
 
 
+        // send the make ticket request
+        printTicketButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SendMakeTicket();
+            }
+        });
+
+    }
+
+    private void SendMakeTicket() {
+        Database db = new Database(BookingSeatActivity.this);
+        String token = db.GetToken(db);
+        ApiClientLongRoute client = new ApiClientLongRoute();
+        Retrofit retrofit = client.getRetrofitInstance();
+        LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
+        Cursor cursor = db.getLocationID();
+        while (cursor.moveToNext()) {
+            // Get the values from the cursor
+            fromLocationID = cursor.getInt(0);
+            toLocationID = cursor.getInt(1);
+
+        }
+        cursor.close();
+        String discount = discountText.getText().toString();
+        String seatsString = TextUtils.join(", ", selectedSeats);
+        CreateTicketRequest request = new CreateTicketRequest(fromLocationID, toLocationID, busID, seatsString,Integer.parseInt( discount));
+
+        Call<TicketResponse> call = longRoute.makeTicket("Token " + token, request );
+        call.enqueue(new Callback<TicketResponse>() {
+            @Override
+            public void onResponse(Call<TicketResponse> call, Response<TicketResponse> response) {
+                if (response.isSuccessful()){
+                    TicketResponse ticket = response.body();
+                    Toast.makeText(getApplicationContext(), "Printing Ticket with ticket ID: "+ticket.getId(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), SelectBusActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }else {
+                    Log.d("ERROR", "err: " + response.errorBody().toString());
+
+                    Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TicketResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void callFairApi() {
+        Database db = new Database(BookingSeatActivity.this);
+        String token = db.GetToken(db);
+        Cursor cursor = db.getLocationID();
+
+        // Iterate through the results
+        while (cursor.moveToNext()) {
+            // Get the values from the cursor
+            fromLocationID = cursor.getInt(0);
+            toLocationID = cursor.getInt(1);
+
+        }
+
+        // Close the cursor
+        cursor.close();
+
+        // Call API
+        ApiClientLongRoute client = new ApiClientLongRoute();
+        Retrofit retrofit = client.getRetrofitInstance();
+        LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
+
+        String seatsString = TextUtils.join(", ", selectedSeats);
+
+        Call<GetFairModel> call = longRoute.getFair("Token " + token, fromLocationID, toLocationID,busID,seatsString);
+
+        call.enqueue(new Callback<GetFairModel>() {
+            @Override
+            public void onResponse(Call<GetFairModel> call, Response<GetFairModel> response) {
+                if(response.isSuccessful()){
+                    GetFairModel theFair = response.body();
+                    printAmount.setText("Amount: "+ String.valueOf( theFair.getFair()));
+
+                }else {
+                    Log.d("ERROR", "err: " + response.errorBody().toString());
+
+                    Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    printAmount.setText("Amount: ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetFairModel> call, Throwable t) {
+
+            }
+        });
     }
 
     // go back to home page if booking is cancelled
     public void Cancel_booking_onClick(View view){
         Intent intent = new Intent(this, SelectBusActivity.class);
+       // String discount = discountText.getText().toString();
+
         startActivity(intent);
         this.finish();
     }
