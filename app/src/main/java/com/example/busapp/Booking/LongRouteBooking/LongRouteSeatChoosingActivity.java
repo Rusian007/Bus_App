@@ -9,11 +9,13 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.busapp.ChooseLongRouteActivity;
+import com.example.busapp.Database.Database;
 import com.example.busapp.R;
 
 public class LongRouteSeatChoosingActivity extends AppCompatActivity {
@@ -25,6 +27,11 @@ public class LongRouteSeatChoosingActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.longroute_seat_choosing_view);
         SeatDropDown();
+        Database db = new Database(LongRouteSeatChoosingActivity.this);
+
+        TextView UsernameText = findViewById(R.id.name);
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
     }
 
     public void goBack(View view){

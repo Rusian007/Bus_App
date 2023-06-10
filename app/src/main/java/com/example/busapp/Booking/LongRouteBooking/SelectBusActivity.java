@@ -55,6 +55,10 @@ public class SelectBusActivity extends AppCompatActivity
         locationtxt.setText("From: "+fromlocation+" To: "+tolocation);
         InitializeNamesArray();
 
+        Database db = new Database(SelectBusActivity.this);
+        TextView UsernameText = findViewById(R.id.name);
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
         searchBus = findViewById(R.id.searchBus);
         searchBus.addTextChangedListener(new TextWatcher() {
             @Override
@@ -118,6 +122,7 @@ public class SelectBusActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<LongRouteBusModel> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Check if Internet is Available", Toast.LENGTH_SHORT).show();
 
             }
         });

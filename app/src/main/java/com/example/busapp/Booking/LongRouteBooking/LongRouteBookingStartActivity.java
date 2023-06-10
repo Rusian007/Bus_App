@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -44,6 +45,11 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
         setContentView(R.layout.long_route_booking_start_view);
 
         getLocationsFromApi();
+        Database db = new Database(LongRouteBookingStartActivity.this);
+
+        TextView UsernameText = findViewById(R.id.name);
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
     }
 
     public boolean isNetworkAvailable() {

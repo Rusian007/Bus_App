@@ -32,6 +32,7 @@
         <activity
             android:name=".Booking.ShortRouteBooking.ShortRouteBookingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".Booking.LongRouteBooking.PrintTicketActivity"/>
         <activity android:name=".Booking.ShortRouteBooking.ShortRouteTicketActivity"/>
         <activity android:name=".Booking.LongRouteBooking.LongRouteBookingStartActivity" />
         <activity android:name=".ChooseRouteActivity" />

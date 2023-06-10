@@ -89,6 +89,9 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         busSeatRecycleView = findViewById(R.id.busSeatRecycleView);
 
 
+        TextView UsernameText = findViewById(R.id.textView4);
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
         // Set recycle view
         setRecycleView();
     }
@@ -172,6 +175,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
             @Override
             public void onFailure(Call<GetBookedSeatsModel> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Check if Internet is Available", Toast.LENGTH_SHORT).show();
 
             }
         });

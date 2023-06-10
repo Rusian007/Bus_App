@@ -17,7 +17,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,9 +43,11 @@ import retrofit2.Retrofit;
 
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
-    TextView BusNameText, seatNamesText, totalSeatText, printAmount;
+    TextView BusNameText, seatNamesText, totalSeatText, printAmount, lessAmount, netAmount;
+    double amount= 0;
+    Intent startPrint;
     ArrayList<String> selectedSeats;
-    int fromLocationID, toLocationID, busID;
+    int fromLocationID, toLocationID, busID,ticketID;
     Button printTicketButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +58,14 @@ public class BookingSeatActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_booking_seat);
         discountText = findViewById(R.id.discountText);
+
         BusNameText = findViewById(R.id.BusName);
         seatNamesText = findViewById(R.id.Printing_seats);
         totalSeatText = findViewById(R.id.Total_Printing_seats);
         printAmount = findViewById(R.id.Printing_amount);
         printTicketButton = findViewById(R.id.Print_ticket_btn);
+        lessAmount = findViewById(R.id.less_Printing);
+        netAmount = findViewById(R.id.Net_Printing_amount);
 
         String BusName = (String) getIntent().getStringExtra("BUSNAME");
         BusNameText.setText(BusName);
@@ -69,22 +77,64 @@ public class BookingSeatActivity extends AppCompatActivity {
         for (String seat: selectedSeats){
             seatNamesText.append(seat+", ");
         }
+        Database db = new Database(BookingSeatActivity.this);
 
+       TextView UsernameText = findViewById(R.id.username);
+        String username = db.GetUsername(db);
+        UsernameText.setText(username);
 
         totalSeatText.setText("Total Seats: "+ String.valueOf( selectedSeats.size()));
 
         callFairApi();
 
+        discountText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Get the entered value as a string
+                String input = s.toString();
+
+                if (!input.isEmpty()) {
+                    // Parse the entered value as an integer
+                    int value = Integer.parseInt(input);
+
+                    // Check if the entered value is greater than 100
+                    if (value > 100) {
+                        // Set the value to 100
+                        discountText.setText("100");
+                        discountText.setSelection(discountText.getText().length()); // Move cursor to the end
+                        value = 100;
+                    }
+                    lessAmount.setText("Less: "+String.valueOf(value));
+                    double net = (double) amount-value;
+                    netAmount.setText("Net Amount: "+String.valueOf(net));
+                } else{
+                    discountText.setText("0");
+
+                }
+            }
+        });
+
         discountText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
-                    ((EditText) view).setCursorVisible(true);
+                     ((EditText) view).setCursorVisible(true);
                 } else {
                     ((EditText) view).setCursorVisible(false);
 
                 }
             }
+
         });
 
         discountText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -139,9 +189,11 @@ public class BookingSeatActivity extends AppCompatActivity {
                 if (response.isSuccessful()){
                     TicketResponse ticket = response.body();
                     Toast.makeText(getApplicationContext(), "Printing Ticket with ticket ID: "+ticket.getId(), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), SelectBusActivity.class);
-                    startActivity(intent);
-                    finish();
+                    startPrint = new Intent(getApplicationContext(), PrintTicketActivity.class);
+                    ticketID = ticket.getId();
+
+                    startPrint.putStringArrayListExtra("SEATLIST", selectedSeats);
+
 
                 }else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
@@ -156,6 +208,17 @@ public class BookingSeatActivity extends AppCompatActivity {
 
             }
         });
+        printTicketButton.setVisibility(View.INVISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(ticketID);
+                startPrint.putExtra("TID", String.valueOf(ticketID));
+                startActivity(startPrint);
+                finish();
+            }
+        }, 1500); // Delay in milliseconds (2 seconds)
+
     }
 
     private void callFairApi() {
@@ -189,7 +252,7 @@ public class BookingSeatActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     GetFairModel theFair = response.body();
                     printAmount.setText("Amount: "+ String.valueOf( theFair.getFair()));
-
+                    amount = theFair.getFair();
                 }else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
 

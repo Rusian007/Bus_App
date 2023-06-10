@@ -3,6 +3,7 @@ package com.example.busapp.retrofit.ApiEndpoints;
 import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.GetFairModel;
+import com.example.busapp.retrofit.ApiModels.GetTicketBody;
 import com.example.busapp.retrofit.ApiModels.LongRouteBusModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
@@ -51,5 +52,9 @@ public interface LongRouteApi {
             @Header("Authorization") String token,
             @Body CreateTicketRequest request
     );
+
+    @GET("ticket/get_ticket")
+    Call<GetTicketBody> getTicket(@Query("ticket_id") int ticketId, @Header("Authorization") String token);
+
 
 }
