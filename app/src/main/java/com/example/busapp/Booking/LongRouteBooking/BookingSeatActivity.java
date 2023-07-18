@@ -10,6 +10,7 @@ import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.GetFairModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
+import com.example.busapp.retrofit.ApiModels.RouteRequestModel;
 import com.example.busapp.retrofit.ApiModels.TicketResponse;
 import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 
@@ -40,11 +41,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
+import org.json.JSONArray;
+import org.json.JSONException;
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
     TextView BusNameText, seatNamesText, totalSeatText, printAmount, lessAmount, netAmount;
     double amount= 0;
+    int busCategory;
     Intent startPrint;
     ArrayList<String> selectedSeats;
     int fromLocationID, toLocationID, busID,ticketID;
@@ -179,32 +182,41 @@ public class BookingSeatActivity extends AppCompatActivity {
         }
         cursor.close();
         String discount = discountText.getText().toString();
-        String seatsString = TextUtils.join(", ", selectedSeats);
-        CreateTicketRequest request = new CreateTicketRequest(fromLocationID, toLocationID, busID, seatsString,Integer.parseInt( discount));
+        JSONArray jsonArray = new JSONArray(selectedSeats);
+        String jsonFormattedString = jsonArray.toString();
+
+        CreateTicketRequest request = new CreateTicketRequest(fromLocationID, toLocationID,busCategory, busID, jsonFormattedString,Integer.parseInt( discount));
+
+
+
+
 
         Call<TicketResponse> call = longRoute.makeTicket("Token " + token, request );
         call.enqueue(new Callback<TicketResponse>() {
             @Override
             public void onResponse(Call<TicketResponse> call, Response<TicketResponse> response) {
                 if (response.isSuccessful()){
-                    TicketResponse ticket = response.body();
-                    Toast.makeText(getApplicationContext(), "Printing Ticket with ticket ID: "+ticket.getId(), Toast.LENGTH_SHORT).show();
-                    startPrint = new Intent(getApplicationContext(), PrintTicketActivity.class);
-                    ticketID = ticket.getId();
+                    try {
+                        TicketResponse ticket = response.body();
+                        Toast.makeText(getApplicationContext(), "Printing Ticket with ticket ID: "+ticket.getId(), Toast.LENGTH_SHORT).show();
+                        startPrint = new Intent(getApplicationContext(), PrintTicketActivity.class);
+                        ticketID = ticket.getId();
 
-                    startPrint.putStringArrayListExtra("SEATLIST", selectedSeats);
-
+                        startPrint.putStringArrayListExtra("SEATLIST", selectedSeats);
+                    } catch (Exception e){
+                        Log.d("ERROR", "err: " + response.errorBody().toString());
+                    }
 
                 }else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
 
                     Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-
                 }
             }
 
             @Override
             public void onFailure(Call<TicketResponse> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Please restart the app because of network problem", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -212,7 +224,8 @@ public class BookingSeatActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                System.out.println(ticketID);
+                Log.d("TAG", "Ticket ID");
+                Log.d("TAG", String.valueOf(ticketID));
                 startPrint.putExtra("TID", String.valueOf(ticketID));
                 startActivity(startPrint);
                 finish();
@@ -238,31 +251,74 @@ public class BookingSeatActivity extends AppCompatActivity {
         cursor.close();
 
         // Call API
+
         ApiClientLongRoute client = new ApiClientLongRoute();
         Retrofit retrofit = client.getRetrofitInstance();
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
 
         String seatsString = TextUtils.join(", ", selectedSeats);
 
-        Call<GetFairModel> call = longRoute.getFair("Token " + token, fromLocationID, toLocationID,busID,seatsString);
+        Call<RouteRequestModel> call = longRoute.GetRouteID("Token " + token, fromLocationID, toLocationID );
 
-        call.enqueue(new Callback<GetFairModel>() {
+        call.enqueue(new Callback<RouteRequestModel>() {
             @Override
-            public void onResponse(Call<GetFairModel> call, Response<GetFairModel> response) {
-                if(response.isSuccessful()){
-                    GetFairModel theFair = response.body();
-                    printAmount.setText("Amount: "+ String.valueOf( theFair.getFair()));
-                    amount = theFair.getFair();
-                }else {
-                    Log.d("ERROR", "err: " + response.errorBody().toString());
+            public void onResponse(Call<RouteRequestModel> call, Response<RouteRequestModel> response) {
+                if (response.isSuccessful()) {
+                    RouteRequestModel routeRequestModel = response.body();
+                    // Handle the response data
+                    try {
+                        if (routeRequestModel != null) {
+                            RouteRequestModel.Route route = routeRequestModel.getRoute();
+                            int id = route.getId();
+                            String routeName = route.getRouteName();
+                            String distance = route.getDistance();
+                            int fair = route.getFair();
+                            int offset = route.getOffset();
+                            int startingLocation = route.getStartingLocation();
+                            int endingLocation = route.getEndingLocation();
+                            busCategory = route.getBusCategory();
 
-                    Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-                    printAmount.setText("Amount: ERROR");
+                            printAmount.setText("Amount: "+ String.valueOf( fair * selectedSeats.size()));
+                            amount = fair * selectedSeats.size();
+                            // Do something with the values
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "This is a invalid route. Redirecting you back, please wait ...", Toast.LENGTH_SHORT).show();
+                        // Delay the redirection and finish the current activity after 2 seconds
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Start the LongRouteBookingStartActivity
+                                Intent intent = new Intent(BookingSeatActivity.this, LongRouteBookingStartActivity.class);
+                                startActivity(intent);
+
+                                // Finish the current activity to destroy it
+                                finish();
+                            }
+                        }, 2000);
+                    }
+
+                } else {
+                    // Handle API error
+                    Toast.makeText(getApplicationContext(), "This is a invalid route. Redirecting you back, please wait ...", Toast.LENGTH_SHORT).show();
+                    // Delay the redirection and finish the current activity after 2 seconds
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Start the LongRouteBookingStartActivity
+                            Intent intent = new Intent(BookingSeatActivity.this, LongRouteBookingStartActivity.class);
+                            startActivity(intent);
+
+                            // Finish the current activity to destroy it
+                            finish();
+                        }
+                    }, 2000); // 2000 milliseconds = 2 seconds
                 }
             }
 
             @Override
-            public void onFailure(Call<GetFairModel> call, Throwable t) {
+            public void onFailure(Call<RouteRequestModel> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Failed due to a network error. Please restart and connect to a wifi.", Toast.LENGTH_SHORT).show();
 
             }
         });

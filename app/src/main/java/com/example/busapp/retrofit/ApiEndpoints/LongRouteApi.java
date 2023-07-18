@@ -7,6 +7,7 @@ import com.example.busapp.retrofit.ApiModels.GetTicketBody;
 import com.example.busapp.retrofit.ApiModels.LongRouteBusModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
+import com.example.busapp.retrofit.ApiModels.RouteRequestModel;
 import com.example.busapp.retrofit.ApiModels.TicketResponse;
 
 import java.util.List;
@@ -34,7 +35,8 @@ public interface LongRouteApi {
     Call<GetBookedSeatsModel> getBookedSeats(
             @Header("Authorization") String token,
             @Query("bus_id") int busId,
-            @Query("date") String date
+            @Query("date") String date,
+            @Query("route_id") int route_id
     );
 
     @FormUrlEncoded
@@ -56,5 +58,10 @@ public interface LongRouteApi {
     @GET("ticket/get_ticket")
     Call<GetTicketBody> getTicket(@Query("ticket_id") int ticketId, @Header("Authorization") String token);
 
-
+    @GET("route/get_route/")
+    Call<RouteRequestModel>GetRouteID(
+            @Header("Authorization") String token,
+            @Query("starting_location_id") int starting_location_id,
+            @Query("ending_location_id") int ending_location_id
+    );
 }

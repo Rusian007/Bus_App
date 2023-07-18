@@ -197,7 +197,7 @@ public class LongRouteBookingStartActivity extends AppCompatActivity {
             db.UpdateLocations(db, fromid,FromLocation, toid, ToLocation);
        }
 
-        startActivity(intent);
+     startActivity(intent);
 
     }
     public void goBack(View view){

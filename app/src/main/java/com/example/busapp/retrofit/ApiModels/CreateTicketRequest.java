@@ -2,6 +2,8 @@ package com.example.busapp.retrofit.ApiModels;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class CreateTicketRequest {
     @SerializedName("starting_location_id")
     private int startingLocationId;
@@ -12,15 +14,19 @@ public class CreateTicketRequest {
     @SerializedName("bus_id")
     private int busId;
 
+    @SerializedName("category_id")
+    private int category_id;
+
     @SerializedName("seats")
     private String seats;
 
     @SerializedName("discount")
     private int discount;
 
-    public CreateTicketRequest(int startingLocationId, int endingLocationId, int busId, String seats, int discount) {
+    public CreateTicketRequest(int startingLocationId, int endingLocationId, int category_id, int busId, String seats, int discount) {
         this.startingLocationId = startingLocationId;
         this.endingLocationId = endingLocationId;
+        this.category_id = category_id;
         this.busId = busId;
         this.seats = seats;
         this.discount = discount;
