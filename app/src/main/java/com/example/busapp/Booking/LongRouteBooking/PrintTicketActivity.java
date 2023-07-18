@@ -279,12 +279,12 @@ public class PrintTicketActivity extends AppCompatActivity {
             outputStream.write(line1.getBytes());
 
 
-            outputStream.write(alignCenter);
+            outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
             outputStream.write(boldOff);
             outputStream.write("issue date: ".getBytes("UTF-8"));
             outputStream.write(date.getBytes("UTF-8"));
-            outputStream.write("              ".getBytes("UTF-8"));
+            outputStream.write("                ".getBytes("UTF-8"));
 
 
            // outputStream.write("".getBytes("UTF-8"));
@@ -317,15 +317,17 @@ public class PrintTicketActivity extends AppCompatActivity {
             outputStream.write("Guide Copy".getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
 
-            // Category
-            outputStream.write(alignStart);
-            outputStream.write(category.getBytes("UTF-8"));
-            outputStream.write("\n".getBytes("UTF-8"));
+
 
             // Serial No
             outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
             outputStream.write(normalText1.getBytes("UTF-8"));
+            outputStream.write("                            ".getBytes("UTF-8"));
+
+            // Category
+
+            outputStream.write(category.getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
 
             // from to location
@@ -350,12 +352,12 @@ public class PrintTicketActivity extends AppCompatActivity {
 
             outputStream.write(boldOff);
             // Amount text
-            outputStream.write(alignCenter);
+            outputStream.write(alignStart);
             outputStream.write(boldOn);
             String amt = "Amount: "+fair;
             outputStream.write(amt.getBytes());
             outputStream.write(boldOff);
-            outputStream.write("    ".getBytes("UTF-8"));
+            outputStream.write("     ".getBytes("UTF-8"));
 
             // seats
             outputStream.write(textSizeSmall);
@@ -363,7 +365,7 @@ public class PrintTicketActivity extends AppCompatActivity {
             outputStream.write(boldOn);
             outputStream.write(seats.getBytes("UTF-8"));
             outputStream.write(boldOff);
-            outputStream.write("    ".getBytes("UTF-8"));
+            outputStream.write("     ".getBytes("UTF-8"));
 
             //Due
             outputStream.write(boldOn);
@@ -374,12 +376,12 @@ public class PrintTicketActivity extends AppCompatActivity {
 
             // date and time
 
-            outputStream.write(alignCenter);
+            outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
             outputStream.write(boldOff);
             outputStream.write("issue date: ".getBytes("UTF-8"));
             outputStream.write(date.getBytes("UTF-8"));
-            outputStream.write("                ".getBytes("UTF-8"));
+            outputStream.write("                  ".getBytes("UTF-8"));
 
 
             outputStream.write("".getBytes("UTF-8"));
