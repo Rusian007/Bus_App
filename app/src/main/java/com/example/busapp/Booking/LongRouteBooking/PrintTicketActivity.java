@@ -102,7 +102,20 @@ public class PrintTicketActivity extends AppCompatActivity {
                   // Print the ticket in POS
 
                     GetTicketBody.Ticket TheTicket = ticket.getTicket();
-                    Bluetoothprint(TheTicket.getStartingLocationName(), TheTicket.getEndingLocationName(), TheTicket.getDate(), TheTicket.getTime(), TheTicket.getBusNumber(), TheTicket.getCategory(),TheTicket.getFair(), TheTicket.getDiscount(), TheTicket.getCountermanUsername(), selectedSeats);
+                    String originalDate = TheTicket.getDate();
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    String formattedDate  =TheTicket.getDate();
+                    try {
+                        Date date = inputFormat.parse(originalDate);
+                         formattedDate = outputFormat.format(date);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "Please restart the app because of error ", Toast.LENGTH_SHORT).show();
+
+                    }
+                    Bluetoothprint(TheTicket.getStartingLocationName(), TheTicket.getEndingLocationName(), formattedDate, TheTicket.getTime(), TheTicket.getBusNumber(), TheTicket.getCategory(),TheTicket.getFair(), TheTicket.getDiscount(), TheTicket.getCountermanUsername(), selectedSeats);
                 }else{
                     Log.d("ERROR", "err: " + response.errorBody().toString());
                     Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
@@ -154,11 +167,11 @@ public class PrintTicketActivity extends AppCompatActivity {
             // Define the text to be printed
             String bigText = "MAWA PARIBAHAN PVT LTD (ELISH)";
             // String bigText = "\u09AE\u09BE\u0993\u09DF\u09BE \u09AA\u09B0\u09BF\u09AC\u09B9\u09A8 (\u09AA\u09CD\u09B0\u09BE\u09B9)\u09B2\u09BF\u0993 (\u0987\u09B2\u09BF\u09B6 )"; // Bangla text in Unicode
-            String smallText = "www.elishparibahan.com";
-            String normalText0 = "Passenger copy";
-            String normalText1 = "serial no: "+tid;
-            String normalText2 = "From: "+startingLocationName;
-            String normalText3 = "To: "+endingLocationName;
+            String dot_com = "www.elishparibahan.com";
+            String passenger_cpy = "Passenger copy";
+            String serial_no = "serial no: "+tid;
+            String from_location = "From: "+startingLocationName;
+            String to_location = "To: "+endingLocationName;
             String coach = "COACH: "+busNumber;
             String seatsString = TextUtils.join(", ", selectedSeats);
             String seats = "SEATS: "+seatsString;
@@ -209,28 +222,28 @@ public class PrintTicketActivity extends AppCompatActivity {
             // passenger copy - text
             outputStream.write(alignCenter);
             outputStream.write(textSizeSmall);
-            outputStream.write(normalText0.getBytes("UTF-8"));
+            outputStream.write(passenger_cpy.getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
 
             // Print small text in the bottom
             outputStream.write(alignCenter);
             outputStream.write(textSizeSmall);
-            outputStream.write(smallText.getBytes("UTF-8"));
+            outputStream.write(dot_com.getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
 
             // Print normal text 1
             outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
-            outputStream.write(normalText1.getBytes("UTF-8"));
+            outputStream.write(serial_no.getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
 
             // Print normal text 2 in bold
             outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
             outputStream.write(boldOn);
-            outputStream.write(normalText2.getBytes("UTF-8"));
+            outputStream.write(from_location.getBytes("UTF-8"));
             outputStream.write(boldOff);
-            outputStream.write("                ".getBytes("UTF-8"));
+            outputStream.write("       ".getBytes("UTF-8"));
 
 
             // Print normal text 3 in bold and right-aligned
@@ -239,8 +252,14 @@ public class PrintTicketActivity extends AppCompatActivity {
 
             outputStream.write(textSizeSmall);
             outputStream.write(boldOn);
-            outputStream.write(normalText3.getBytes("UTF-8"));
+            outputStream.write(to_location.getBytes("UTF-8"));
             outputStream.write(boldOff);
+            outputStream.write("       ".getBytes("UTF-8"));
+
+            // Category
+            //outputStream.write(alignStart);
+            outputStream.write(boldOff);
+            outputStream.write(category.getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
 
             // coach and seats
@@ -254,13 +273,9 @@ public class PrintTicketActivity extends AppCompatActivity {
             outputStream.write(textSizeSmall);
             outputStream.write(boldOff);
             outputStream.write(seats.getBytes("UTF-8"));
-            outputStream.write("              ".getBytes("UTF-8"));
-
-            // Category
-            outputStream.write(alignStart);
-            outputStream.write(boldOff);
-            outputStream.write(category.getBytes("UTF-8"));
             outputStream.write("\n".getBytes("UTF-8"));
+
+
 
 
             // Amount text
@@ -322,7 +337,7 @@ public class PrintTicketActivity extends AppCompatActivity {
             // Serial No
             outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
-            outputStream.write(normalText1.getBytes("UTF-8"));
+            outputStream.write(serial_no.getBytes("UTF-8"));
             outputStream.write("                            ".getBytes("UTF-8"));
 
             // Category
@@ -332,13 +347,13 @@ public class PrintTicketActivity extends AppCompatActivity {
 
             // from to location
             outputStream.write(textSizeSmall);
-            outputStream.write(normalText2.getBytes("UTF-8"));
+            outputStream.write(from_location.getBytes("UTF-8"));
             outputStream.write(boldOff);
             outputStream.write("    ".getBytes("UTF-8"));
 
 
             outputStream.write(textSizeSmall);
-            outputStream.write(normalText3.getBytes("UTF-8"));
+            outputStream.write(to_location.getBytes("UTF-8"));
             outputStream.write(boldOff);
             outputStream.write("    ".getBytes("UTF-8"));
 
