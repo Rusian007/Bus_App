@@ -39,14 +39,25 @@ public class SalesApiModel {
         @SerializedName("discount")
         private int discount;
 
-        @SerializedName("booked_by")
+        @SerializedName("counterman_username")
         private String booked_by;
+
+        @SerializedName("bus_number")
+        private String bus_number;
 
         @SerializedName("counterman_metadata")
         private CountermanMetadata counterman_metadata;
 
         // Getters and Setters for Ticket class fields
 
+
+        public String getBus_number() {
+            return bus_number;
+        }
+
+        public void setBus_number(String bus_number) {
+            this.bus_number = bus_number;
+        }
 
         public int getId() {
             return id;

@@ -24,6 +24,7 @@ import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
 import com.example.busapp.retrofit.ApiModels.ShortRouteTicketModel;
 import com.example.busapp.retrofit.ApiModels.TicketRequestBodyMultiple;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -56,21 +57,18 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
 
     private void GetAllData() {
         if(! db.doesTicketSoldTableExist()){
-
              handler=new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                loadingText.setText("কিরে মামা, database তো খালি");
+                loadingText.setText("All Data Already Uploaded");
             }
         },2000);
 
 
         }else {
             Cursor cv = db.getSoldTickets();
-
             cv.moveToFirst();
-
 
             do {
                 // Retrieve the values from the cursor for each column
@@ -97,16 +95,13 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
            */
             if(isNetworkAvailable()){
                 callTicketUploadApi(multipleTickets);
-
             }
-
-            else loadingText.setText("ki miya , data off koira moja lou?");
+            else loadingText.setText("You need to have a internet connection to upload data.");
 
             handler=new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
 
                     Intent intent = new Intent(getApplicationContext(), ShortRouteFromLoationActivity.class);
                     startActivity(intent);
@@ -125,6 +120,10 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
         ApiClient client = new ApiClient();
         Retrofit retrofit = client.getRetrofitInstance();
         ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
+        for (TicketRequestBodyMultiple.TicketModel ticket : multipleTickets.getTickets()) {
+            System.out.println("Nyaa~! Logging seat: " + ticket.getSeats());
+            Log.d("Debug", ticket.getSeats());
+        }
         Call<TicketRequestBodyMultiple> call = shortapi.postMultipleTickets("Token " + token, multipleTickets);
 
         call.enqueue(new Callback<TicketRequestBodyMultiple>() {
@@ -133,7 +132,7 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
 
                         db.deleteAllRecordsFromTable();
-                        loadingText.setText("সব data upload শেষ, এখন খালি chill আর chill");
+                        loadingText.setText("Data upload complete. Please close this screen.");
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Error Occured on sending request" , Toast.LENGTH_LONG).show();
@@ -144,8 +143,17 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<TicketRequestBodyMultiple> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Error " +t.getMessage() , Toast.LENGTH_LONG).show();
-                System.out.println("Error " + t.getMessage());
+                Log.d("Debug", t.getMessage());
 
+                if (call.request().body() != null) {
+                    try {
+                        // Convert the request body to a string and log it
+                        String requestBody = call.request().body().toString();
+                        Log.d("Debug", "Request Body: " + requestBody);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 

@@ -29,7 +29,6 @@ public class SalesViewAdapter extends RecyclerView.Adapter<SalesViewAdapter.View
         notifyDataSetChanged(); // Notify RecyclerView to update its view
     }
 
-
     @NonNull
     @Override
     public SalesViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

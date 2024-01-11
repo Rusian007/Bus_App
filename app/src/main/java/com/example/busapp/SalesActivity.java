@@ -26,6 +26,7 @@ import com.example.busapp.retrofit.ApiEndpoints.SalesApi;
 import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
 import com.example.busapp.retrofit.ApiModels.SalesApiModel;
 import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
+import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,7 +92,7 @@ public class SalesActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.sales_recycleView);
          adapter = new SalesViewAdapter(this, SalesInfoList);
         // setting grid layout manager to implement grid view.
-        GridLayoutManager layoutManager=new GridLayoutManager(this,6);
+        GridLayoutManager layoutManager=new GridLayoutManager(this,5);
         // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
 
@@ -99,18 +100,17 @@ public class SalesActivity extends AppCompatActivity {
     }
 
     public void callAPI(){
-        ApiClient client = new ApiClient();
+        ApiClientLongRoute client = new ApiClientLongRoute();
         Retrofit retrofit = client.getRetrofitInstance();
         SalesApi salesApi = retrofit.create(SalesApi.class);
         String token = db.GetToken(db);
 
         Call<SalesApiModel> call = salesApi.getSales("Token "+token, date);
-
+        Log.d("TOKEN", token);
         // Execute the API call
         call.enqueue(new Callback<SalesApiModel>() {
             @Override
             public void onResponse(Call<SalesApiModel> call, Response<SalesApiModel> response) {
-
 
                 if (response.isSuccessful()) {
                     adapter.clearData();
@@ -120,7 +120,7 @@ public class SalesActivity extends AppCompatActivity {
                     if(sales.size() > 0){
                         SalesInfoList.add(new SalesModel("time", true));
                         SalesInfoList.add(new SalesModel("bus", true));
-                        SalesInfoList.add(new SalesModel("seat",true));
+                      //  SalesInfoList.add(new SalesModel("seat",true));
                         SalesInfoList.add(new SalesModel("amount",true));
                         SalesInfoList.add(new SalesModel("discount",true));
                         SalesInfoList.add(new SalesModel("booked by",true));
@@ -133,8 +133,8 @@ public class SalesActivity extends AppCompatActivity {
                             String hourAndMinute = time.substring(0, 5); // "16:42"
 
                             SalesInfoList.add(new SalesModel(hourAndMinute,false));
-                            SalesInfoList.add(new SalesModel("null",false));
-                            SalesInfoList.add(new SalesModel("1",false));
+                            SalesInfoList.add(new SalesModel(sale.getBus_number(),false));
+                          //  SalesInfoList.add(new SalesModel("1",false));
                             SalesInfoList.add(new SalesModel(fair,false));
                             SalesInfoList.add(new SalesModel(discount,false));
                             SalesInfoList.add(new SalesModel(sale.getBooked_by(),false));
@@ -147,7 +147,10 @@ public class SalesActivity extends AppCompatActivity {
                     }
 
                     initialize();
-                } else Toast.makeText(getApplicationContext(), "Sorry, Something went wrong", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("EROR",response.toString());
+                    Toast.makeText(getApplicationContext(), "Sorry, Something went wrong", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

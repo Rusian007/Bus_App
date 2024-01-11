@@ -10,6 +10,6 @@ import retrofit2.http.Query;
 
 public interface SalesApi {
 
-    @GET("ticket/sells/")
+    @GET("ticket/sales/")
     Call<SalesApiModel> getSales(@Header("Authorization") String token, @Query("date") String date);
 }

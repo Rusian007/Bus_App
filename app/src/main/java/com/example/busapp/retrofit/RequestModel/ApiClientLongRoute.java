@@ -9,7 +9,7 @@ public class ApiClientLongRoute {
 
 //Define the base URL//
 
-    private static final String BASE_URL = "http://samsun.pythonanywhere.com/";
+    private static final String BASE_URL = "https://longroute.elishparibahan.com/";
 
 //Create the Retrofit instance//
 
@@ -17,8 +17,6 @@ public class ApiClientLongRoute {
         if (retrofit == null) {
             retrofit = new retrofit2.Retrofit.Builder()
                     .baseUrl(BASE_URL)
-
-
 
                     .addConverterFactory(GsonConverterFactory.create())
 

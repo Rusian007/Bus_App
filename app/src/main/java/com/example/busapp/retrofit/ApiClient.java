@@ -10,7 +10,7 @@ public class ApiClient {
 
 //Define the base URL//
 
-    private static final String BASE_URL = "http://rusian.pythonanywhere.com/";
+    private static final String BASE_URL = "https://shortroute.elishparibahan.com/";
 
 //Create the Retrofit instance//
 
