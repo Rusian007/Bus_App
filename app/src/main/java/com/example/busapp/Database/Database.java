@@ -21,6 +21,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String LOCATION_TABLE = "Locations";
     public static final String TOKENTABLE = "TokenTable";
     public static final String USERNAME = "Username";
+    public static final String ROUTEINFO = "Route";
     public static final String POINTSTABLE = "PointsTable";
     public static final String ROUTESTABLE = "RoutesTable";
     public static final String ID = "ID";
@@ -105,6 +106,8 @@ public class Database extends SQLiteOpenHelper {
                 .append(TOKEN)
                 .append(" TEXT, ")
                 .append(USERNAME)
+                .append(" TEXT, ")
+                .append(ROUTEINFO)
                 .append(" TEXT )");
 
         db.execSQL(sql.toString());
@@ -575,13 +578,14 @@ public class Database extends SQLiteOpenHelper {
 
 
     // ************** Token Table ***************
-    public void addNewToken(String token, String username){
+    public void addNewToken(String token, String username, String route){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(TOKEN, token);
         contentValues.put(USERNAME, username);
+        contentValues.put(ROUTEINFO, route);
 
         long result = db.insert(TOKENTABLE,null, contentValues);
         if(result == -1){
@@ -602,11 +606,13 @@ public class Database extends SQLiteOpenHelper {
         else
             return true;
     }
-    public void UpdateToken(Database table, String token, String username){
+    public void UpdateToken(Database table, String token, String username, String route){
         SQLiteDatabase db = table.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(TOKEN, token);
         cv.put(USERNAME, username);
+        cv.put(ROUTEINFO, route);
+
         String whereClause = "Counter = ?";
         String[] whereArgs = {String.valueOf(1)};
         long result =  db.update(TOKENTABLE,cv,whereClause,whereArgs);
@@ -635,7 +641,7 @@ public class Database extends SQLiteOpenHelper {
     public String GetUsername(Database db){
         SQLiteDatabase SQ = db.getReadableDatabase();
         String username=null;
-        String query = "SELECT "+ USERNAME +" FROM "+ TOKENTABLE +" WHERE "+COUNTER+" = 1";
+        String query = "SELECT "+ USERNAME +" FROM "+ TOKENTABLE +" ORDER BY "+COUNTER+" ASC LIMIT 1";
 
         Cursor cursor = SQ.rawQuery(query,null);
         if (cursor.moveToFirst()) {
@@ -644,6 +650,20 @@ public class Database extends SQLiteOpenHelper {
         }
         cursor.close();
         return username;
+    }
+
+    public String GetRouteLoginInfo(Database db){
+        SQLiteDatabase SQ = db.getReadableDatabase();
+        String routeInfo = null;
+        String query = "SELECT "+ ROUTEINFO +" FROM "+ TOKENTABLE +" ORDER BY "+COUNTER+" ASC LIMIT 1";
+
+        Cursor cursor = SQ.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            routeInfo = cursor.getString(cursor.getColumnIndex(ROUTEINFO));
+            // Do something with the token value
+        }
+        cursor.close();
+        return routeInfo;
     }
 
     public boolean DeleteToken(Database db){SQLiteDatabase SQ = db.getWritableDatabase();

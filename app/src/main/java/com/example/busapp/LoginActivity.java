@@ -72,7 +72,6 @@ public class LoginActivity extends AppCompatActivity {
 
         boolean ISTableEmpty = db.IsTokenTableEmpty(db);
         if (!ISTableEmpty){
-
             openNextActivity();
         }
 
@@ -135,9 +134,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     // for now we still save the token in database - this maybe change later
                     if(ISTableEmpty){
-                        db.addNewToken(token, usernameEdit.getText().toString());
+                        db.addNewToken(token, usernameEdit.getText().toString(), "LONG");
                     } else {
-                        db.UpdateToken(db, token, usernameEdit.getText().toString());
+                        db.UpdateToken(db, token, usernameEdit.getText().toString(), "LONG");
                     }
                     openNextActivity();
 
@@ -199,17 +198,13 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
 //                        openNextActivity();
 
-
-
-
                         // for now we still save the token in database - this maybe change later
                         if(ISTableEmpty){
-                            db.addNewToken(token, usernameEdit.getText().toString());
+                            db.addNewToken(token, usernameEdit.getText().toString(), "SHORT");
                         } else {
-                            db.UpdateToken(db, token, usernameEdit.getText().toString());
+                            db.UpdateToken(db, token, usernameEdit.getText().toString(), "SHORT");
                         }
                         openNextActivity();
-
 
                 } else {
                     // handle the error

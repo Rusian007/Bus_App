@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,11 +66,23 @@ public class ChooseRouteActivity extends AppCompatActivity {
             deviceConnected = true;
         }
 
-// Logout btn on click action
+        // Logout btn on click action
         Logout();
-
-
         db = new Database(ChooseRouteActivity.this);
+
+        Button longRouteButton = findViewById(R.id.long_route);
+        Button shortRouteButton = findViewById(R.id.short_route);
+
+        String routeInfo = db.GetRouteLoginInfo(db);
+        Log.d("ROUTEINFO", "route - " + routeInfo);
+
+        if (routeInfo != null) {
+            if (routeInfo.equals("SHORT")) {
+                longRouteButton.setVisibility(View.GONE); // This will hide the button
+            } else if (routeInfo.equals("LONG")) {
+                shortRouteButton.setVisibility(View.GONE); // This will show the button
+            }
+        }
 
     }
 
@@ -213,6 +226,12 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
                     if (db.DeleteToken(db)){
                         Toast.makeText(getApplicationContext(), "Logged out successfully", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(ChooseRouteActivity.this, ChooseRouteActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+
                     } else{
                         Toast.makeText(getApplicationContext(), "Internal error, not logged out", Toast.LENGTH_SHORT).show();
                     }

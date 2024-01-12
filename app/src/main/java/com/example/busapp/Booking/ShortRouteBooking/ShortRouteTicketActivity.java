@@ -133,7 +133,6 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
 
                         db.deleteAllRecordsFromTable();
                         loadingText.setText("Data upload complete. Please close this screen.");
-
                 } else {
                     Toast.makeText(getApplicationContext(), "Error Occured on sending request" , Toast.LENGTH_LONG).show();
                     Log.d("****", "Error Occured on sending request");

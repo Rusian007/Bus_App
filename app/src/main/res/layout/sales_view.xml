@@ -23,19 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/image17" />
 
-    <TextView
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Tamjid"
-        android:textColor="@color/ColorBluGray"
-        android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/dateview"
