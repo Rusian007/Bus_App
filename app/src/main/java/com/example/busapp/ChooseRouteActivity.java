@@ -48,6 +48,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
     View parentLayout ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -55,7 +56,13 @@ public class ChooseRouteActivity extends AppCompatActivity {
         setContentView(R.layout.route_choose_view);
          logoutTextView = findViewById(R.id.logout);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
+
+        }
         if (!bluetoothAdapter.isEnabled()) {
+            Log.d("NOT", "Not Enabled");
+
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, 0);
 
@@ -64,7 +71,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
             Snackbar snackbar = Snackbar.make(parentLayout, "Please connect to a new device, or the application will not work >_<.", Snackbar.LENGTH_LONG);
             snackbar.show();
             deviceConnected = true;
-        }
+      }
 
         // Logout btn on click action
         Logout();
