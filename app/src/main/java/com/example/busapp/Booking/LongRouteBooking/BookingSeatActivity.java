@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.busapp.ChooseLongRouteActivity;
 import com.example.busapp.Database.Database;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
 import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.GetFairModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
+import com.example.busapp.retrofit.ApiModels.PhoneNumberResponse;
 import com.example.busapp.retrofit.ApiModels.RouteRequestModel;
 import com.example.busapp.retrofit.ApiModels.TicketResponse;
 import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
@@ -45,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
+    String PhoneNumber = null;
     TextView BusNameText, seatNamesText, totalSeatText, printAmount, lessAmount, netAmount;
     double amount= 0;
     int busCategory;
@@ -121,7 +124,7 @@ public class BookingSeatActivity extends AppCompatActivity {
                     double net = (double) amount-value;
                     netAmount.setText("Net Amount: "+String.valueOf(net));
                 } else{
-                    discountText.setText("0");
+                    discountText.setText("");
 
                 }
             }
@@ -161,10 +164,39 @@ public class BookingSeatActivity extends AppCompatActivity {
         printTicketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SendMakeTicket();
+                GetPhoneApi();
+
             }
         });
 
+    }
+
+
+    public void GetPhoneApi(){
+        ApiClient client = new ApiClient();
+        Retrofit retrofit = client.getRetrofitInstance();
+        LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
+
+        Call<PhoneNumberResponse> call = longRoute.getPhone();
+
+        call.enqueue(new Callback<PhoneNumberResponse>() {
+            @Override
+            public void onResponse(Call<PhoneNumberResponse> call, Response<PhoneNumberResponse> response) {
+                if (response.isSuccessful()) {
+                    PhoneNumberResponse phone_number_res = response.body();
+                    PhoneNumber = phone_number_res.getPhone_number();
+                    SendMakeTicket();
+                }else{
+                    Log.d("ERROR", "err: " + response.errorBody().toString());
+                    Toast.makeText(getApplicationContext(), "Sorry something went wrong getting phone number", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PhoneNumberResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void SendMakeTicket() {
@@ -184,10 +216,10 @@ public class BookingSeatActivity extends AppCompatActivity {
         String discount = discountText.getText().toString();
         JSONArray jsonArray = new JSONArray(selectedSeats);
         String jsonFormattedString = jsonArray.toString();
-
+if(discount.isEmpty()){
+    discount = "0";
+}
         CreateTicketRequest request = new CreateTicketRequest(fromLocationID, toLocationID,busCategory, busID, jsonFormattedString,Integer.parseInt( discount));
-
-
 
 
 
@@ -209,7 +241,6 @@ public class BookingSeatActivity extends AppCompatActivity {
 
                 }else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
-
                     Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -217,7 +248,6 @@ public class BookingSeatActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<TicketResponse> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Please restart the app because of network problem", Toast.LENGTH_SHORT).show();
-
             }
         });
         printTicketButton.setVisibility(View.INVISIBLE);
@@ -227,10 +257,11 @@ public class BookingSeatActivity extends AppCompatActivity {
                 Log.d("TAG", "Ticket ID");
                 Log.d("TAG", String.valueOf(ticketID));
                 startPrint.putExtra("TID", String.valueOf(ticketID));
+                startPrint.putExtra("phoneNumber", PhoneNumber);
                 startActivity(startPrint);
                 finish();
             }
-        }, 1500); // Delay in milliseconds (2 seconds)
+        }, 1555); // Delay in milliseconds
 
     }
 
@@ -244,7 +275,6 @@ public class BookingSeatActivity extends AppCompatActivity {
             // Get the values from the cursor
             fromLocationID = cursor.getInt(0);
             toLocationID = cursor.getInt(1);
-
         }
 
         // Close the cursor

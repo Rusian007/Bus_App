@@ -36,6 +36,7 @@ import com.example.busapp.Model.ShortRoute_LocationModel;
 import com.example.busapp.R;
 import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
+import com.example.busapp.retrofit.ApiModels.PhoneNumberResponse;
 import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
 import com.example.busapp.retrofit.ApiModels.ShortRouteTicketModel;
 import com.example.busapp.retrofit.ApiModels.TicketRequestBody;
@@ -61,7 +62,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ShortRouteBookingActivity extends AppCompatActivity implements ToLocationAdapter.IEndLocation {
-
+    String PhoneNumber = null;
     ArrayList<ShortRoute_LocationModel> toLocations = new ArrayList<>();
     View parentLayout ;
     BluetoothSocket socket = null;
@@ -135,13 +136,40 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
         // call API - start a method
         callApi();
-        getTime();
+        GetPhoneApi();
+      //  getTime();
         BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
         printbtn.setVisibility(View.INVISIBLE);
 
 
+    }
+
+    public void GetPhoneApi(){
+        ApiClient client = new ApiClient();
+        Retrofit retrofit = client.getRetrofitInstance();
+        ShortRouteApi shortApi = retrofit.create(ShortRouteApi.class);
+
+        Call<PhoneNumberResponse> call = shortApi.getPhone();
+
+        call.enqueue(new Callback<PhoneNumberResponse>() {
+            @Override
+            public void onResponse(Call<PhoneNumberResponse> call, Response<PhoneNumberResponse> response) {
+                if (response.isSuccessful()) {
+                    PhoneNumberResponse phone_number_res = response.body();
+                    PhoneNumber = phone_number_res.getPhone_number();
+                }else{
+                    Log.d("ERROR", "err: " + response.errorBody().toString());
+                    Toast.makeText(getApplicationContext(), "Sorry something went wrong getting phone number", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PhoneNumberResponse> call, Throwable t) {
+
+            }
+        });
     }
     public void SetSeatandAmount(String seats, String amount){
         TicketSeatCount.setText(seats);
@@ -408,7 +436,6 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             }
             // Define the text to be printed
             String bigText = "MAWA PARIBAHAN PVT LTD (ELISH)";
-           // String bigText = "\u09AE\u09BE\u0993\u09DF\u09BE \u09AA\u09B0\u09BF\u09AC\u09B9\u09A8 (\u09AA\u09CD\u09B0\u09BE\u09B9)\u09B2\u09BF\u0993 (\u0987\u09B2\u09BF\u09B6 )"; // Bangla text in Unicode
             String smallText = "www.elishparibahan.com";
             String normalText1 = "serial no: "+integerList.get(0);
             String normalText2 = "From: "+FromLocationSelected;
@@ -426,7 +453,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
             // Set the text size to big
             //byte[] textSizeBig = {0x1D, 0x21, 0x11};
-            byte[] textSizeBig = new byte[]{0x1D, 0x21, 0x14}; // 0x30 is the command for double height and double width text
+            byte[] textSizeBig = new byte[]{0x1D, 0x21, 0x12}; // 0x30 is the command for double height and double width text
 
 
             // Set the text size to small
@@ -461,7 +488,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
             outputStream.write(normalText1.getBytes("UTF-8"));
-            outputStream.write("\n\n".getBytes("UTF-8"));
+            outputStream.write("\n".getBytes("UTF-8"));
 
             // Print normal text 2 in bold
             outputStream.write(textSizeSmall);
@@ -482,11 +509,11 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             outputStream.write("\n".getBytes("UTF-8"));
 
 
-            outputStream.write(alignCenter);
+            outputStream.write(alignStart);
             outputStream.write(textSizeSmall);
             outputStream.write(boldOff);
             outputStream.write(date.getBytes("UTF-8"));
-            outputStream.write("     ".getBytes("UTF-8"));
+            outputStream.write("      ".getBytes("UTF-8"));
 
             LocalTime time = LocalTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -496,13 +523,23 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
             outputStream.write(timeString.getBytes());
             outputStream.write("\n".getBytes("UTF-8"));
 
+
+
             String line1 = "------------------------------------------------\n";
             outputStream.write(line1.getBytes());
 
             outputStream.write(alignStart);
             outputStream.write(boldOn);
-            String line2 = "Amount: "+endLocationSelectedPrice.get(0)+" /- \n";
+            String line2 = "Amount: "+endLocationSelectedPrice.get(0);
             outputStream.write(line2.getBytes());
+
+            outputStream.write(boldOff);
+
+            outputStream.write("                       ".getBytes("UTF-8"));
+            outputStream.write(boldOff);
+            String line7 = "non-ac \n";
+            outputStream.write(line7.getBytes());
+
 
             outputStream.write(boldOff);
             String line3 = "------------------------------------------------\n";
@@ -510,16 +547,10 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
             outputStream.write(alignStart);
             outputStream.write(boldOff);
-            String line4 = "Complain: 01409978008 \n";
+            String line4 = "Complain: "+ PhoneNumber +" \n";
             outputStream.write(line4.getBytes());
 
-            outputStream.write(alignStart);
-            outputStream.write(boldOff);
-            String line7 = "non-ac \n";
-            outputStream.write(line7.getBytes());
 
-
-            outputStream.write(boldOff);
             String line5 = "------------------------------------------------\n";
             outputStream.write(line5.getBytes());
             outputStream.write(alignCenter);
@@ -607,9 +638,12 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
     public boolean AddDestinationLocation(String locationName, String price, int id) {
         if (endLocationSelected.isEmpty()) {
             endLocationSelected.add(locationName);
+            endLocationSelectedPrice.clear();
+            endLocationSelectedPrice.trimToSize();
             endLocationSelectedPrice.add(price);
             endLocationId = id;
             checkLocations();
+          //  Log.d("PRICE", price);
             printbtn.setVisibility(View.VISIBLE);
         }
 

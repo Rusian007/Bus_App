@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +18,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.busapp.ChooseLongRouteActivity;
 import com.example.busapp.Database.Database;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiClient;
+import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
+import com.example.busapp.retrofit.ApiModels.PhoneNumberResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LongRouteSeatChoosingActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +42,7 @@ public class LongRouteSeatChoosingActivity extends AppCompatActivity {
         TextView UsernameText = findViewById(R.id.name);
         String username = db.GetUsername(db);
         UsernameText.setText(username);
+
     }
 
     public void goBack(View view){

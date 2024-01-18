@@ -120,17 +120,14 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
         ApiClient client = new ApiClient();
         Retrofit retrofit = client.getRetrofitInstance();
         ShortRouteApi shortapi = retrofit.create(ShortRouteApi.class);
-        for (TicketRequestBodyMultiple.TicketModel ticket : multipleTickets.getTickets()) {
-            System.out.println("Nyaa~! Logging seat: " + ticket.getSeats());
-            Log.d("Debug", ticket.getSeats());
-        }
-        Call<TicketRequestBodyMultiple> call = shortapi.postMultipleTickets("Token " + token, multipleTickets);
 
-        call.enqueue(new Callback<TicketRequestBodyMultiple>() {
+        Call<String> call = shortapi.postMultipleTickets("Token " + token, multipleTickets);
+
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<TicketRequestBodyMultiple> call, Response<TicketRequestBodyMultiple> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-
+                    Log.d("Debug", response.toString());
                         db.deleteAllRecordsFromTable();
                         loadingText.setText("Data upload complete. Please close this screen.");
                 } else {
@@ -140,7 +137,7 @@ public class ShortRouteTicketActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<TicketRequestBodyMultiple> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Error " +t.getMessage() , Toast.LENGTH_LONG).show();
                 Log.d("Debug", t.getMessage());
 

@@ -1,5 +1,6 @@
 package com.example.busapp.retrofit.ApiEndpoints;
 
+import com.example.busapp.retrofit.ApiModels.PhoneNumberResponse;
 import com.example.busapp.retrofit.ApiModels.ShortRouteModel;
 import com.example.busapp.retrofit.ApiModels.ShortRoutePointModel;
 import com.example.busapp.retrofit.ApiModels.ShortRouteTicketModel;
@@ -27,9 +28,12 @@ public interface ShortRouteApi {
     );
 
     @POST("ticket/ticket_multiple/")
-    Call<TicketRequestBodyMultiple> postMultipleTickets(
+    Call<String> postMultipleTickets(
             @Header("Authorization") String token,
             @Body TicketRequestBodyMultiple ticketRequestModel
     );
+
+    @GET("ticket/phone-number/")
+    Call<PhoneNumberResponse> getPhone();
 
 }

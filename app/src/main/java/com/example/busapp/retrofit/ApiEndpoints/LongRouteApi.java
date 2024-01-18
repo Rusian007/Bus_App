@@ -7,6 +7,7 @@ import com.example.busapp.retrofit.ApiModels.GetTicketBody;
 import com.example.busapp.retrofit.ApiModels.LongRouteBusModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
+import com.example.busapp.retrofit.ApiModels.PhoneNumberResponse;
 import com.example.busapp.retrofit.ApiModels.RouteRequestModel;
 import com.example.busapp.retrofit.ApiModels.TicketResponse;
 
@@ -64,4 +65,7 @@ public interface LongRouteApi {
             @Query("starting_location_id") int starting_location_id,
             @Query("ending_location_id") int ending_location_id
     );
+
+    @GET("ticket/phone-number/")
+    Call<PhoneNumberResponse>getPhone();
 }

@@ -25,9 +25,12 @@ import com.bumptech.glide.Glide;
 import com.example.busapp.Booking.ShortRouteBooking.ShortRouteBookingActivity;
 import com.example.busapp.Database.Database;
 import com.example.busapp.R;
+import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
+import com.example.busapp.retrofit.ApiEndpoints.ShortRouteApi;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.GetTicketBody;
+import com.example.busapp.retrofit.ApiModels.PhoneNumberResponse;
 import com.example.busapp.retrofit.ApiModels.TicketResponse;
 import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 import com.google.android.material.snackbar.Snackbar;
@@ -51,6 +54,7 @@ import retrofit2.Retrofit;
 
 public class PrintTicketActivity extends AppCompatActivity {
     int tid;
+    String PhoneNumber;
     Database db;
     BluetoothSocket socket = null;
     BluetoothAdapter bluetoothAdapter;
@@ -73,17 +77,17 @@ public class PrintTicketActivity extends AppCompatActivity {
 
 
         selectedSeats = getIntent().getStringArrayListExtra("SEATLIST");
-
+PhoneNumber = getIntent().getStringExtra("phoneNumber");
         Glide.with(this)
                 .asGif()
                 .load(R.drawable.loading)
                 .into(imageView);
-
         GetTicketInfo();
         BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
     }
+
 
     private void GetTicketInfo() {
         db = new Database(PrintTicketActivity.this);
@@ -311,7 +315,7 @@ public class PrintTicketActivity extends AppCompatActivity {
 
             outputStream.write(alignStart);
             outputStream.write(boldOff);
-            String line4 = "Complain: 01409978008 \n";
+            String line4 = "Complain: "+ PhoneNumber +" \n";
             outputStream.write(line4.getBytes());
 
 
