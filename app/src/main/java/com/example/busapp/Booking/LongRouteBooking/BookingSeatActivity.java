@@ -106,7 +106,7 @@ public class BookingSeatActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                discountText.setText("");
+
             }
 
             @Override
@@ -122,17 +122,17 @@ public class BookingSeatActivity extends AppCompatActivity {
                     if (value > Integer.parseInt(DiscountLimit)) {
                         // Set the value to 100
                         discountText.setText(DiscountLimit);
-                        discountText.setSelection(discountText.getText().length()); // Move cursor to the end
+
+                       // discountText.setSelection(discountText.getText().length()); // Move cursor to the end
                        value = Integer.parseInt(DiscountLimit);
                     }
                     lessAmount.setText("Less: "+ String.valueOf(value));
                     double net = (double) amount-value;
                     netAmount.setText("Net Amount: "+ String.valueOf(net));
                 } else{
-                    netAmount.setText("Net Amount: "+ String.valueOf(amount));
-                    lessAmount.setText("0");
+                  //  netAmount.setText("Net Amount: "+ String.valueOf(amount));
+                  //  lessAmount.setText("0");
                     discountText.setText("0");
-
 
                 }
             }
