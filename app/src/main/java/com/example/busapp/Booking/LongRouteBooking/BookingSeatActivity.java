@@ -8,6 +8,7 @@ import com.example.busapp.R;
 import com.example.busapp.retrofit.ApiClient;
 import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
 import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
+import com.example.busapp.retrofit.ApiModels.DiscountLimitResponse;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.GetFairModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
@@ -48,6 +49,7 @@ import org.json.JSONException;
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
     String PhoneNumber = null;
+    String DiscountLimit = "200";
     TextView BusNameText, seatNamesText, totalSeatText, printAmount, lessAmount, netAmount;
     double amount= 0;
     int busCategory;
@@ -79,6 +81,8 @@ public class BookingSeatActivity extends AppCompatActivity {
         selectedSeats = getIntent().getStringArrayListExtra("SEATLIST");
         seatNamesText.setText("Seat: ");
 
+        DiscountLimit = getIntent().getStringExtra("DISCOUNTLIMIT");
+
         busID = getIntent().getIntExtra("BUSID", 0);
         for (String seat: selectedSeats){
             seatNamesText.append(seat+", ");
@@ -91,6 +95,7 @@ public class BookingSeatActivity extends AppCompatActivity {
 
         totalSeatText.setText("Total Seats: "+ String.valueOf( selectedSeats.size()));
 
+      //  GetDiscountLimitApi();
         callFairApi();
 
         discountText.addTextChangedListener(new TextWatcher() {
@@ -101,7 +106,7 @@ public class BookingSeatActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                discountText.setText("");
             }
 
             @Override
@@ -114,17 +119,20 @@ public class BookingSeatActivity extends AppCompatActivity {
                     int value = Integer.parseInt(input);
 
                     // Check if the entered value is greater than 100
-                    if (value > 100) {
+                    if (value > Integer.parseInt(DiscountLimit)) {
                         // Set the value to 100
-                        discountText.setText("100");
+                        discountText.setText(DiscountLimit);
                         discountText.setSelection(discountText.getText().length()); // Move cursor to the end
-                        value = 100;
+                       value = Integer.parseInt(DiscountLimit);
                     }
-                    lessAmount.setText("Less: "+String.valueOf(value));
+                    lessAmount.setText("Less: "+ String.valueOf(value));
                     double net = (double) amount-value;
-                    netAmount.setText("Net Amount: "+String.valueOf(net));
+                    netAmount.setText("Net Amount: "+ String.valueOf(net));
                 } else{
-                    discountText.setText("");
+                    netAmount.setText("Net Amount: "+ String.valueOf(amount));
+                    lessAmount.setText("0");
+                    discountText.setText("0");
+
 
                 }
             }
@@ -170,6 +178,7 @@ public class BookingSeatActivity extends AppCompatActivity {
         });
 
     }
+
 
 
     public void GetPhoneApi(){

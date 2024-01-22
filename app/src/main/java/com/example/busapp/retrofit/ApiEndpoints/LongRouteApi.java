@@ -1,6 +1,7 @@
 package com.example.busapp.retrofit.ApiEndpoints;
 
 import com.example.busapp.retrofit.ApiModels.CreateTicketRequest;
+import com.example.busapp.retrofit.ApiModels.DiscountLimitResponse;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.GetFairModel;
 import com.example.busapp.retrofit.ApiModels.GetTicketBody;
@@ -68,4 +69,7 @@ public interface LongRouteApi {
 
     @GET("ticket/phone-number/")
     Call<PhoneNumberResponse>getPhone();
+
+    @GET("ticket/discount-max-limit")
+    Call<DiscountLimitResponse>getDiscount();
 }

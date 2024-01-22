@@ -25,6 +25,7 @@ import com.example.busapp.Database.Database;
 import com.example.busapp.Model.BusSeatListModel;
 import com.example.busapp.R;
 import com.example.busapp.retrofit.ApiEndpoints.LongRouteApi;
+import com.example.busapp.retrofit.ApiModels.DiscountLimitResponse;
 import com.example.busapp.retrofit.ApiModels.GetBookedSeatsModel;
 import com.example.busapp.retrofit.ApiModels.LongRouteSeatModel;
 import com.example.busapp.retrofit.ApiModels.RouteRequestModel;
@@ -44,6 +45,7 @@ import retrofit2.Retrofit;
 public class LongRouteSelectSeatActivity extends AppCompatActivity implements  BusSeatAdapter.IBusSeat{
     RecyclerView busSeatRecycleView;
     BusSeatAdapter adapter;
+    String DiscountLimit = "100";
     ImageButton back;
     TextView locationText;
     String fromLoc, toLoc, BusName;
@@ -75,8 +77,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
         // Close the cursor
         cursor1.close();
-
-        // get Route ID
+        GetDiscountLimitApi();        // get Route ID
         callFairApi();
 
         // END
@@ -115,6 +116,32 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
     }
 
+    public void GetDiscountLimitApi(){
+        ApiClientLongRoute client = new ApiClientLongRoute();
+        Retrofit retrofit = client.getRetrofitInstance();
+        LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
+
+        Call<DiscountLimitResponse> call = longRoute.getDiscount();
+
+        call.enqueue(new Callback<DiscountLimitResponse>() {
+            @Override
+            public void onResponse(Call<DiscountLimitResponse> call, Response<DiscountLimitResponse> response) {
+                if(response.isSuccessful()){
+                    DiscountLimitResponse discount_res = response.body();
+                    DiscountLimit = discount_res.getMax_limit();
+                    Log.d("discount", DiscountLimit);
+                }else{
+
+                    Toast.makeText(getApplicationContext(), "Sorry something went wrong getting discount limit", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DiscountLimitResponse> call, Throwable t) {
+
+            }
+        });
+    }
     public void ConfirmSeatButton_OnClickListener(View view){
         Intent intent = new Intent(this, BookingSeatActivity.class);
         if (SelectedBusSeatsList.isEmpty()){
@@ -124,6 +151,8 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         intent.putStringArrayListExtra("SEATLIST", SelectedBusSeatsList);
         intent.putExtra("BUSNAME", BusName);
         intent.putExtra("BUSID", busid);
+        intent.putExtra("DISCOUNTLIMIT", DiscountLimit);
+
         startActivity(intent);
         this.finish();
     }
@@ -137,7 +166,6 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
             // Get the values from the cursor
             fromLocationID = cursor.getInt(0);
             toLocationID = cursor.getInt(1);
-
         }
 
         // Close the cursor
@@ -261,7 +289,6 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
                     for(GetBookedSeatsModel.BookedSeat seat : bookedSeats.getBookedSeats()){
                      //   Log.d("BOOK", seat.getSeatNo());
                         bookedSeatsList.add(seat.getSeatNo());
-
                     }
 
                 }else {
