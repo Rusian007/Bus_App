@@ -537,7 +537,7 @@ public class ShortRouteBookingActivity extends AppCompatActivity implements ToLo
 
             outputStream.write("                       ".getBytes("UTF-8"));
             outputStream.write(boldOff);
-            String line7 = "non-ac \n";
+            String line7 = "\n";
             outputStream.write(line7.getBytes());
 
 
