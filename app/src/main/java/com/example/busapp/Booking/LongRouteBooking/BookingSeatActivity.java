@@ -182,7 +182,7 @@ public class BookingSeatActivity extends AppCompatActivity {
 
 
     public void GetPhoneApi(){
-        ApiClient client = new ApiClient();
+        ApiClientLongRoute client = new ApiClientLongRoute();
         Retrofit retrofit = client.getRetrofitInstance();
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
 
