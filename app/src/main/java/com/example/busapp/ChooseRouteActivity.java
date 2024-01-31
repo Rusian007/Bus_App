@@ -42,9 +42,9 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
     Database db;
     BluetoothAdapter bluetoothAdapter;
-    BroadcastReceiver broadcastReceiver;
     boolean registered = false, deviceConnected = false;
     TextView logoutTextView;
+    BroadcastReceiver broadcastReceiver;
     View parentLayout ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +70,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
             parentLayout = findViewById(android.R.id.content);
             Snackbar snackbar = Snackbar.make(parentLayout, "Please connect to a new device, or the application will not work >_<.", Snackbar.LENGTH_LONG);
             snackbar.show();
+
             deviceConnected = true;
       }
 
@@ -112,7 +113,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
         bluetoothAdapter.startDiscovery();
         ArrayList<String> arrayList = new ArrayList<>();
 
-        broadcastReceiver = new BroadcastReceiver() {
+       broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -168,6 +169,9 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
         IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED);
+        intentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(broadcastReceiver, intentFilter);
         registered = true;
     }
