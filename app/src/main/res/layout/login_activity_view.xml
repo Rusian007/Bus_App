@@ -73,7 +73,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:textSize="16dp"
-        android:hint="Username, Email or Phone Number"
+        android:hint="Phone Number"
         android:fontFamily="@font/poppins_regular"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
