@@ -79,7 +79,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 }
             });
         } else {
-            Viewholder.col1Text.setTextColor(Color.parseColor("#1cab50"));
+            Viewholder.col1Text.setTextColor(Color.parseColor("#ff0000"));
             Viewholder.col1Text.setBackgroundColor(Color.BLACK);
         }
 
@@ -105,7 +105,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 }
             });
         } else {
-            Viewholder.col2Text.setTextColor(Color.parseColor("#1cab50"));
+            Viewholder.col2Text.setTextColor(Color.parseColor("#ff0000"));
             Viewholder.col2Text.setBackgroundColor(Color.BLACK);
         }
 
@@ -131,7 +131,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 }
             });
         } else {
-            Viewholder.col3Text.setTextColor(Color.parseColor("#1cab50"));
+            Viewholder.col3Text.setTextColor(Color.parseColor("#ff0000"));
             Viewholder.col3Text.setBackgroundColor(Color.BLACK);
         }
 
@@ -157,7 +157,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 }
             });
         } else {
-            Viewholder.col4Text.setTextColor(Color.parseColor("#1cab50"));
+            Viewholder.col4Text.setTextColor(Color.parseColor("#ff0000"));
             Viewholder.col4Text.setBackgroundColor(Color.BLACK);
         }
 
@@ -182,7 +182,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 }
             });
         } else {
-            Viewholder.col5Text.setTextColor(Color.parseColor("#1cab50"));
+            Viewholder.col5Text.setTextColor(Color.parseColor("#ff0000"));
             Viewholder.col5Text.setBackgroundColor(Color.BLACK);
         }
     }
@@ -196,7 +196,7 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
 
     // Action if per-seat is clicked
     private void onItemClick(TextView text) {
-        text.setTextColor(Color.parseColor("#ff0000"));
+        text.setTextColor(Color.parseColor("#1cab50"));
         text.setBackgroundColor(Color.BLACK);
     }
 
