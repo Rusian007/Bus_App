@@ -1,6 +1,7 @@
 package com.example.busapp.Booking.LongRouteBooking;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,10 +53,22 @@ public class SelectBusActivity extends AppCompatActivity
         Intent intent = getIntent();
         String fromlocation = intent.getStringExtra("fromLocation");
         String tolocation = intent.getStringExtra("toLocation");
+        // DB stuff
+        Database db = new Database(SelectBusActivity.this);
+        Cursor cursor1 = db.getLocations(db);
+        // Iterate through the results
+        while (cursor1.moveToNext()) {
+            // Get the values from the cursor
+            fromlocation = cursor1.getString(0);
+            tolocation = cursor1.getString(1);
+        }
+        // Close the cursor
+        cursor1.close();
+
         locationtxt.setText("From: "+fromlocation+" To: "+tolocation);
         InitializeNamesArray();
 
-        Database db = new Database(SelectBusActivity.this);
+     //  Database db = new Database(SelectBusActivity.this);
         TextView UsernameText = findViewById(R.id.name);
         String username = db.GetUsername(db);
         UsernameText.setText(username);

@@ -17,6 +17,10 @@ import com.example.busapp.retrofit.ApiModels.RouteRequestModel;
 import com.example.busapp.retrofit.ApiModels.TicketResponse;
 import com.example.busapp.retrofit.RequestModel.ApiClientLongRoute;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,24 +43,30 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 public class BookingSeatActivity extends AppCompatActivity {
     EditText discountText;
     String PhoneNumber = null;
     String DiscountLimit = "200";
     TextView BusNameText, seatNamesText, totalSeatText, printAmount, lessAmount, netAmount;
-    double amount= 0;
+    double amount = 0;
     int busCategory;
     Intent startPrint;
     ArrayList<String> selectedSeats;
-    int fromLocationID, toLocationID, busID,ticketID;
+    int fromLocationID, toLocationID, busID, ticketID;
     Button printTicketButton;
+    BluetoothAdapter bluetoothAdapter;
+    BluetoothSocket socket = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,19 +94,21 @@ public class BookingSeatActivity extends AppCompatActivity {
         DiscountLimit = getIntent().getStringExtra("DISCOUNTLIMIT");
 
         busID = getIntent().getIntExtra("BUSID", 0);
-        for (String seat: selectedSeats){
-            seatNamesText.append(seat+", ");
+        for (String seat : selectedSeats) {
+            seatNamesText.append(seat + ", ");
         }
         Database db = new Database(BookingSeatActivity.this);
 
-       TextView UsernameText = findViewById(R.id.username);
+        TextView UsernameText = findViewById(R.id.username);
         String username = db.GetUsername(db);
         UsernameText.setText(username);
 
-        totalSeatText.setText("Total Seats: "+ String.valueOf( selectedSeats.size()));
+        totalSeatText.setText("Total Seats: " + String.valueOf(selectedSeats.size()));
 
-      //  GetDiscountLimitApi();
+        //  GetDiscountLimitApi();
         callFairApi();
+        BluetoothManager bluetoothManager = getSystemService(BluetoothManager.class);
+        bluetoothAdapter = bluetoothManager.getAdapter();
 
         discountText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,15 +135,15 @@ public class BookingSeatActivity extends AppCompatActivity {
                         // Set the value to 100
                         discountText.setText(DiscountLimit);
 
-                       // discountText.setSelection(discountText.getText().length()); // Move cursor to the end
-                       value = Integer.parseInt(DiscountLimit);
+                        // discountText.setSelection(discountText.getText().length()); // Move cursor to the end
+                        value = Integer.parseInt(DiscountLimit);
                     }
-                    lessAmount.setText("Less: "+ String.valueOf(value));
-                    double net = (double) amount-value;
-                    netAmount.setText("Net Amount: "+ String.valueOf(net));
-                } else{
-                  //  netAmount.setText("Net Amount: "+ String.valueOf(amount));
-                  //  lessAmount.setText("0");
+                    lessAmount.setText("Less: " + String.valueOf(value));
+                    double net = (double) amount - value;
+                    netAmount.setText("Net Amount: " + String.valueOf(net));
+                } else {
+                    //  netAmount.setText("Net Amount: "+ String.valueOf(amount));
+                    //  lessAmount.setText("0");
                     discountText.setText("0");
 
                 }
@@ -142,7 +154,7 @@ public class BookingSeatActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
-                     ((EditText) view).setCursorVisible(true);
+                    ((EditText) view).setCursorVisible(true);
                 } else {
                     ((EditText) view).setCursorVisible(false);
 
@@ -180,8 +192,7 @@ public class BookingSeatActivity extends AppCompatActivity {
     }
 
 
-
-    public void GetPhoneApi(){
+    public void GetPhoneApi() {
         ApiClientLongRoute client = new ApiClientLongRoute();
         Retrofit retrofit = client.getRetrofitInstance();
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
@@ -195,7 +206,7 @@ public class BookingSeatActivity extends AppCompatActivity {
                     PhoneNumberResponse phone_number_res = response.body();
                     PhoneNumber = phone_number_res.getPhone_number();
                     SendMakeTicket();
-                }else{
+                } else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
                     Toast.makeText(getApplicationContext(), "Sorry something went wrong getting phone number", Toast.LENGTH_SHORT).show();
                 }
@@ -211,6 +222,44 @@ public class BookingSeatActivity extends AppCompatActivity {
     private void SendMakeTicket() {
         Database db = new Database(BookingSeatActivity.this);
         String token = db.GetToken(db);
+
+        // check bluetooth status
+        boolean macExists = db.doesMacExist();
+   /*     if (!macExists){
+            Toast.makeText(getApplicationContext(), "No Bluetooth device connected, Please restart the app", Toast.LENGTH_LONG).show();
+            return;
+        }
+*/
+
+        try {
+            String MacAddress = db.getMacAddress();
+            Log.d("#########", "Bluetooth enabled " + MacAddress);
+
+            BluetoothDevice printer = bluetoothAdapter.getRemoteDevice(MacAddress.replaceAll("\\s", "")); // replace with your printer's MAC address
+            UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+            socket = printer.createRfcommSocketToServiceRecord(MY_UUID);
+            socket.connect();
+
+            boolean isConnected = socket.isConnected();
+            if (!isConnected) {
+                Toast.makeText(getApplicationContext(), "Device can't connect to bluetooth, Print ticket failed, do it again !", Toast.LENGTH_LONG).show();
+
+                Intent startFailPrint = new Intent(getApplicationContext(), LongRouteBookingStartActivity.class);
+                startActivity(startFailPrint);
+                finish();
+                return;
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Device can't connect to Bluetooth, Print ticket failed, please try again.", Toast.LENGTH_LONG).show();
+
+            Intent startFailPrint = new Intent(getApplicationContext(), LongRouteBookingStartActivity.class);
+            startActivity(startFailPrint);
+            finish();
+            return;
+        }
+
+        // end
+
         ApiClientLongRoute client = new ApiClientLongRoute();
         Retrofit retrofit = client.getRetrofitInstance();
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
@@ -225,30 +274,29 @@ public class BookingSeatActivity extends AppCompatActivity {
         String discount = discountText.getText().toString();
         JSONArray jsonArray = new JSONArray(selectedSeats);
         String jsonFormattedString = jsonArray.toString();
-if(discount.isEmpty()){
-    discount = "0";
-}
-        CreateTicketRequest request = new CreateTicketRequest(fromLocationID, toLocationID,busCategory, busID, jsonFormattedString,Integer.parseInt( discount));
+        if (discount.isEmpty()) {
+            discount = "0";
+        }
+        CreateTicketRequest request = new CreateTicketRequest(fromLocationID, toLocationID, busCategory, busID, jsonFormattedString, Integer.parseInt(discount));
 
 
-
-        Call<TicketResponse> call = longRoute.makeTicket("Token " + token, request );
+        Call<TicketResponse> call = longRoute.makeTicket("Token " + token, request);
         call.enqueue(new Callback<TicketResponse>() {
             @Override
             public void onResponse(Call<TicketResponse> call, Response<TicketResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     try {
                         TicketResponse ticket = response.body();
-                        Toast.makeText(getApplicationContext(), "Printing Ticket with ticket ID: "+ticket.getId(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Printing Ticket with ticket ID: " + ticket.getId(), Toast.LENGTH_SHORT).show();
                         startPrint = new Intent(getApplicationContext(), PrintTicketActivity.class);
                         ticketID = ticket.getId();
 
                         startPrint.putStringArrayListExtra("SEATLIST", selectedSeats);
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         Log.d("ERROR", "err: " + response.errorBody().toString());
                     }
 
-                }else {
+                } else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
                     Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -297,7 +345,7 @@ if(discount.isEmpty()){
 
         String seatsString = TextUtils.join(", ", selectedSeats);
 
-        Call<RouteRequestModel> call = longRoute.GetRouteID("Token " + token, fromLocationID, toLocationID );
+        Call<RouteRequestModel> call = longRoute.GetRouteID("Token " + token, fromLocationID, toLocationID);
 
         call.enqueue(new Callback<RouteRequestModel>() {
             @Override
@@ -317,11 +365,12 @@ if(discount.isEmpty()){
                             int endingLocation = route.getEndingLocation();
                             busCategory = route.getBusCategory();
 
-                            printAmount.setText("Amount: "+ String.valueOf( fair * selectedSeats.size()));
+                            printAmount.setText("Amount: " + String.valueOf(fair * selectedSeats.size()));
                             amount = fair * selectedSeats.size();
+                            netAmount.setText("Net Amount: " + String.valueOf(amount));
                             // Do something with the values
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "This is a invalid route. Redirecting you back, please wait ...", Toast.LENGTH_SHORT).show();
                         // Delay the redirection and finish the current activity after 2 seconds
                         new Handler().postDelayed(new Runnable() {
@@ -364,15 +413,16 @@ if(discount.isEmpty()){
     }
 
     // go back to home page if booking is cancelled
-    public void Cancel_booking_onClick(View view){
+    public void Cancel_booking_onClick(View view) {
         Intent intent = new Intent(this, SelectBusActivity.class);
-       // String discount = discountText.getText().toString();
+        // String discount = discountText.getText().toString();
 
         startActivity(intent);
         this.finish();
     }
-    public void Print_ticket_OnClick(View view){
-        Toast.makeText(getApplicationContext(),"Printing Ticket ....", Toast.LENGTH_SHORT).show();
+
+    public void Print_ticket_OnClick(View view) {
+        Toast.makeText(getApplicationContext(), "Printing Ticket ....", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, SelectBusActivity.class);
         startActivity(intent);
         this.finish();

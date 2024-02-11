@@ -5,6 +5,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,9 +43,11 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
     Database db;
     BluetoothAdapter bluetoothAdapter;
-    boolean registered = false, deviceConnected = false;
+    boolean registered = false, deviceConnected = false, deviceSearchEnabled = true;
     TextView logoutTextView;
     BroadcastReceiver broadcastReceiver;
+    BluetoothSocket socket = null;
+
     View parentLayout ;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -204,6 +207,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
     public void goToShortRoute_View(View view){
         if(deviceConnected){
+            deviceSearchEnabled = true;
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("ROUTE", "SHORT");
             startActivity(intent);
@@ -216,6 +220,7 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
     public void goToLongRoute_View(View view){
         if(deviceConnected){
+            deviceSearchEnabled = true;
             Intent intent = new Intent(this, LoginActivity.class);
             intent.putExtra("ROUTE", "LONG");
             startActivity(intent);
@@ -257,7 +262,12 @@ public class ChooseRouteActivity extends AppCompatActivity {
 
 
     public void startBouetoothButton(View view){
-        startBluetoothScan();
+        if(deviceSearchEnabled){
+            deviceSearchEnabled = false;
+            startBluetoothScan();
+        }
+
+        else return;
     }
     public void finishActivity(View v){
         this.finish();

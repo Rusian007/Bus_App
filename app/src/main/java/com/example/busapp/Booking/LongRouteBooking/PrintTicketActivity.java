@@ -77,7 +77,7 @@ public class PrintTicketActivity extends AppCompatActivity {
 
 
         selectedSeats = getIntent().getStringArrayListExtra("SEATLIST");
-PhoneNumber = getIntent().getStringExtra("phoneNumber");
+        PhoneNumber = getIntent().getStringExtra("phoneNumber");
         Glide.with(this)
                 .asGif()
                 .load(R.drawable.loading)

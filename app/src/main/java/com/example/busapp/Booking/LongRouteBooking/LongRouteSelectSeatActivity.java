@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -42,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class LongRouteSelectSeatActivity extends AppCompatActivity implements  BusSeatAdapter.IBusSeat{
+public class LongRouteSelectSeatActivity extends AppCompatActivity implements BusSeatAdapter.IBusSeat {
     RecyclerView busSeatRecycleView;
     BusSeatAdapter adapter;
     String DiscountLimit = "100";
@@ -53,6 +52,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
     int busid;
 
     ArrayList<String> SelectedBusSeatsList;
+    List<BusSeatListModel> seatList;
     Button seatConfirmedButton;
 
     @Override
@@ -66,15 +66,12 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         // DB stuff
         Database db = new Database(LongRouteSelectSeatActivity.this);
         Cursor cursor1 = db.getLocations(db);
-
         // Iterate through the results
         while (cursor1.moveToNext()) {
             // Get the values from the cursor
             fromLoc = cursor1.getString(0);
             toLoc = cursor1.getString(1);
-
         }
-
         // Close the cursor
         cursor1.close();
         GetDiscountLimitApi();        // get Route ID
@@ -82,7 +79,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
         // END
         BusName = (String) getIntent().getStringExtra("BUSNAME");
-        busid =Integer.parseInt( getIntent().getStringExtra("BUSID"));
+        busid = Integer.parseInt(getIntent().getStringExtra("BUSID"));
 
         TextView busNameText = findViewById(R.id.busName);
         locationText = findViewById(R.id.locationText);
@@ -109,14 +106,14 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
             @Override
             public void run() {
 
-                setRecycleView();
+                FetchSeatList();
             }
         }, 1000);
 
 
     }
 
-    public void GetDiscountLimitApi(){
+    public void GetDiscountLimitApi() {
         ApiClientLongRoute client = new ApiClientLongRoute();
         Retrofit retrofit = client.getRetrofitInstance();
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
@@ -126,11 +123,10 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         call.enqueue(new Callback<DiscountLimitResponse>() {
             @Override
             public void onResponse(Call<DiscountLimitResponse> call, Response<DiscountLimitResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     DiscountLimitResponse discount_res = response.body();
                     DiscountLimit = discount_res.getMax_limit();
-                    Log.d("discount", DiscountLimit);
-                }else{
+                } else {
 
                     Toast.makeText(getApplicationContext(), "Sorry something went wrong getting discount limit", Toast.LENGTH_SHORT).show();
                 }
@@ -142,9 +138,10 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
             }
         });
     }
-    public void ConfirmSeatButton_OnClickListener(View view){
+
+    public void ConfirmSeatButton_OnClickListener(View view) {
         Intent intent = new Intent(this, BookingSeatActivity.class);
-        if (SelectedBusSeatsList.isEmpty()){
+        if (SelectedBusSeatsList.isEmpty()) {
             Toast.makeText(this.getApplicationContext(), "Select a seat please.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -156,6 +153,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         startActivity(intent);
         this.finish();
     }
+
     private void callFairApi() {
         Database db = new Database(LongRouteSelectSeatActivity.this);
         String token = db.GetToken(db);
@@ -177,8 +175,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
         Retrofit retrofit = client.getRetrofitInstance();
         LongRouteApi longRoute = retrofit.create(LongRouteApi.class);
 
-
-        Call<RouteRequestModel> call = longRoute.GetRouteID("Token " + token, fromLocationID, toLocationID );
+        Call<RouteRequestModel> call = longRoute.GetRouteID("Token " + token, fromLocationID, toLocationID);
 
         call.enqueue(new Callback<RouteRequestModel>() {
             @Override
@@ -190,10 +187,8 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
                         if (routeRequestModel != null) {
                             RouteRequestModel.Route route = routeRequestModel.getRoute();
                             routeId = route.getId();
-
-
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "This is a invalid route. Redirecting you back, please wait ...", Toast.LENGTH_SHORT).show();
                         // Delay the redirection and finish the current activity after 2 seconds
                         new Handler().postDelayed(new Runnable() {
@@ -237,31 +232,30 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
     //On Back button click
     public void gotoBack(View view) {
-        Intent intent = new Intent(this, SelectBusActivity.class );
+        Intent intent = new Intent(this, SelectBusActivity.class);
         startActivity(intent);
         this.finish();
+    }
+
+    private void FetchSeatList() {
+        seatList = getSeatList();
+        setRecycleView();
+
     }
 
     private void setRecycleView() {
         busSeatRecycleView.setHasFixedSize(true);
         busSeatRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new BusSeatAdapter(this, getSeatList() , this);
+        adapter = new BusSeatAdapter(this, seatList, this);
         busSeatRecycleView.setAdapter(adapter);
     }
 
-    private List<BusSeatListModel> getSeatList(){
+    private List<BusSeatListModel> getSeatList() {
         List<BusSeatListModel> BusSeatList = new ArrayList<>();
         List<String> bookedSeatsList = new ArrayList<>();
 
-
-        //Dummy Data - for test
-        // Remove this in Production
-        // This data will come from API
-
         Database db = new Database(LongRouteSelectSeatActivity.this);
         String token = db.GetToken(db);
-        // Call API
-       // LongRouteSeatStructureRequestModel busIdRequest = new LongRouteSeatStructureRequestModel(1);
 
 
         ApiClientLongRoute client = new ApiClientLongRoute();
@@ -280,18 +274,18 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
         //Get booked seats
         LongRouteApi longRoute2 = retrofit.create(LongRouteApi.class);
-        Call<GetBookedSeatsModel> call_seats = longRoute2.getBookedSeats("Token "+token, busid, formattedDate, routeId);
+        Call<GetBookedSeatsModel> call_seats = longRoute2.getBookedSeats("Token " + token, busid, formattedDate, routeId);
         call_seats.enqueue(new Callback<GetBookedSeatsModel>() {
             @Override
             public void onResponse(Call<GetBookedSeatsModel> call, Response<GetBookedSeatsModel> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     GetBookedSeatsModel bookedSeats = response.body();
-                    for(GetBookedSeatsModel.BookedSeat seat : bookedSeats.getBookedSeats()){
-                     //   Log.d("BOOK", seat.getSeatNo());
+                    for (GetBookedSeatsModel.BookedSeat seat : bookedSeats.getBookedSeats()) {
+
                         bookedSeatsList.add(seat.getSeatNo());
                     }
 
-                }else {
+                } else {
                     Log.d("ERROR", "err: " + response.errorBody().toString());
                     Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
 
@@ -305,54 +299,61 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
             }
         });
         //get bus seats
-        call.enqueue(new Callback<LongRouteSeatModel>() {
-            @SuppressLint("NotifyDataSetChanged")
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onResponse(Call<LongRouteSeatModel> call, Response<LongRouteSeatModel> response) {
-                if (response.isSuccessful()) {
+            public void run() {
+                call.enqueue(new Callback<LongRouteSeatModel>() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onResponse(Call<LongRouteSeatModel> call, Response<LongRouteSeatModel> response) {
+                        if (response.isSuccessful()) {
 
-                    LongRouteSeatModel seats = response.body();
+                            LongRouteSeatModel seats = response.body();
 
-                    // get the booked seats
+                            // get the booked seats
 
-                 Log.d("TAG", bookedSeatsList.toString());
-                    // make the seats that are booked = false
-                    for(List<String> seat : seats.getSeatStructure()){
-                        boolean s1=true,s2=true,s3=true,s4=true,s5=true;
-                        if(bookedSeatsList.contains(seat.get(0))) s1=false;
-                        if(bookedSeatsList.contains(seat.get(1))) s2=false;
-                        if(bookedSeatsList.contains(seat.get(2))) s3=false;
-                        if(bookedSeatsList.contains(seat.get(3))) s4=false;
-                        if(bookedSeatsList.contains(seat.get(4))) s5=false;
-                        // Log.d("Seat", seat.toString());
-                        BusSeatListModel busSeatRow = new BusSeatListModel(
-                                new BusSeatListModel.Seat(seat.get(0), s1),
-                                new BusSeatListModel.Seat(seat.get(1), s2),
-                                new BusSeatListModel.Seat(seat.get(2), s3),
-                                new BusSeatListModel.Seat(seat.get(3), s4),
-                                new BusSeatListModel.Seat(seat.get(4), s5));
+                            Log.d("Booked seats - ", bookedSeatsList.toString());
+                            // make the seats that are booked = false
+                            for (List<String> seat : seats.getSeatStructure()) {
+                                boolean s1 = true, s2 = true, s3 = true, s4 = true, s5 = true;
+                                if (bookedSeatsList.contains(seat.get(0))) s1 = false;
+                                if (bookedSeatsList.contains(seat.get(1))) s2 = false;
+                                if (bookedSeatsList.contains(seat.get(2))) s3 = false;
+                                if (bookedSeatsList.contains(seat.get(3))) s4 = false;
+                                if (bookedSeatsList.contains(seat.get(4))) s5 = false;
+                                // Log.d("Seat", seat.toString());
+                                BusSeatListModel busSeatRow = new BusSeatListModel(
+                                        new BusSeatListModel.Seat(seat.get(0), s1),
+                                        new BusSeatListModel.Seat(seat.get(1), s2),
+                                        new BusSeatListModel.Seat(seat.get(2), s3),
+                                        new BusSeatListModel.Seat(seat.get(3), s4),
+                                        new BusSeatListModel.Seat(seat.get(4), s5));
 
-                        BusSeatList.add(busSeatRow);
+                                BusSeatList.add(busSeatRow);
 
+                            }
+
+                            // Log.d("Seats", showAllSeats.toString());
+                            adapter.notifyDataSetChanged();
+
+                        } else {
+                            // handle error
+                            Log.d("ERROR", "err: " + response.errorBody().toString());
+                            Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
+                        }
                     }
 
-                    // Log.d("Seats", showAllSeats.toString());
+                    @Override
+                    public void onFailure(Call<LongRouteSeatModel> call, Throwable t) {
 
-                    adapter.notifyDataSetChanged();
-
-                } else {
-                    // handle error
-                    Log.d("ERROR", "err: " + response.errorBody().toString());
-                    Toast.makeText(getApplicationContext(), "Please restart the app because of the following error:  " + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LongRouteSeatModel> call, Throwable t) {
+                    }
+                });
 
             }
-        });
+        }, 3500);
+
+
 /*
 
 
@@ -413,21 +414,21 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
     @Override
     public boolean AddSeat(String seatname) {
-       // Log.d("SEATNAME", "AddSeat: "+ seatname);
+        // Log.d("SEATNAME", "AddSeat: "+ seatname);
 
 
         boolean contains = false;
-        if(SelectedBusSeatsList.size() > 0){
+        if (SelectedBusSeatsList.size() > 0) {
             contains = SelectedBusSeatsList.contains(seatname);
         }
         boolean RestrictSeats = false;
 
-       if(contains){
+        if (contains) {
             SelectedBusSeatsList.remove(seatname);
-         //  Log.d("seats", "Seat Removed: "+ "Removed******");
+            //  Log.d("seats", "Seat Removed: "+ "Removed******");
             //print Out selected Seats
 
-        }else {
+        } else {
             SelectedBusSeatsList.add(seatname);
             //print Out selected Seats
 
@@ -437,7 +438,7 @@ public class LongRouteSelectSeatActivity extends AppCompatActivity implements  B
 
     }
 
-    public void finishActivity(View v){
+    public void finishActivity(View v) {
         this.finish();
     }
 

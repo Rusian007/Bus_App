@@ -37,10 +37,10 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull BusSeatAdapter.ViewHolder holder, int position) {
         BusSeatListModel model;
-        if(BusSeatNameList != null && BusSeatNameList.size()>0 ){
+        if (BusSeatNameList != null && BusSeatNameList.size() > 0) {
             model = BusSeatNameList.get(position);
 
-            holder.col1Text.setText(checkNameForX(model.getSeatCol1(),holder.col1Text));
+            holder.col1Text.setText(checkNameForX(model.getSeatCol1(), holder.col1Text));
             holder.col2Text.setText(checkNameForX(model.getSeatCol2(), holder.col2Text));
             holder.col3Text.setText(checkNameForX(model.getSeatCol3(), holder.col3Text));
             holder.col4Text.setText(checkNameForX(model.getSeatCol4(), holder.col4Text));
@@ -63,24 +63,22 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 @Override
                 public void onClick(View view) {
 
-                    if(!model.isSeatCol1Clicked()){
+                    if (!model.isSeatCol1Clicked()) {
                         onItemClick(Viewholder.col1Text);
                         model.setIsClickedSeatCol1(true);
-                       boolean SeatsRestricted =  SeatAdder.AddSeat(Viewholder.col1Text.getText().toString());
+                        boolean SeatsRestricted = SeatAdder.AddSeat(Viewholder.col1Text.getText().toString());
 
-                       if (SeatsRestricted){
-                           onItemUnClick(Viewholder.col1Text);
-                       }
-                    }
-
-                    else{
+                        if (SeatsRestricted) {
+                            onItemUnClick(Viewholder.col1Text);
+                        }
+                    } else {
                         model.setIsClickedSeatCol1(false);
                         onItemUnClick(Viewholder.col1Text);
                     }
 
                 }
             });
-        } else{
+        } else {
             Viewholder.col1Text.setTextColor(Color.parseColor("#1cab50"));
             Viewholder.col1Text.setBackgroundColor(Color.BLACK);
         }
@@ -91,24 +89,22 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 @Override
                 public void onClick(View view) {
 
-                    if(!model.isSeatCol2Clicked()){
+                    if (!model.isSeatCol2Clicked()) {
                         onItemClick(Viewholder.col2Text);
                         model.setIsClickedSeatCol2(true);
-                        boolean SeatsRestricted =  SeatAdder.AddSeat(Viewholder.col2Text.getText().toString());
+                        boolean SeatsRestricted = SeatAdder.AddSeat(Viewholder.col2Text.getText().toString());
 
-                        if (SeatsRestricted){
+                        if (SeatsRestricted) {
                             onItemUnClick(Viewholder.col2Text);
                         }
-                    }
-
-                    else{
+                    } else {
                         model.setIsClickedSeatCol2(false);
                         onItemUnClick(Viewholder.col2Text);
                     }
 
                 }
             });
-        } else{
+        } else {
             Viewholder.col2Text.setTextColor(Color.parseColor("#1cab50"));
             Viewholder.col2Text.setBackgroundColor(Color.BLACK);
         }
@@ -119,24 +115,22 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 @Override
                 public void onClick(View view) {
 
-                    if(!model.isSeatCol3Clicked()){
+                    if (!model.isSeatCol3Clicked()) {
                         onItemClick(Viewholder.col3Text);
                         model.setIsClickedSeatCol3(true);
-                        boolean SeatsRestricted =  SeatAdder.AddSeat(Viewholder.col3Text.getText().toString());
+                        boolean SeatsRestricted = SeatAdder.AddSeat(Viewholder.col3Text.getText().toString());
 
-                        if (SeatsRestricted){
+                        if (SeatsRestricted) {
                             onItemUnClick(Viewholder.col3Text);
                         }
-                    }
-
-                    else{
+                    } else {
                         model.setIsClickedSeatCol3(false);
                         onItemUnClick(Viewholder.col3Text);
                     }
 
                 }
             });
-        } else{
+        } else {
             Viewholder.col3Text.setTextColor(Color.parseColor("#1cab50"));
             Viewholder.col3Text.setBackgroundColor(Color.BLACK);
         }
@@ -147,17 +141,15 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
                 @Override
                 public void onClick(View view) {
 
-                    if(!model.isSeatCol4Clicked()){
+                    if (!model.isSeatCol4Clicked()) {
                         onItemClick(Viewholder.col4Text);
                         model.setIsClickedSeatCol4(true);
-                        boolean SeatsRestricted =  SeatAdder.AddSeat(Viewholder.col4Text.getText().toString());
+                        boolean SeatsRestricted = SeatAdder.AddSeat(Viewholder.col4Text.getText().toString());
 
-                        if (SeatsRestricted){
+                        if (SeatsRestricted) {
                             onItemUnClick(Viewholder.col4Text);
                         }
-                    }
-
-                    else{
+                    } else {
                         model.setIsClickedSeatCol4(false);
                         onItemUnClick(Viewholder.col4Text);
                     }
@@ -174,24 +166,22 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
             Viewholder.col5Text.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!model.isSeatCol5Clicked()){
+                    if (!model.isSeatCol5Clicked()) {
                         onItemClick(Viewholder.col5Text);
                         model.setIsClickedSeatCol5(true);
-                        boolean SeatsRestricted =  SeatAdder.AddSeat(Viewholder.col5Text.getText().toString());
+                        boolean SeatsRestricted = SeatAdder.AddSeat(Viewholder.col5Text.getText().toString());
 
-                        if (SeatsRestricted){
+                        if (SeatsRestricted) {
                             onItemUnClick(Viewholder.col5Text);
                         }
-                    }
-
-                    else{
+                    } else {
                         model.setIsClickedSeatCol5(false);
                         onItemUnClick(Viewholder.col5Text);
                     }
 
                 }
             });
-        } else{
+        } else {
             Viewholder.col5Text.setTextColor(Color.parseColor("#1cab50"));
             Viewholder.col5Text.setBackgroundColor(Color.BLACK);
         }
@@ -200,23 +190,23 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
     private void onItemUnClick(TextView text) {
         SeatAdder.AddSeat(text.getText().toString());
         text.setTextColor(Color.WHITE);
-       text.setBackgroundColor(Color.parseColor("#242230"));
+        text.setBackgroundColor(Color.parseColor("#242230"));
     }
 
 
     // Action if per-seat is clicked
     private void onItemClick(TextView text) {
-            text.setTextColor(Color.parseColor("#1cab50"));
-            text.setBackgroundColor(Color.BLACK);
+        text.setTextColor(Color.parseColor("#ff0000"));
+        text.setBackgroundColor(Color.BLACK);
     }
 
     // Set visibility for "X" seats
     private String checkNameForX(String seat, TextView colText) {
 
-        if (seat.equals("X")){
+        if (seat.equals("X")) {
             colText.setVisibility(View.INVISIBLE);
             return " ";
-        }else {
+        } else {
             return seat;
         }
 
@@ -227,23 +217,23 @@ public class BusSeatAdapter extends RecyclerView.Adapter<BusSeatAdapter.ViewHold
         return BusSeatNameList.size();
     }
 
-   public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView col1Text, col2Text, col3Text, col4Text, col5Text;
         IBusSeat SeatAdder;
 
-       public ViewHolder(@NonNull View itemView, IBusSeat SeatAdder) {
-           super(itemView);
+        public ViewHolder(@NonNull View itemView, IBusSeat SeatAdder) {
+            super(itemView);
             this.SeatAdder = SeatAdder;
-           col1Text = itemView.findViewById(R.id.col1Text);
-           col2Text = itemView.findViewById(R.id.col2Text);
-           col3Text = itemView.findViewById(R.id.col3Text);
-           col4Text = itemView.findViewById(R.id.col4Text);
-           col5Text = itemView.findViewById(R.id.col5Text);
-       }
-   }
+            col1Text = itemView.findViewById(R.id.col1Text);
+            col2Text = itemView.findViewById(R.id.col2Text);
+            col3Text = itemView.findViewById(R.id.col3Text);
+            col4Text = itemView.findViewById(R.id.col4Text);
+            col5Text = itemView.findViewById(R.id.col5Text);
+        }
+    }
 
-   public interface IBusSeat{
+    public interface IBusSeat {
         boolean AddSeat(String seatname);
-   }
+    }
 }
